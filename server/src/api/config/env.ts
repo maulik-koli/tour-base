@@ -8,6 +8,7 @@ const envSchema = z.object({
     PORT: z.coerce.number().default(3005),
     CLIENT_DOMAIN_URL: z.url(),
     MONGO_URI: z.string(),
+    JWT_ADMIN_SECRET: z.string().min(64),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

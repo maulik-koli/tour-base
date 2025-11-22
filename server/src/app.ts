@@ -4,9 +4,12 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
 
 import { globalErrorHandler } from '@api/middlewares/error.middleware';
 import { env } from '@api/config/env';
+
+import adminRoutes from '@api/modules/admin/admin.routes';
 
 const app: Application = express();
 
@@ -17,6 +20,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(morgan('dev'));
 
@@ -39,6 +43,7 @@ app.use('/api', apiLimiter);
 
 
 // api routes
+app.use('/api/admin', adminRoutes);
 
 
 // test route
