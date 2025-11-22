@@ -1,0 +1,62 @@
+import express, { Application, NextFunction, Request, Response } from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import hpp from 'hpp';
+import rateLimit from 'express-rate-limit';
+import morgan from 'morgan';
+
+import { globalErrorHandler } from '@api/middlewares/error.middleware';
+import { env } from '@api/config/env';
+
+const app: Application = express();
+
+
+// Middleware
+app.use(cors({
+  origin: env.CLIENT_DOMAIN_URL,
+  credentials: true
+}));
+app.use(express.json());
+
+app.use(morgan('dev'));
+
+
+// Security Middlewares
+app.use(helmet());
+app.use(hpp());
+
+
+// Rate Limiting
+const apiLimiter = rateLimit({
+    windowMs: 30 * 60 * 1000,
+    max: 150,
+    message: {
+        status: 429,
+        message: 'Too many requests, please try again later.'
+    }
+});
+app.use('/api', apiLimiter);
+
+
+// api routes
+
+
+// test route
+app.get('/api/test', (req: Request, res: Response) => {
+    res.json({ message: 'I am just a guy who is hero for fun!'});
+});
+
+
+// 404 handler for undefined routes
+app.use((req: Request, res: Response, next: NextFunction) => {
+    res.status(404).json({
+        status: 404,
+        message: 'Request not found.',
+    });
+});
+
+
+// Global error handler
+app.use(globalErrorHandler);
+
+export default app;
