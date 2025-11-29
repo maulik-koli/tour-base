@@ -13,10 +13,11 @@ import adminRoutes from '@api/modules/admin/admin.routes';
 
 const app: Application = express();
 
+const allowedOrigins = [env.CLIENT_URL, env.ADMIN_URL];
 
 // Middleware
 app.use(cors({
-  origin: env.CLIENT_DOMAIN_URL,
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
