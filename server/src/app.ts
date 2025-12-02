@@ -10,6 +10,7 @@ import { globalErrorHandler } from '@api/middlewares/error.middleware';
 import { env } from '@api/config/env';
 
 import adminRoutes from '@api/modules/admin/admin.routes';
+import tourRoutes from '@api/modules/tour/tour.routes';
 
 const app: Application = express();
 
@@ -45,6 +46,7 @@ app.use('/api', apiLimiter);
 
 // api routes
 app.use('/api/admin', adminRoutes);
+app.use('/api/tour', tourRoutes);
 
 
 // test route
