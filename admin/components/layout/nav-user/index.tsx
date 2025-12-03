@@ -1,16 +1,8 @@
 "use client"
+import React from "react"
 
-import {
-  ChevronsUpDown,
-  LogOut,
-  UserCircle2
-} from "lucide-react"
-
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback,AvatarImage } from "@/components/ui/avatar"
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "@/components/ui/sidebar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,22 +12,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from "@/components/ui/sidebar"
+import Icon from "@/components/icons"
 
-export function NavUser({
-  user,
-}: {
-  user: {
-    name: string
-    email: string
-    avatar: string
-  }
-}) {
+interface NavUserProps {
+    user : {
+        name: string
+        email: string
+        avatar: string
+    }
+}
+
+
+const NavUser: React.FC<NavUserProps> = ({ user }) => {
     const { isMobile } = useSidebar()
 
     return (
@@ -54,7 +42,7 @@ export function NavUser({
                             <div className="grid flex-1 text-left text-sm leading-tight">
                                 <span className="truncate font-medium">{user.name}</span>
                             </div>
-                            <ChevronsUpDown className="ml-auto size-4" />
+                            <Icon name="ChevronsUpDown" className="ml-auto size-4" />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -78,11 +66,11 @@ export function NavUser({
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                             <DropdownMenuItem>
-                                <UserCircle2 />
+                                <Icon name="UserCircle2" />
                                 Account
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                                <LogOut />
+                                <Icon name="LogOut" />
                                 Log out
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
@@ -92,3 +80,5 @@ export function NavUser({
         </SidebarMenu>
     )
 }
+
+export default NavUser

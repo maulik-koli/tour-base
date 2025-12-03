@@ -1,5 +1,6 @@
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import AppSidebar from "@/components/layout/app-sidebar";
+import Header from "@/components/layout/header";
 
 
 export default function RootLayout({
@@ -7,13 +8,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-    return (
-        <SidebarProvider>
-            <AppSidebar />
-            <main>
-                <SidebarTrigger />
-                {children}
-            </main>
-        </SidebarProvider>
-    );
+  return (
+    <SidebarProvider>
+      <AppSidebar />
+      <div  className="w-full h-full">
+        <Header />
+        {children}
+      </div>
+    </SidebarProvider>
+  );
 }
