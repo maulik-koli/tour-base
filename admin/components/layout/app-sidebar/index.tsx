@@ -1,35 +1,41 @@
-import { LayoutDashboard, TicketCheck, TramFront } from "lucide-react"
-
+import React from "react"
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavUser } from "../nav-user"
+import { IconName } from "@/components/icons"
+import NavUser from "../nav-user"
+import SidebarNavLink from "../sidebar-nav-link";
 
-const items = [
-  {
-    title: "Dashboard",
-    url: "#",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Tours",
-    url: "#",
-    icon: TramFront,
-  },
-  {
-    title: "Tickets",
-    url: "#",
-    icon: TicketCheck,
-  },
+export type SideBarItem = {
+    title: string;
+    url: string;
+    icon: IconName;
+}
+
+const items: SideBarItem[] = [
+    {
+        title: "Dashboard",
+        url: "/",
+        icon: "LayoutDashboard",
+    },
+    {
+        title: "Tours",
+        url: "/tours",
+        icon: "TramFront",
+    },
+    {
+        title: "Tickets",
+        url: "/tickets",
+        icon: "TicketCheck",
+    },
 ]
 
 const USER = {
@@ -38,8 +44,8 @@ const USER = {
     avatar: "/avatars/shadcn.jpg",
 }
 
- 
-export function AppSidebar() {
+
+const AppSidebar: React.FC = () => {
     return (
        <Sidebar collapsible="icon">
             <SidebarHeader>
@@ -51,11 +57,8 @@ export function AppSidebar() {
                         <SidebarMenu>
                         {items.map((item) => (
                             <SidebarMenuItem key={item.title}>
-                                <SidebarMenuButton asChild>
-                                    <a href={item.url}>
-                                    <item.icon />
-                                    <span>{item.title}</span>
-                                    </a>
+                                <SidebarMenuButton asChild >
+                                    <SidebarNavLink item={item} />
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         ))}
@@ -69,3 +72,5 @@ export function AppSidebar() {
         </Sidebar>
     )
 }
+
+export default AppSidebar;
