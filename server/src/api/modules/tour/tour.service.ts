@@ -1,83 +1,58 @@
-import Tour from "./tour.model";
-import { slugify } from "./tour.utils";
+import mongoose from "mongoose";
+import Tour, { TourFields, TourLean } from "./tour.model";
+import { CreateTourPayload, TourListAdminQueries, TourPayload } from "./tour.schema";
+import { addPakagesToTour, deletePackagesByTourId } from "../packages/packages.service";
 
-import { TourPayload } from "./tour.schema";
 import { CustomError } from "@/api/utils/response";
+import { ADMIN_SORT_FIELD_MAP, slugify } from "./tour.utils";
 
 
-export const validateTourData = (tourPayload: TourPayload) => {
-    const days = tourPayload.dayPlans.map(day => day.dayNumber);
-
-    const isValidOrder = days.every((day, i) =>
-        i === 0 || day === days[i - 1] + 1
-    );
-
-    if(!isValidOrder) {
-        throw new CustomError(400, 'Day plans must be in consecutive order');
-    }
-
-    const daySet = new Set(days);
-
-    const invalidPackagesDaysplans = tourPayload.packages
-        .filter(pckg => !pckg.dayNumbers.every(day => daySet.has(day)))
-        .map(pckg => pckg.name);
-
-    if (invalidPackagesDaysplans.length > 0) {
-        throw new CustomError(
-            400, 
-            `Invalid day plan in the following packages: ${invalidPackagesDaysplans.join(', ')}`
-        );
-    }
-
-    const invalidPackagesDuration = tourPayload.packages
-        .filter(pckg => pckg.days > pckg.dayNumbers.length)
-        .map(pckg => pckg.name);
-
-    if (invalidPackagesDuration.length > 0) {
-        throw new CustomError(
-            400, 
-            `Number of days and day plans mismatch in the following packages: ${invalidPackagesDuration.join(', ')}`
-        );
-    }
-
-    const invalidHotelDayNumbers = tourPayload.packages
-        .flatMap(pckg =>
-            pckg.hotels
-                .filter(hotel => !daySet.has(hotel.dayNumber))
-                .map(hotel => `${hotel.hotelName} in package "${pckg.name}"`)
-        );
-
-    if (invalidHotelDayNumbers.length > 0) {
-        throw new CustomError(
-            400,
-            `Invalid hotel dayNumber(s) found: ${invalidHotelDayNumbers.join(', ')}`
-        );
-    }
-}
-
-
-export const createTour = async (tourPayload: TourPayload) => {
-    try {
-        const slug = slugify(tourPayload.name)
-        const tour = new Tour({ ...tourPayload, slug });
-        await tour.save();
-    }
-    catch (error: any) {
-        if(error.name == 'MongoServerError' && error.code == 11000) {
-            throw new CustomError(409, "Same name tour already exists");
-        }
-        throw error;
-    }
-}
-
-export const getTourBySlug = async (slug: string) => {
-    const tour = await Tour.findOne({ slug }).lean();
+export const getTourBySlug = async (slug: string, select?: TourFields[]) => {
+    const tour = await Tour.findOne({ slug })
+        .select(select?.join(' ') || '')
+        .lean();
 
     if(!tour) {
         throw new CustomError(404, 'Tour not found');
     }
     return tour;
 };
+
+
+export const createTour = async (payload: CreateTourPayload) => {
+    const { tour: tourPayload, packages: packagePayload } = payload;
+
+    const slug = slugify(tourPayload.name);
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const existingTour = await Tour.exists({ slug }).session(session);
+    
+        if(existingTour) {
+            throw new CustomError(409, "Tour with this name already exists");
+        }
+    
+        const tour = new Tour({ ...tourPayload, slug });
+        const newTour = await tour.save({ session });
+    
+        await addPakagesToTour(
+            { tourId: newTour._id, numberOfDays: newTour.dayPlans.length },
+            packagePayload,
+            session
+        );
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return newTour.toObject();
+    }
+    catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
+    }
+}
 
 
 export const updateTourBySlug = async (slug: string, tourPayload: TourPayload) => {
@@ -92,3 +67,62 @@ export const updateTourBySlug = async (slug: string, tourPayload: TourPayload) =
     }
     return tour;
 };
+
+
+export const getAdminToursList = async (query: TourListAdminQueries) => {
+    const { page, limit, search, sort } = query;
+
+    const skip = (page - 1) * limit;
+    
+    const filter: any = {};
+
+    if (search) {
+        filter.name = { $regex: search, $options: "i" };
+    }
+
+    const sortOption = sort ? ADMIN_SORT_FIELD_MAP[sort] : { updatedAt: -1 };
+
+    const tours = await Tour.find(filter)
+        .sort(sortOption)
+        .skip(skip)
+        .limit(limit)
+        .select("name slug thumbnailImage updatedAt");
+
+    const total = await Tour.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+        tours,
+        pagination: {
+            total,
+            page,
+            totalPages,
+            isPrevPage: page > 1,
+            isNextPage: page < totalPages,
+        }
+    };
+};
+
+
+export const deleteTourBySlug = async (slug: string) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const tour = await Tour.findOneAndDelete({ slug }, { session });
+    
+        if(!tour) {
+            throw new CustomError(404, 'Tour not found');
+        }
+        
+        await deletePackagesByTourId(tour._id, session);
+
+        await session.commitTransaction();
+        session.endSession();
+    }
+    catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+        throw error;
+    }
+}
