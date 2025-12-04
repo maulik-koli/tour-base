@@ -1,7 +1,18 @@
-export const Hotels = ["standard", "deluxe", "premium", "luxury"] as const;
+export const ADMIN_SORT_MAP = [
+    "createdAt_desc",
+    "createdAt_asc",
+    "updatedAt_desc",
+    "updatedAt_asc",
+] as const;
 
-export type HotelType = typeof Hotels[number];
+type AdminSortField = typeof ADMIN_SORT_MAP[number];
 
+export const ADMIN_SORT_FIELD_MAP: Record<AdminSortField, any> = {
+    createdAt_desc: { createdAt: -1 },
+    createdAt_asc: { createdAt: 1 },
+    updatedAt_desc: { updatedAt: -1 },
+    updatedAt_asc: { updatedAt: 1 },
+}
 
 
 export const slugify = (text: string): string => {

@@ -1,14 +1,13 @@
-import { createTour, getTourBySlug, updateTourBySlug, validateTourData } from "./tour.service";
-import { TourPayload } from "./tour.schema";
+import { CreateTourPayload, TourListAdminQueries, TourPayload } from "./tour.schema";
+import { createTour, deleteTourBySlug, getAdminToursList, getTourBySlug, updateTourBySlug } from "./tour.service";
+import { addPakagesToTour, getPackagesByTourId } from "../packages/packages.service";
 
 import { asyncWrapper } from "@/api/utils/apiHelper";
 import { successResponse } from "@/api/utils/response";
 
 
 export const createTourController = asyncWrapper(async (req, res) => {
-    const payload = req.body as TourPayload;
-
-    validateTourData(payload);
+    const payload = req.body as CreateTourPayload;
 
     await createTour(payload);
 
@@ -24,11 +23,12 @@ export const getTourController = asyncWrapper(async (req, res) => {
     const { slug } = req.params;
 
     const tour = await getTourBySlug(slug);
+    const packages = await getPackagesByTourId(tour._id);
 
     successResponse(res, {
         message: "Tour fetched successfully",
         status: 200,
-        data: tour,
+        data: { tour, packages },
     });
 });
 
@@ -37,7 +37,6 @@ export const updateTourController = asyncWrapper(async (req, res) => {
     const { slug } = req.params;
     const payload = req.body as TourPayload;
 
-    validateTourData(payload);
     const tour = await updateTourBySlug(slug, payload);
 
     successResponse(res, {
@@ -48,6 +47,25 @@ export const updateTourController = asyncWrapper(async (req, res) => {
 });
 
 
-const getToursListController = asyncWrapper(async (req, res) => {});
+export const getAdminToursListController = asyncWrapper(async (req, res) => {
+    const query = res.locals.query as TourListAdminQueries;
+    const { pagination, tours } = await getAdminToursList(query);
 
-const deleteTourController = asyncWrapper(async (req, res) => {});
+    successResponse(res, {
+        message: "Admin tours list fetched successfully",
+        status: 200,
+        data: { pagination, tours },
+    });
+});
+
+
+export const deleteTourController = asyncWrapper(async (req, res) => {
+    const { slug } = req.params;
+    await deleteTourBySlug(slug);
+
+    successResponse(res, {
+        message: "Tour deleted successfully",
+        status: 200,
+        data: null,
+    });
+});
