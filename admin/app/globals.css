@@ -46,54 +46,44 @@
 :root {
   --radius: 0.625rem;
 
-  /* Base */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
 
-  /* Cards */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
 
-  /* Popover */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
 
   /* -------------------------------------------------------
-     PRIMARY (Generated from #1a73e8)
-     OKLCH: oklch(0.66 0.13 254.86)
-     ------------------------------------------------------- */
+    PRIMARY (Generated from #1a73e8)
+    OKLCH: oklch(0.66 0.13 254.86)
+  ------------------------------------------------------- */
   --primary: oklch(0.66 0.13 254.86);
-  --primary-foreground: oklch(0.98 0 0); /* white text on blue */
+  --primary-foreground: oklch(0.98 0 0);
 
-  /* Secondary (slightly desaturated version of primary hue) */
   --secondary: oklch(0.92 0.02 254.86);
   --secondary-foreground: oklch(0.20 0 0);
 
-  /* Muted */
   --muted: oklch(0.95 0.01 254.86);
   --muted-foreground: oklch(0.45 0.02 254.86);
 
-  /* Accent */
   --accent: oklch(0.94 0.03 254.86);
   --accent-foreground: oklch(0.20 0 0);
 
-  /* Destructive */
   --destructive: oklch(0.58 0.17 28);
   --destructive-foreground: oklch(0.98 0 0);
 
-  /* Borders, Inputs, Ring */
   --border: oklch(0.92 0 0);
   --input: oklch(0.92 0 0);
-  --ring: oklch(0.66 0.13 254.86); /* same as primary */
+  --ring: oklch(0.66 0.13 254.86);
 
-  /* Chart Colors (kept as they were) */
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
 
-  /* Sidebar (slightly adjusted to match your blue theme) */
   --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: oklch(0.66 0.13 254.86);
@@ -102,6 +92,18 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: oklch(0.66 0.13 254.86);
+}
+
+@layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body[data-scroll-locked] {
+    overflow: auto !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
 /* 

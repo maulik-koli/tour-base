@@ -1,6 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/layout/app-sidebar";
 import Header from "@/components/layout/header";
+import { Separator } from "@/components/ui/separator";
 
 
 export default function RootLayout({
@@ -11,8 +12,9 @@ export default function RootLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <div  className="w-full h-full">
+      <div className="w-full h-full">
         <Header />
+        <Separator />
         {children}
       </div>
     </SidebarProvider>
