@@ -1,9 +1,16 @@
 import React from 'react'
-import { DefaultPage } from '../../page'
+import { Typography } from '@/components/ui/typography'
+import CreateTourForm from '@/module/tours/components/create-tour-form'
 
 const CreateTourPage: React.FC = () => {
     return (
-        <DefaultPage page="Create Tour" />
+         <div className='py-3 px-8'>
+            <div className='flex flex-col gap-4'>
+                <Typography variant="h1">Create Tour</Typography>
+                
+                <CreateTourForm />
+            </div>
+        </div>
     )
 }
 

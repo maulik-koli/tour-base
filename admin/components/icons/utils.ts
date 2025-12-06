@@ -9,7 +9,15 @@ import {
     ChevronsUpDown,
     LogOut,
     UserCircle2,
-    PanelLeftIcon
+    PanelLeftIcon,
+    ChevronDownIcon,
+    ChevronUpIcon,
+    Plus,
+    Calendar,
+    Package,
+    IndianRupee,
+    SquarePen,
+    Trash2
 } from "lucide-react"
 
 
@@ -25,4 +33,12 @@ export const LUCIDE_ICON_MAP = {
     LogOut: LogOut,
     UserCircle2: UserCircle2,
     PanelLeftIcon: PanelLeftIcon,
+    ChevronDownIcon: ChevronDownIcon,
+    ChevronUpIcon: ChevronUpIcon,
+    Plus: Plus,
+    Calendar: Calendar,
+    Package: Package,
+    IndianRupee: IndianRupee,
+    SquarePen: SquarePen,
+    Trash2: Trash2,
 }
