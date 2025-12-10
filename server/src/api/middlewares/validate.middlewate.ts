@@ -31,7 +31,7 @@ export const validateQuery = (schema: ZodType<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
             const validated = schema.parse(req.query);
-            res.locals.query = validated;              
+            req.localsQuery = validated;              
             next();
         }
         catch (error) {

@@ -10,6 +10,9 @@ const envSchema = z.object({
     ADMIN_URL: z.url(),
     MONGO_URI: z.string(),
     JWT_ADMIN_SECRET: z.string().min(64),
+    CLOUDINARY_CLOUD_NAME: z.string().min(1),
+    CLOUDINARY_API_KEY: z.string().min(1),
+    CLOUDINARY_API_SECRET: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

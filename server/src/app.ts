@@ -12,6 +12,7 @@ import { env } from '@api/config/env';
 import adminRoutes from '@api/modules/admin/admin.routes';
 import tourRoutes from '@api/modules/tour/tour.routes';
 import packageRoutes from '@api/modules/packages/packages.routes';
+import mediaRoutes from '@api/modules/media/media.routes';
 
 const app: Application = express();
 
@@ -49,6 +50,7 @@ app.use('/api', apiLimiter);
 app.use('/api/admin', adminRoutes);
 app.use('/api/tour', tourRoutes);
 app.use('/api/packages', packageRoutes);
+app.use('/api/media', mediaRoutes);
 
 
 // test route
