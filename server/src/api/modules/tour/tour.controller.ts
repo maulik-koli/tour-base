@@ -48,7 +48,7 @@ export const updateTourController = asyncWrapper(async (req, res) => {
 
 
 export const getAdminToursListController = asyncWrapper(async (req, res) => {
-    const query = res.locals.query as TourListAdminQueries;
+    const query = req.localsQuery as TourListAdminQueries;
     const { pagination, tours } = await getAdminToursList(query);
 
     successResponse(res, {

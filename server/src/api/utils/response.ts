@@ -1,12 +1,12 @@
 import { Response } from 'express';
 
-interface IApiResponse<T> {
+export interface IApiResponse<T> {
     status: number;
     message: string;
     data?: T | null;
 }
 
-interface IApiError {
+export interface IApiError {
     status: number;
     message: string;
 }

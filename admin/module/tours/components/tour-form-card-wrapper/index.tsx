@@ -11,7 +11,7 @@ interface TourFormCardWrapperProps {
 
 const TourFormCardWrapper: React.FC<TourFormCardWrapperProps> = ({ cardTitle, children, contentClassName }) => {
     return (
-        <Card className='gap-4'>
+        <Card className='gap-2.5'>
             <CardHeader>
                 <CardTitle className={typographyVariants({ variant: 'h4' })}>{cardTitle}</CardTitle>
             </CardHeader>

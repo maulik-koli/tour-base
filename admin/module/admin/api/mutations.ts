@@ -16,7 +16,7 @@ export const useAdminLogin = (
 ) => {
     
     return useMutation({
-        mutationKey: [MUSTAION_REGISTRY.loing],
+        mutationKey: [MUSTAION_REGISTRY.login],
         mutationFn: (payload) => safeAxios(() => login(payload)),
         ...options,
     });

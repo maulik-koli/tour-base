@@ -17,7 +17,10 @@ import {
     Package,
     IndianRupee,
     SquarePen,
-    Trash2
+    Trash2,
+    Save,
+    Image,
+    Loader2
 } from "lucide-react"
 
 
@@ -41,4 +44,7 @@ export const LUCIDE_ICON_MAP = {
     IndianRupee: IndianRupee,
     SquarePen: SquarePen,
     Trash2: Trash2,
+    Save: Save,
+    Image: Image,
+    Loader2: Loader2,
 }
