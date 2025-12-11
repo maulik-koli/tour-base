@@ -1,5 +1,5 @@
 import React from 'react'
-import { DefaultPage } from '@/app/(admin)/page'
+import { DefaultPage } from '@app/(admin)/page'
 
 const EditTourPage: React.FC = () => {
     return (

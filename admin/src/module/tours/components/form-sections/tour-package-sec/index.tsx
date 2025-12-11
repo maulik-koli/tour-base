@@ -46,7 +46,7 @@ const TourFormPackageSection: React.FC = () => {
             }
         >
             <CollapsibleComponent
-                items={fields.map((field, index) => {
+                items={fields.map((_, index) => {
                     return {
                         label: (
                             <div className='flex items-center justify-between'>
@@ -121,10 +121,11 @@ const TourFormPackageSection: React.FC = () => {
                                             render={({ field, fieldState }) => (
                                                 <InputField
                                                     type='number'
+                                                    min={0}
                                                     label="Package Price"
                                                     placeholder="Enter package price per person"
-                                                    onChange={field.onChange}
-                                                    value={field.value}
+                                                    onChange={(value) => field.onChange(Number(value))}
+                                                    value={field.value.toString()}
                                                     errMsg={fieldState.error?.message}
                                                 />
                                             )}
