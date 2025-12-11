@@ -22,10 +22,10 @@ export const uploadToCloudinary = async (payload: CloudinaryUploadPayload): Prom
     const URL = `https://api.cloudinary.com/v1_1/${payload.data.cloud_name}/image/upload`;
 
     const res = await axios.post(URL, formData);
-    logger('Cloudinary upload response:', res.data.url);
+    logger('Cloudinary upload response:', res.data);
     return {
         public_id: res.data.public_id,
         original_filename: res.data.original_filename,
-        url: res.data.url
+        url: res.data.secure_url,
     };
 }

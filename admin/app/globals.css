@@ -106,6 +106,25 @@
   }
 }
 
+.tiptap-editor .ProseMirror {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Make it cleaner */
+.tiptap-editor .ProseMirror:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove browser highlight */
+.tiptap-editor *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 /* 
 .dark {
   --background: oklch(0.145 0 0);

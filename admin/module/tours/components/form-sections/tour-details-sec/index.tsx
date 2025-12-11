@@ -1,18 +1,20 @@
 import React from 'react'
-import TourFormCardWrapper from '../tour-form-card-wrapper'
-import TextareaComponent from '@/components/form/textarea'
-import ArrayListInput from '../array-list-input'
 import { Controller, useFormContext } from 'react-hook-form'
-import { TourFormType } from '../../utils/schema'
+import { CreateTourFormType, TourFormType } from '@/module/tours//utils/schema'
+
+import TourFormCardWrapper from '@/module/tours/components/tour-form-card-wrapper'
+import ArrayListInput from '@/module/tours/components/array-list-input'
+import TextareaComponent from '@/components/form/textarea'
+
 
 const TourDetailsSection: React.FC = () => {
-    const { control } = useFormContext<TourFormType>();
+    const { control } = useFormContext<CreateTourFormType>();
 
     return (
         <TourFormCardWrapper cardTitle="Details" contentClassName='flex flex-col gap-4'>
             <Controller
                 control={control}
-                name='description'
+                name='tour.description'
                 render={({ field, fieldState }) => (
                     <TextareaComponent
                         label="Tour Description"
@@ -27,13 +29,13 @@ const TourDetailsSection: React.FC = () => {
             <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                 <ArrayListInput
                     control={control}
-                    name='includes'
+                    name='tour.includes'
                     label='Includes'
                     placeholder='What is included'
                 />
                 <ArrayListInput
                     control={control}
-                    name='excludes'
+                    name='tour.excludes'
                     label='Excludes'
                     placeholder='What is excluded'
                 />
