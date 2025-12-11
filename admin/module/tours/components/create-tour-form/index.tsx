@@ -2,27 +2,39 @@
 import React, { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateTourFormType, createTourSchema } from '../../utils/schema'
+import { CreateTourFormType, createTourSchema, defaultCreateTourSchema } from '../../utils/schema'
 
 import Icon from '@/components/icons'
-import TourOverviewSection from '../tour-overview-sec'
-import TourDetailsSection from '../tour-details-sec'
-import TourImageSection from '../tour-image-sec'
 import { Typography } from '@/components/ui/typography'
 import { Button } from '@/components/ui/button'
+import { 
+    TourOverviewSection, 
+    TourDetailsSection, 
+    TourImageSection,
+    ToursFormDaysSections
+} from '../form-sections'
+import TourFormPackageSection from '../form-sections/tour-package-sec'
+import { logger } from '@/lib/utils'
 
 
 const CreateTourForm: React.FC = () => {
     const form = useForm<CreateTourFormType>({
-        resolver: zodResolver(createTourSchema),  
+        resolver: zodResolver(createTourSchema),
+        mode: 'onSubmit',
+        defaultValues: defaultCreateTourSchema
     })
 
+    useEffect(() => {
+        logger('watch', form.watch());
+    }, [form.watch]);
+
     const onSumbit = (data: CreateTourFormType) => {
-        console.log("data", data);
+        console.log("data onSumbit", data);
     }
 
     useEffect(() => {
         if(Object.keys(form.formState.errors).length > 0) {
+            console.log("data", form.getValues());
             console.log("error", form.formState.errors);
         }
     }, [form.formState.errors]);
@@ -42,6 +54,8 @@ const CreateTourForm: React.FC = () => {
                 <TourOverviewSection />
                 <TourDetailsSection />
                 <TourImageSection />
+                <ToursFormDaysSections />
+                <TourFormPackageSection />
             </form>
         </FormProvider>
     )

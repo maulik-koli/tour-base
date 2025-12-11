@@ -20,7 +20,13 @@ import {
     Trash2,
     Save,
     Image,
-    Loader2
+    Loader2,
+    Upload,
+    X,
+    Bold,
+    ListOrdered,
+    List,
+    Minus
 } from "lucide-react"
 
 
@@ -47,4 +53,10 @@ export const LUCIDE_ICON_MAP = {
     Save: Save,
     Image: Image,
     Loader2: Loader2,
+    Upload: Upload,
+    X: X,
+    Bold: Bold,
+    ListOrdered: ListOrdered,
+    List: List,
+    Minus: Minus
 }

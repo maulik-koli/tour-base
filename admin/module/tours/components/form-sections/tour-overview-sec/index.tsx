@@ -1,23 +1,23 @@
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 
-import TourFormCardWrapper from '../tour-form-card-wrapper'
+import TourFormCardWrapper from '../../tour-form-card-wrapper'
 import InputField from '@/components/form/input-field'
 import { Separator } from '@/components/ui/separator'
 import { FieldLabel } from '@/components/ui/field'
 import { Typography } from '@/components/ui/typography'
 import { Switch } from '@/components/ui/switch'
-import { TourFormType } from '../../utils/schema'
+import { CreateTourFormType, TourFormType } from '../../../utils/schema'
 
 
 const TourOverviewSection: React.FC = () => {
-    const { control } = useFormContext<TourFormType>();
+    const { control } = useFormContext<CreateTourFormType>();
 
     return (
         <TourFormCardWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-y-4 gap-x-8">
             <Controller
                 control={control}
-                name='name'
+                name='tour.name'
                 render={({ field, fieldState }) => (
                     <InputField
                         label="Tour Name"
@@ -30,8 +30,8 @@ const TourOverviewSection: React.FC = () => {
             />
             <Controller
                 control={control}
-                name='youtubeVideoUrl'
-                render={({ field, fieldState }) => (
+                name='tour.youtubeVideoUrl'
+                render={({ field }) => (
                     <InputField
                         label="YouTube Video URL"
                         placeholder="https://www.youtube.com/watch?v=..."
@@ -48,7 +48,7 @@ const TourOverviewSection: React.FC = () => {
                 </div>
                 <Controller
                     control={control}
-                    name='isActive'
+                    name='tour.isActive'
                     render={({ field }) => (
                         <Switch checked={field.value} onCheckedChange={field.onChange} />
                     )}

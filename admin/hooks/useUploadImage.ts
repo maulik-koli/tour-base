@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { AxiosError } from "axios";
 
@@ -7,31 +7,31 @@ import { UPLOAD_CONFIG, UploadConfigsType } from "@/lib/mediaUpload";
 import { useCreateSignature, useUploadToCloudinary } from "@/module/tours/apis/mutations";
 
 type UseUploadImageArgs = {
-    upload: "single" | "multiple";
     imageType: UploadConfigsType;
+    onUploadComplete: (urls: string) => void;
 }
 
 
-export const useUploadImage = ({ upload, imageType } : UseUploadImageArgs) => {
+export const useUploadImage = ({ imageType, onUploadComplete } : UseUploadImageArgs) => {
     const [uploading, setUploading] = useState(false);
     const [uploadError, setUploadError] = useState<string | null>(null);
-    const [previews, setPreviews] = useState<string[]>([]);
 
-    const { mutateAsync: createSignature } = useCreateSignature();
-    const { mutateAsync: uploadToCloudinary } = useUploadToCloudinary();
+    const { mutateAsync: createSignature, isPending: isCreatingSignature } = useCreateSignature();
+    const { mutateAsync: uploadToCloudinary, isPending: isUploading } = useUploadToCloudinary();
     
 
-    const onDrop = async (acceptedFiles: File[]) => {
+    const onDrop = useCallback(async (acceptedFiles: File[]) => {
         if(acceptedFiles.length === 0) return;
 
         logger('Dropped files:', acceptedFiles);
         setUploading(true);
         setUploadError(null);
 
-        const fileFormat = acceptedFiles[0]?.name.split('.').pop()?.toLowerCase();
-        const fileSize = acceptedFiles[0]?.size || 0;
-
         try {
+            const file = acceptedFiles[0];
+            const fileFormat = file.name.split('.').pop()?.toLowerCase();
+            const fileSize = file.size;
+
             const signatureRes = await createSignature({ 
                 fileFormat: fileFormat || '',
                 mediaType: imageType,
@@ -44,21 +44,21 @@ export const useUploadImage = ({ upload, imageType } : UseUploadImageArgs) => {
 
             const signatureData = signatureRes.data;
 
-            const uploadClodinary = await uploadToCloudinary({
+            const uploadResult = await uploadToCloudinary({
                 data: signatureData,
-                file: acceptedFiles[0],
+                file,
             });
 
-            logger('Upload to Cloudinary successful:', uploadClodinary);
-
-            setPreviews(prev => {
-                const newPreviews = upload === "multiple" ? [...prev, uploadClodinary.url] : [uploadClodinary.url];
-                return newPreviews;
+            logger('Uploaded:', {
+                name: file.name,
+                uploadResult
             });
 
+            onUploadComplete(uploadResult.url);
         }
         catch (error: any) {
             logger('Error during upload process:', error);
+
             if(error instanceof AxiosError) {
                 const apiErr = error.response?.data.error.message;
                 if(apiErr) {
@@ -66,17 +66,14 @@ export const useUploadImage = ({ upload, imageType } : UseUploadImageArgs) => {
                     return;
                 }
             }
-            if(error?.message) {
-                setUploadError(error.message);
-            }
-            else {
-                setUploadError('An unexpected error occurred during upload.');
-            }
+            
+            setUploadError(error?.message || 'An unexpected error occurred during upload.');
         }
         finally {
             setUploading(false);
         }
-    }
+    }, [createSignature, uploadToCloudinary, imageType, onUploadComplete]);
+
 
     const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
         onDrop,
@@ -86,11 +83,12 @@ export const useUploadImage = ({ upload, imageType } : UseUploadImageArgs) => {
             "image/png": [],
             "image/webp": [],
         },
-        maxFiles: 5,
+        maxFiles: 1,
         maxSize: UPLOAD_CONFIG[imageType],
-        multiple: upload === "multiple",
-        disabled: false
+        multiple: false,
+        disabled: uploading
     });
+
 
     useEffect(() => {
         if(isDragReject && fileRejections.length > 0) {
@@ -108,14 +106,14 @@ export const useUploadImage = ({ upload, imageType } : UseUploadImageArgs) => {
                 setUploadError(`File "${file.file.name}" was rejected.`);
             }
         }
-    }, [isDragReject, fileRejections]);
+    }, [isDragReject, fileRejections, imageType]);
+
 
     return {
         uploadError,
-        uploading,
+        isUploading: uploading || isCreatingSignature || isUploading,
         getRootProps, 
         getInputProps, 
         isDragActive,
-        previews,
     }
 }

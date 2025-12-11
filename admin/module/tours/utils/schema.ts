@@ -28,7 +28,6 @@ const listOfStringsSchema = z.array(
 
 
 const dayDetailsZodSchema = z.object({
-    dayNumber: z.number(),
     title: z.string().min(3, 'Title must be at least 3 characters').trim(),
     subtitle: z.string().nullable(),
     description: z.string().nullable(),
@@ -55,7 +54,24 @@ export const createTourSchema = z.object({
     packages: z.array(packageZodSchema).min(1, 'At least one package is required'),
 });
 
+export type DayDetailsType= z.infer<typeof dayDetailsZodSchema>;
 
 export type TourFormType = z.infer<typeof tourZodSchema>;
 export type PackageFormType = z.infer<typeof packageZodSchema>;
 export type CreateTourFormType = z.infer<typeof createTourSchema>;
+
+
+export const defaultCreateTourSchema: CreateTourFormType = {
+    tour: {
+        name: '',
+        description: '',
+        includes: [],
+        excludes: [],
+        dayPlans: [],
+        isActive: true,
+        images: [],
+        thumbnailImage: '',
+        youtubeVideoUrl: null,
+    },
+    packages: [],
+};
