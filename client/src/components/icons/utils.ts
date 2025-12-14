@@ -28,7 +28,9 @@ import {
     List,
     Minus,
     Funnel,
-    LayoutGrid
+    LayoutGrid,
+    Ticket,
+    CalendarDays
 } from "lucide-react"
 
 
@@ -63,4 +65,6 @@ export const LUCIDE_ICON_MAP = {
     Minus: Minus,
     Funnel: Funnel,
     LayoutGrid: LayoutGrid,
+    Ticket: Ticket,
+    CalendarDays
 }

@@ -1,12 +1,21 @@
+"use client"
 import React from 'react'
 import { Typography } from '@/components/ui/typography'
 import TourFilterHeader from '@/modules/tours/components/tour-filter-header'
 import TourListGrid from '@/modules/tours/components/tour-list-grid'
 
+export type ViewMode = 'grid' | 'list';
+
 
 const ToursPage: React.FC = () => {
+    const [viewMode, setViewMode] = React.useState<ViewMode>('list')
+    
+    const toggleViewMode = (mode: ViewMode) => {
+        setViewMode(mode)
+    }
+
     return (
-        <div className='py-4 px-20 flex flex-col gap-4'>
+        <div className='py-4 px-20 flex flex-col gap-4 bg-backgroud'>
             <div className='flex flex-col gap-2'>
                 <Typography variant="h1" className='font-semibold'>
                     Explore Our Tours
@@ -16,9 +25,9 @@ const ToursPage: React.FC = () => {
                 </Typography>
             </div>
 
-            <TourFilterHeader />
+            <TourFilterHeader viewMode={viewMode} onToggleViewMode={toggleViewMode} />
 
-            <TourListGrid />
+            <TourListGrid viewMode={viewMode} />
         </div>
     )
 }
