@@ -29,7 +29,7 @@ const SelectField: React.FC<SelectFieldProps> = ({
                 <SelectTrigger type="button" className={cn("w-full h-9", selectTriggerClass)}>
                     <SelectValue placeholder={placeholder}  />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent position='popper'>
                     {options.map((opt, index) => (
                         <SelectItem 
                             key={`${opt.label}-${index}`} 

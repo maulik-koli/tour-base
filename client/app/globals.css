@@ -100,5 +100,15 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body[data-scroll-locked] {
+    overflow: auto !important;
+    margin-right: 0 !important;
+    padding-right: 0 !important;
+  }
 }
 
