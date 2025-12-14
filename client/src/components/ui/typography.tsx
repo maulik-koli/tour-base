@@ -7,16 +7,16 @@ import { cn } from "@/lib/utils"
 const typographyVariants = cva("", {
         variants: {
             variant: {
-                h1: "scroll-m-20  text-4xl font-bold tracking-tight text-balance",
-                h2: "scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0",
-                h3: "scroll-m-20 text-2xl font-semibold tracking-tight",
-                h4: "scroll-m-20 text-xl font-semibold tracking-tight",
-                p: "text-base",
+                h1: "scroll-m-20  text-4xl font-bold tracking-tight text-balance text-foreground",
+                h2: "scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0 text-foreground",
+                h3: "scroll-m-20 text-2xl font-semibold tracking-tight text-foreground",
+                h4: "scroll-m-20 text-xl font-semibold tracking-tight text-foreground",
+                p: "text-base text-foreground",
                 lead: "text-muted-foreground text-xl",
-                large: "text-lg font-semibold",
-                small: "text-sm font-normal leading-none",
+                large: "text-lg font-semibold text-foreground",
+                small: "text-sm font-normal leading-none text-muted-foreground",
                 muted: "text-muted-foreground text-sm",
-                link: "text-sm font-normal"
+                link: "text-sm font-normal text-foreground active:text-primary hover:text-primary"
             },
         },
         defaultVariants: {
