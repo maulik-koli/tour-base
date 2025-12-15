@@ -19,7 +19,7 @@ const TourCard: React.FC<TourListCardProps> = ({ tour, view }) => {
     return (
         <div className='w-full rounded-xl shadow-xs border border-border flex items-center justify-center hover:shadow-lg'>
             <div className={cn( "w-full flex", isList ? 'flex-row' : 'flex-col')}>
-                <div className={cn('relative h-full aspect-video', isList ? "w-100 shrink-0" : "w-full")}>
+                <div className={cn('relative h-full aspect-video', isList ? "w-110 shrink-0" : "w-full")}>
                     <CldImage
                         src={tour.image}
                         crop="fill"
@@ -54,7 +54,7 @@ const TourContent: React.FC<{ tour: TourCardType }> = function({ tour }) {
     return (
         <div className='flex flex-col gap-4'>
             <div className='flex flex-col gap-2 w-full h-full'>
-                <Typography variant="h3" className='truncate'>{tour.title}</Typography>
+                <Typography variant="h3" className='truncate leading-[1.4]'>{tour.title}</Typography>
                 <Typography variant="large" className='font-normal line-clamp-2'>
                     {tour.subtitle}
                 </Typography>

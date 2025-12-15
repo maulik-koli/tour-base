@@ -34,7 +34,8 @@ import {
     BadgeIndianRupee,
     BusFront,
     Hotel,
-    Headset
+    Headset,
+    ArrowRight
 } from "lucide-react"
 
 
@@ -75,4 +76,5 @@ export const LUCIDE_ICON_MAP = {
     BusFront: BusFront,
     Hotel: Hotel,
     Headset: Headset,
+    ArrowRight: ArrowRight
 }

@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
-import InputField from '../../../../components/form/input-field'
-import { Button } from '../../../../components/ui/button'
+import InputField from '@/components/form/input-field'
+import { Button } from '@/components/ui/button'
 
 const SearchButtonBar: React.FC = () => {
     const [searchQuery, setSearchQuery] = React.useState<string>('')
