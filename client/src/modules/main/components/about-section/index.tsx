@@ -2,6 +2,8 @@
 import React from 'react'
 import { Typography } from '@/components/ui/typography'
 import { CldImage } from 'next-cloudinary'
+import { Button } from '@/components/ui/button'
+import Icon from '@/components/icons'
 
 
 const AboutSection: React.FC = () => {
@@ -34,6 +36,11 @@ const AboutSection: React.FC = () => {
                             <Typography variant='small'>Years Experience</Typography>
                         </div>
                     </div>
+
+                    <Button variant="default" size="lg" className='max-w-min mt-2'>
+                        Explore All Tours
+                        <Icon name='ArrowRight' width={16} height={16} />
+                    </Button>
                 </div>
                 <div className="w-full relative h-full">
                     <CldImage

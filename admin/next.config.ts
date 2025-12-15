@@ -10,16 +10,13 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com',
-        pathname: '/**', // allow any path under res.cloudinary.com
+        pathname: '/**',
       },
       {
-        protocol: 'http',  // ← ADD THIS
+        protocol: 'http',
         hostname: 'res.cloudinary.com',
         pathname: '/**',
       },
-
-      // you can add more image hosts later
-      // { protocol: "https", hostname: "yourcdn.com" }
     ],
   },
 };
