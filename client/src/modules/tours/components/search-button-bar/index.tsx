@@ -3,7 +3,7 @@ import React from 'react'
 import InputField from '../../../../components/form/input-field'
 import { Button } from '../../../../components/ui/button'
 
-const SearchBar: React.FC = () => {
+const SearchButtonBar: React.FC = () => {
     const [searchQuery, setSearchQuery] = React.useState<string>('')
 
     return (
@@ -25,4 +25,4 @@ const SearchBar: React.FC = () => {
     )
 }
 
-export default SearchBar
+export default SearchButtonBar

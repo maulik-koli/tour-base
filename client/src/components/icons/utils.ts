@@ -30,7 +30,11 @@ import {
     Funnel,
     LayoutGrid,
     Ticket,
-    CalendarDays
+    CalendarDays,
+    BadgeIndianRupee,
+    BusFront,
+    Hotel,
+    Headset
 } from "lucide-react"
 
 
@@ -66,5 +70,9 @@ export const LUCIDE_ICON_MAP = {
     Funnel: Funnel,
     LayoutGrid: LayoutGrid,
     Ticket: Ticket,
-    CalendarDays
+    CalendarDays: CalendarDays,
+    BadgeIndianRupee: BadgeIndianRupee,
+    BusFront: BusFront,
+    Hotel: Hotel,
+    Headset: Headset,
 }
