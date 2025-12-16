@@ -20,7 +20,7 @@ const Header: React.FC = () => {
     const breadCrumbs = getBreadCrumbs(pathName);
 
     return (
-        <div className='w-full flex gap-2 items-center'>
+        <div className='w-full flex gap-2 items-center bg-background'>
             <SidebarTrigger />
 
             <Separator orientation="vertical"  className='h-6!' />

@@ -1,15 +1,16 @@
 import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { CreateTourFormType, PackageFormType } from '@/module/tours/utils/schema';
-import TourFormCardWrapper from '../../tour-form-card-wrapper';
-import { Button } from '@/components/ui/button';
-import CollapsibleComponent from '@/components/ui/collapsible/index';
-import { Typography } from '@/components/ui/typography';
+import { TourStarHirarchyOptions } from '@/constants/selectOptions';
+
 import Icon from '@/components/icons';
 import InputField from '@/components/form/input-field';
 import CounterInput from '@/components/form/counter-input';
 import SelectField from '@/components/form/select-field';
-import { TourStarHirarchyOptions } from '@/constants/selectOptions';
+import TourFormCardWrapper from '../../tour-form-card-wrapper';
+import CollapsibleComponent from '@/components/ui/collapsible/index';
+import { Button } from '@/components/ui/button';
+import { Typography } from '@/components/ui/typography';
 
 const DEFAULT_PACKAGE : PackageFormType = {
     name: "",
@@ -18,7 +19,7 @@ const DEFAULT_PACKAGE : PackageFormType = {
     startCity: "",
     endCity: "",
     pricePerPerson: 0,
-    starHierarchy: 0,
+    starHierarchy: 1,
     hotels: [],
 }
 
@@ -41,6 +42,7 @@ const TourFormPackageSection: React.FC = () => {
                     className='text-xs'
                     onClick={() => append(DEFAULT_PACKAGE)}
                 >
+                    <Icon name="Plus" />
                     Add Packge
                 </Button>
             }
@@ -59,7 +61,7 @@ const TourFormPackageSection: React.FC = () => {
                                         type='button'
                                         size="sm"
                                         onClick={() => remove(index)}
-                                        className='bg-green-400 hover:bg-green-400/80 h-8'
+                                        className='bg-green-400 text-foreground hover:bg-green-400/80 h-8'
                                     >
                                         Save
                                     </Button>
@@ -68,6 +70,8 @@ const TourFormPackageSection: React.FC = () => {
                                         variant="outline"
                                         type='button'
                                         onClick={() => remove(index)}
+                                        className='text-destructive border-none'
+                                        disabled={fields.length === 1}
                                     >
                                         <Icon name="Trash2" width={16} height={16}  />
                                     </Button>
@@ -75,7 +79,7 @@ const TourFormPackageSection: React.FC = () => {
                             </div>
                         ),
                         children: (
-                            <div className='flex flex-col gap-4'>
+                            <div className='flex flex-col gap-4 border-t pt-6 pb-3'>
                                 <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                                     <Controller
                                         control={control}

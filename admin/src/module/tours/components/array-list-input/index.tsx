@@ -62,7 +62,7 @@ const ArrayListInput = <T extends FieldValues>({
                         variant="outline"
                         size="icon"
                         onClick={() => handleRemove(0)}
-                        className="shrink-0 text-destructive border-0 shadow-none hover:text-foreground/60"
+                        className='text-destructive border-none'
                     >
                         <Icon name='Trash2' width={16} height={16} stroke='currentColor' />
                     </Button>
@@ -80,7 +80,7 @@ const ArrayListInput = <T extends FieldValues>({
                             variant="outline"
                             size="icon"
                             onClick={() => handleRemove(index + 1)}
-                            className="shrink-0 text-destructive border-0 shadow-none hover:text-foreground/60"
+                            className='text-destructive border-none'
                         >
                             <Icon name='Trash2' width={16} height={16} stroke='currentColor' />
                         </Button>
@@ -89,9 +89,9 @@ const ArrayListInput = <T extends FieldValues>({
             </div>
             <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 onClick={handleAdd}
-                className="w-fit text-primary hover:text-foreground/60"
+                className="w-fit border-none"
             >
                 <Icon name='Plus' width={16} height={16} />
                 Add Item

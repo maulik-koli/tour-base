@@ -12,7 +12,7 @@ interface TourFormCardWrapperProps {
 
 const TourFormCardWrapper: React.FC<TourFormCardWrapperProps> = ({ cardTitle, children, contentClassName, headerNode }) => {
     return (
-        <Card className='gap-2.5'>
+        <Card className='gap-2.5 shadow-none border border-border'>
             <CardHeader className={cn(headerNode && "flex items-center justify-between")}>
                 <CardTitle className={typographyVariants({ variant: 'h4' })}>{cardTitle}</CardTitle>
                 {headerNode}

@@ -24,8 +24,8 @@ const TourCard: React.FC<TourCardProps> = ({ tour, className }) => {
     }
 
     return (
-        <div className={cn('w-full flex flex-col rounded-md border hover:shadow-lg', className)}>
-            <div className='relative w-full aspect-6/3 bg-muted rounded-t-md'>
+        <div className={cn('w-full flex flex-col rounded-md border hover:shadow-lg bg-card', className)}>
+                    <div className='relative w-full aspect-6/3 bg-muted rounded-t-md'>
                 <Image
                     // src="/placeholder.jpg"
                     src={tour.image}

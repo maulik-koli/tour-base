@@ -72,14 +72,14 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
     return (
         <div className='flex flex-col gap-1.5'>
             {label && <FieldLabel>{label}</FieldLabel>}
-            <div className="w-full border border-border rounded-md bg-background">
-                <div className="flex gap-2 bg-secondary/30 rounded-t-md p-2 border-b border-border">
+            <div className="w-full border border-border rounded-md bg-card">
+                <div className="flex gap-2 bg-secondary/50 rounded-t-md p-2 border-b border-border">
                     <Button
                         type="button"
                         size="icon"
                         variant="outline"
                         onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={cn(active.bold ? "bg-accent text-accent-foreground" : "bg-background")}
+                        className={cn(active.bold && "bg-primary/30 text-secondary-foreground")}
                     >
                         <Icon name="Bold" width={16} height={16} />
                     </Button>
@@ -89,7 +89,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
                         size="icon"
                         variant="outline"
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        className={cn(active.bulletList ? "bg-accent text-accent-foreground" : "bg-background")}
+                        className={cn(active.bulletList && "bg-primary/30 text-secondary-foreground")}
                     >
                         <Icon name="List" width={16} height={16} />
                     </Button>
@@ -99,7 +99,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
                         size="icon"
                         variant="outline"
                         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        className={cn(active.orderedList ? "bg-accent text-accent-foreground" : "bg-background")}
+                        className={cn(active.orderedList && "bg-primary/30 text-secondary-foreground")}
                     >
                         <Icon name="ListOrdered" width={16} height={16} />
                     </Button>
