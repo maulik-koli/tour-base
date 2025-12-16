@@ -49,7 +49,7 @@ const AppSidebar: React.FC = () => {
     return (
        <Sidebar collapsible="icon">
             <SidebarHeader>
-                <div className="bg-blue-200 flex items-center justify-center p-4">Logo</div>
+                <div className="bg-blue-900 flex items-center justify-center p-4 rounde-xl text-primary-foreground">Logo</div>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>

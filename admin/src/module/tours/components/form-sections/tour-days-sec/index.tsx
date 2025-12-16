@@ -37,12 +37,13 @@ const ToursFormDaysSections: React.FC = () => {
                     type='button'
                     onClick={() => append(DEFAILT_DAY_PLAN)}
                 >
+                    <Icon name="Plus" />
                     Add Day
                 </Button>
             }
         >
             <CollapsibleComponent
-                items={fields.map((field, index) => {
+                items={fields.map((_, index) => {
                     return {
                         label: (
                             <div className='flex items-center justify-between'>
@@ -52,13 +53,15 @@ const ToursFormDaysSections: React.FC = () => {
                                     variant="outline"
                                     type='button'
                                     onClick={() => remove(index)}
+                                    className='text-destructive border-none'
+                                    disabled={fields.length === 1}
                                 >
                                     <Icon name="Trash2" width={16} height={16}  />
                                 </Button>
                             </div>
                         ),
                         children: (
-                            <div className='flex flex-col gap-4'>
+                            <div className='flex flex-col gap-4 pb-2'>
                                 <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                                     <Controller
                                         control={control}

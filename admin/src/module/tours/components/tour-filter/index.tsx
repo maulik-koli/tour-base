@@ -12,7 +12,7 @@ const TourFilter: React.FC = () => {
     const [selectedCategory, setSelectedCategory] = React.useState<string>(SortingOptions[0].value);
 
     return (
-        <div className='w-full flex justify-between items-center gap-6'>
+        <div className='w-full flex justify-between items-center gap-6 bg-card border border-border rounded-md p-3'>
             <InputField 
                 onChange={(value) => setSearchTour(value)}
                 value={searchTour}
