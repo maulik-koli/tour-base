@@ -25,3 +25,19 @@ export const DURATION_OPTIONS_VALUES = [
     "1-3", "4-7", "8-14", "15+"
 ] as const;
 export type DurationOptionsType = typeof DURATION_OPTIONS_VALUES[number];
+
+
+
+export const CATEGORY_OPTIONS = [
+    { label: "Adventure", value: "adventure" },
+    { label: "Cultural", value: "cultural" },
+    { label: "Relaxation", value: "relaxation" },
+    { label: "Wildlife", value: "wildlife" },
+    { label: "Spiritual", value: "spiritual" },
+    { label: "Nature", value: "nature" },
+];
+
+export const CATEGORY_OPTIONS_VALUES = [
+    "adventure", "cultural", "relaxation", "wildlife", "spiritual", "nature"
+] as const;
+export type CategoryOptionsType = typeof CATEGORY_OPTIONS_VALUES[number];
