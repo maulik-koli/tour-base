@@ -1,6 +1,8 @@
 import express from "express";
-import { createTourController, deleteTourController, getAdminToursListController, getTourController, updateTourController } from "./tour.controller";
-import { createTourSchema, tourListAdminQueriesZodSchema, tourZodSchema } from "./tour.schema";
+import { 
+    createTourController, deleteTourController, getAdminToursListController, getTourAdminController, getTourController, getToursListController, updateTourController
+} from "./tour.controller";
+import { createTourSchema, tourListAdminQueriesZodSchema, tourListQueriesZodSchema, tourZodSchema } from "./tour.schema";
 import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 
@@ -8,22 +10,22 @@ const router = express.Router();
 
 router.post(
     "/", 
-    validateRequest(createTourSchema), 
     authMiddleware, 
+    validateRequest(createTourSchema), 
     createTourController
 );
 
 router.get(
     "/list", 
-    validateQuery(tourListAdminQueriesZodSchema), 
     authMiddleware, 
+    validateQuery(tourListAdminQueriesZodSchema), 
     getAdminToursListController
 );
 
 router.put(
     "/:slug", 
-    validateRequest(tourZodSchema), 
     authMiddleware, 
+    validateRequest(tourZodSchema), 
     updateTourController
 );
 
@@ -34,8 +36,25 @@ router.delete(
 );
 
 
+router.get(
+    "/admin/:slug", 
+    authMiddleware, 
+    getTourAdminController
+);
+
 // public routes
-router.get("/:slug", getTourController);
+router.get(
+    "/", 
+    validateQuery(tourListQueriesZodSchema),
+    getToursListController
+);
+
+
+router.get(
+    "/:slug", 
+    getTourController
+)
+
 
 
 export default router;

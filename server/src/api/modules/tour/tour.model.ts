@@ -1,12 +1,10 @@
 import { Document, model, Schema, Types } from "mongoose";
 import { slugify } from "./tour.utils";
-import { keyof } from "zod";
 
 export interface IDayDetail {
-    dayNumber: number;
     title: string;
     subtitle: string | null;
-    description: string | null; // might also html string
+    description: string;
 }
 
 interface DayDetailsDocument extends IDayDetail, Document {
@@ -16,12 +14,13 @@ interface DayDetailsDocument extends IDayDetail, Document {
 export interface ITour {
     name: string;
     slug: string;
+    tagLine: string;
     description: string; // html string of whole tour
     includes: string[];
     excludes: string[];
+    categories: Types.ObjectId[];
 
     dayPlans: IDayDetail[]; // all day plans
-    packages: Types.ObjectId[];
     isActive: boolean;
 
     images: string[];
@@ -45,7 +44,6 @@ export type TourFields = keyof TourLean;
 
 
 const dayDetailsSchema = new Schema<DayDetailsDocument>({
-    dayNumber: { type: Number, required: true },
     title: { type: String, required: true },
     subtitle: { type: String, default: null },
     description: { type: String, default: null },
@@ -57,9 +55,11 @@ const dayDetailsSchema = new Schema<DayDetailsDocument>({
 
 const tourSchema = new Schema<TourDocument>({
     name: { type: String, required: true },
+    tagLine: { type: String, required: true },
     description: { type: String, required: true },
     includes: { type: [String], required: true },
     excludes: { type: [String], required: true },
+    categories: { type: [Schema.Types.ObjectId], ref: 'Category', default: [] },
 
     slug: { type: String, required: true, unique: true },
 

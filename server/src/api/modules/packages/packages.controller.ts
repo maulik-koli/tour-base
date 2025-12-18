@@ -2,11 +2,10 @@ import { createPackage, deletePackageById, getPackagesByTourId, updatePackage } 
 import { getTourBySlug } from "../tour/tour.service";
 import { PackagePayload } from "./packages.schema";
 import { asyncWrapper } from "@/api/utils/apiHelper";
-import { log } from "@/api/utils/log";
 
 
 export const getPackagesOfTourController = asyncWrapper(async (req, res) => {
-    const { slug } = req.params;
+    const slug = req.params.slug;
 
     const tour = await getTourBySlug(slug,  ["slug"]);
     const packages = await getPackagesByTourId(tour._id);
@@ -19,12 +18,15 @@ export const getPackagesOfTourController = asyncWrapper(async (req, res) => {
 });
 
 
-export const addPackageController = asyncWrapper(async (req, res) => {
-    const { slug } = req.params;
+export const createPackageController = asyncWrapper(async (req, res) => {
+    const slug = req.params.slug;
     const payload = req.body as PackagePayload;
 
-    const tour = await getTourBySlug(slug,  ["slug"]);
-    const newPackage = await createPackage(tour._id, payload);
+    const tour = await getTourBySlug(slug,  ["slug", "dayPlans"]);
+
+    const newPackage = await createPackage(payload, {
+        tourId: tour._id, numberOfDays: tour.dayPlans.length
+    });
 
     return res.status(201).json({
         status: 201,
@@ -35,7 +37,7 @@ export const addPackageController = asyncWrapper(async (req, res) => {
 
 
 export const updatePackageController = asyncWrapper(async (req, res) => {
-    const { packageId } = req.params;
+    const packageId = req.params.packageId;
     const payload = req.body as PackagePayload;
 
     const updatedPackage = await updatePackage(packageId, payload);
@@ -49,7 +51,7 @@ export const updatePackageController = asyncWrapper(async (req, res) => {
 
 
 export const removePackageFromTourController = asyncWrapper(async (req, res) => {
-    const { packageId } = req.params;
+    const packageId = req.params.packageId;
 
     const deletedPackage = await deletePackageById(packageId);
 

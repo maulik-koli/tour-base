@@ -48,7 +48,7 @@ export const updateCategory = async (category: CategoryDocument, payload: Update
 
 
 export const deleteCategory = async (categoryId: string) => {
-    const tourCounts = await Tour.countDocuments({ category: categoryId });
+    const tourCounts = await Tour.countDocuments({ categories: categoryId });
 
     if (tourCounts > 0) {
         throw new CustomError(
