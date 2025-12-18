@@ -1,5 +1,7 @@
 import express from "express";
-import { addPackageController, getPackagesOfTourController, removePackageFromTourController, updatePackageController } from "./packages.controller";
+import { 
+    createPackageController, getPackagesOfTourController, removePackageFromTourController, updatePackageController
+} from "./packages.controller";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 import { validateRequest } from "@/api/middlewares/validate.middlewate";
 import { packageZodSchema } from "./packages.schema";
@@ -14,15 +16,15 @@ router.get(
 
 router.post(
     "/:slug", 
-    validateRequest(packageZodSchema), 
     authMiddleware, 
-    addPackageController
+    validateRequest(packageZodSchema), 
+    createPackageController
 );
 
 router.put(
     "/:packageId", 
-    validateRequest(packageZodSchema), 
     authMiddleware, 
+    validateRequest(packageZodSchema), 
     updatePackageController
 );
 

@@ -5,7 +5,6 @@ export interface IHotelPlan {
     hotelName: string;
     city: string;
     nightNo: number;
-    dayNo: number;
 }
 
 interface HotelPlanDocument extends IHotelPlan, Document {
@@ -43,7 +42,6 @@ const hotelSchema = new Schema<HotelPlanDocument>({
     hotelName: { type: String, required: true },
     city: { type: String, required: true },
     nightNo: { type: Number, required: true },
-    dayNo: { type: Number, required: true },
 }, {
     versionKey: false,
     _id: false,

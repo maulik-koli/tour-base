@@ -1,11 +1,12 @@
-export const ADMIN_SORT_MAP = [
+
+export const ADMIN_SORT_VALUE = [
     "createdAt_desc",
     "createdAt_asc",
     "updatedAt_desc",
     "updatedAt_asc",
 ] as const;
 
-type AdminSortField = typeof ADMIN_SORT_MAP[number];
+type AdminSortField = typeof ADMIN_SORT_VALUE[number];
 
 export const ADMIN_SORT_FIELD_MAP: Record<AdminSortField, any> = {
     createdAt_desc: { createdAt: -1 },
@@ -13,6 +14,38 @@ export const ADMIN_SORT_FIELD_MAP: Record<AdminSortField, any> = {
     updatedAt_desc: { updatedAt: -1 },
     updatedAt_asc: { updatedAt: 1 },
 }
+
+
+export const SORT_VALUE = [
+    "name_asc",
+    "price_asc",
+    "price_desc",
+    "duration_asc",
+    "duration_desc"
+] as const;
+export type SortField = typeof SORT_VALUE[number];
+
+export const SORT_FIELD_MAP: Record<SortField, any> = {
+    name_asc: { name: 1 },
+    price_asc: { minPackagePrice: 1 },
+    price_desc: { maxPackagePrice: -1 },
+    duration_asc: { minPackageDays: 1 },
+    duration_desc: { maxPackageDays: -1 },
+}
+
+
+export const DURATION_VALUE = [
+    "1-3", "4-7", "8-14", "15+", "none"
+] as const;
+export type DurationType = typeof DURATION_VALUE[number];
+
+export const DURATION_MAP: Record<DurationType, any> = {
+    "1-3": { $gte: 1, $lte: 3 },
+    "4-7": { $gte: 4, $lte: 7 },
+    "8-14": { $gte: 8, $lte: 14 },
+    "15+": { $gte: 15 },
+    "none": {},
+};
 
 
 export const slugify = (text: string): string => {
@@ -26,18 +59,12 @@ export const slugify = (text: string): string => {
 
 export const isHtmlContentEmpty = (html: string): boolean => {
     if (!html) return true;
-    
-    const div = document.createElement('div');
-    div.innerHTML = html;
-  
-    const text = div.textContent?.replace(/\u200B/g, '').trim() || '';
-    
-    const htmlContent = div.innerHTML.trim();
-    const hasOnlyEmptyTags = htmlContent === '' || 
-                            htmlContent === '<p></p>' || 
-                            htmlContent === '<p><br></p>' ||
-                            !!htmlContent.match(/^<p>\s*<\/p>$/) ||
-                            !!htmlContent.match(/^<p><br><\/p>$/);
-    
-    return text === '' || hasOnlyEmptyTags;
+
+    const textOnly = html
+        .replace(/<[^>]*>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/\u200B/g, '')
+        .trim();
+
+  return textOnly.length === 0;
 };

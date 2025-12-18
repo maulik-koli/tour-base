@@ -1,6 +1,14 @@
 import z from "zod";
+import { Types } from "mongoose";
 import { packageZodSchema } from "../packages/packages.schema";
-import { ADMIN_SORT_MAP } from "./tour.utils";
+import { ADMIN_SORT_VALUE, DURATION_VALUE, isHtmlContentEmpty, SORT_VALUE } from "./tour.utils";
+
+
+const mongooseIdSchema = z
+        .string()
+        .refine((val) => Types.ObjectId.isValid(val), {
+            message: 'Invalid ID',
+        });
 
 
 const listOfStringsSchema = z.array(
@@ -11,19 +19,25 @@ const listOfStringsSchema = z.array(
 
 
 const dayDetailsZodSchema = z.object({
-    dayNumber: z.number(),
     title: z.string().min(3, 'Title must be at least 3 characters').trim(),
     subtitle: z.string().nullable(),
-    description: z.string().nullable(),
-});
+    description: z.string().min(10, 'Description must be at least 10 characters').trim(),
+})
+.refine((data) => !isHtmlContentEmpty(data.description), {
+    message: 'Description cannot be empty',
+    path: ['description'],
+})
+
 
 
 export const tourZodSchema = z.object({
     name: z.string().min(3, 'Name must be at least 3 characters').trim(),
+    tagLine: z.string().min(5, 'Tag line must be at least 5 characters').trim(),
     description: z.string().min(10, 'Description must be at least 10 characters').trim(),
     includes: listOfStringsSchema,
     excludes: listOfStringsSchema,
-
+    categories: z.array(mongooseIdSchema),
+    
     dayPlans: z.array(dayDetailsZodSchema),
     isActive: z.boolean(),
 
@@ -40,18 +54,27 @@ export const createTourSchema = z.object({
 
 
 export const tourListAdminQueriesZodSchema = z.object({
-    page: z.string()
-        .default("1")
-        .transform((val) => Number(val)),
-    limit: z.string()
-        .default("18")
-        .transform((val) => Number(val)),
+    search: z.string().trim().optional().transform(s => s === '' ? undefined : s),
+    sort: z.enum(ADMIN_SORT_VALUE).default("updatedAt_desc"),
 
-    search: z.string().optional(),
-    sort: z.enum(ADMIN_SORT_MAP).optional(),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(15),
+});
+
+
+export const tourListQueriesZodSchema = z.object({
+    search: z.string().trim().optional().transform(s => s === '' ? undefined : s),
+    sort: z.enum(SORT_VALUE).default("name_asc"),
+    maxPrice: z.coerce.number().min(0).optional(),
+    duration: z.enum(DURATION_VALUE).default("none"),
+    category: z.string().trim().optional().transform(c => c === '' ? undefined : c),
+
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(15),
 });
 
 
 export type TourPayload = z.infer<typeof tourZodSchema>;
 export type CreateTourPayload = z.infer<typeof createTourSchema>;
 export type TourListAdminQueries = z.infer<typeof tourListAdminQueriesZodSchema>;
+export type TourListQueries = z.infer<typeof tourListQueriesZodSchema>;

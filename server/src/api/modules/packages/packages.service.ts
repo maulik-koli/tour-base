@@ -1,5 +1,6 @@
 import mongoose, { Types } from "mongoose";
 import Package from "./packages.model";
+import Tour from "../tour/tour.model";
 import { PackagePayload } from "./packages.schema";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
@@ -9,23 +10,36 @@ type AddPackageTourType = {
     numberOfDays: number;
 }
 
+const validatePackages = function(packages: PackagePayload[], tourDays: number) {
+    const invalidPackages = packages
+        .filter(pckg => {
+            const invalidByDays = pckg.days > tourDays;
+            
+            const hotelsNightCount = pckg.hotels.reduce((total, hotel) => total + hotel.nightNo, 0);
+            let invalidByNights = hotelsNightCount !== pckg.nights;
+
+            log.info('in the add packages', { invalidByDays, invalidByNights })
+            return invalidByDays || invalidByNights;
+        })
+        .map(pckg => pckg.name);
+
+    log.info('Invalid Packages:', invalidPackages);
+
+    if (invalidPackages.length > 0) {
+        throw new CustomError(
+            400, 
+            `Number of days or nights are mismatch. Please check number of days plan with package days or number of total hotels nights with package nights.`
+        );
+    }
+}
+
 
 export const addPakagesToTour = async (
     tour: AddPackageTourType, 
     packages: PackagePayload[],
     session?: mongoose.ClientSession
 ) => {
-
-    const invalidPackages = packages
-        .filter(pckg => pckg.days > tour.numberOfDays)
-        .map(pckg => pckg.name);
-
-    if (invalidPackages.length > 0) {
-        throw new CustomError(
-            400, 
-            `Number of days and tour days mismatch in the following packages: ${invalidPackages.join(', ')}`
-        );
-    }
+    validatePackages(packages, tour.numberOfDays);
 
     const packagesData = packages.map(pckg => ({
         ...pckg,
@@ -36,33 +50,48 @@ export const addPakagesToTour = async (
 };
 
 
-export const createPackage = async (tourId: Types.ObjectId, packagePayload: PackagePayload) => {
-    const newPackage = new Package({ ...packagePayload, tourId });
+export const getPackagesByTourId = async (tourId: Types.ObjectId) => {
+    const packages = await Package.find({ tourId }).lean();
+    return packages;
+}
+
+
+export const createPackage = async (packagePayload: PackagePayload, tour: AddPackageTourType) => {
+    validatePackages([packagePayload], tour.numberOfDays);
+
+    const newPackage = new Package({ ...packagePayload, tourId: tour.tourId });
     const savedPackage = await newPackage.save();
+    
     return savedPackage.toObject();
 };
 
 
 export const updatePackage = async (packageId: string, packagePayload: PackagePayload) => {
-    const id = new mongoose.Types.ObjectId(packageId);
+    const existingPackage = await Package.findById(packageId)
+        .select("tourId")
+        .lean();
+
+    if (!existingPackage) {
+        throw new CustomError(404, "Package not found");
+    }
+
+    const tour = await Tour.findById(existingPackage.tourId)
+        .select("dayPlans")
+        .lean();
+
+    if (!tour) {
+        throw new CustomError(404, "Parent tour not found");
+    }
+
+    validatePackages([packagePayload], tour.dayPlans.length);
 
     const updatedPackage = await Package.findByIdAndUpdate(
-        id,
+        packageId,
         { $set: packagePayload },
         { new: true }
     ).lean();
 
-    if (!updatedPackage) {
-        throw new CustomError(404, 'Package not found');
-    }
-
     return updatedPackage;
-}
-
-
-export const getPackagesByTourId = async (tourId: Types.ObjectId) => {
-    const packages = await Package.find({ tourId }).lean();
-    return packages;
 }
 
 
