@@ -11,6 +11,7 @@ import TourFormCardWrapper from '../../tour-form-card-wrapper';
 import CollapsibleComponent from '@/components/ui/collapsible/index';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
+import HotelInput from '../../hotel-inpput';
 
 const DEFAULT_PACKAGE : PackageFormType = {
     name: "",
@@ -129,7 +130,7 @@ const TourFormPackageSection: React.FC = () => {
                                                     label="Package Price"
                                                     placeholder="Enter package price per person"
                                                     onChange={(value) => field.onChange(Number(value))}
-                                                    value={field.value.toString()}
+                                                    value={String(field.value)}
                                                     errMsg={fieldState.error?.message}
                                                 />
                                             )}
@@ -166,7 +167,7 @@ const TourFormPackageSection: React.FC = () => {
                                     <Controller
                                         control={control}
                                         name={`packages.${index}.starHierarchy`}
-                                        render={({ field, fieldState }) => (
+                                        render={({ field }) => (
                                             <SelectField
                                                 label="Star"
                                                 options={TourStarHirarchyOptions}
@@ -177,6 +178,7 @@ const TourFormPackageSection: React.FC = () => {
                                         )}
                                     />
                                 </div>
+                                <HotelInput packageIndex={index} />
                             </div>
                         )
                     }

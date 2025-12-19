@@ -1,14 +1,14 @@
 import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { DayDetailsType, TourFormType } from '@/module/tours/utils/schema';
+import { CreateTourFormType, DayDetailsType, TourFormType } from '@/module/tours/utils/schema';
 
 import Icon from '@/components/icons';
 import TourFormCardWrapper from '@/module/tours/components/tour-form-card-wrapper'
 import InputField from '@/components/form/input-field';
 import RichTextEditor from '@/module/tours/components/rich-text-editor';
+import CollapsibleComponent from '@/components/ui/collapsible/index';
 import { Button } from '@/components/ui/button';
 import { Typography } from '@/components/ui/typography';
-import CollapsibleComponent from '@/components/ui/collapsible/index';
 
 const DEFAILT_DAY_PLAN: DayDetailsType = {
     subtitle: '',
@@ -18,11 +18,11 @@ const DEFAILT_DAY_PLAN: DayDetailsType = {
 
 
 const ToursFormDaysSections: React.FC = () => {
-    const { control } = useFormContext<TourFormType>();
+    const { control } = useFormContext<CreateTourFormType>();
 
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'dayPlans',
+        name: 'tour.dayPlans',
     });
 
 
@@ -65,7 +65,7 @@ const ToursFormDaysSections: React.FC = () => {
                                 <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                                     <Controller
                                         control={control}
-                                        name={`dayPlans.${index}.title`}
+                                        name={`tour.dayPlans.${index}.title`}
                                         render={({ field, fieldState }) => (
                                             <InputField
                                                 label="Title"
@@ -78,12 +78,12 @@ const ToursFormDaysSections: React.FC = () => {
                                     />
                                     <Controller
                                         control={control}
-                                        name={`dayPlans.${index}.subtitle`}
+                                        name={`tour.dayPlans.${index}.subtitle`}
                                         render={({ field, fieldState }) => (
                                             <InputField
                                                 label="Subtitle"
                                                 placeholder="Enter day subtitle"
-                                                onChange={field.onChange}
+                                                onChange={(value) => field.onChange(value || null)}
                                                 value={field.value || ""}
                                                 errMsg={fieldState.error?.message}
                                             />
@@ -92,7 +92,7 @@ const ToursFormDaysSections: React.FC = () => {
                                 </div>
                                 <Controller
                                     control={control}
-                                    name={`dayPlans.${index}.description`}
+                                    name={`tour.dayPlans.${index}.description`}
                                     render={({ field }) => (
                                         <RichTextEditor
                                             label="Description"

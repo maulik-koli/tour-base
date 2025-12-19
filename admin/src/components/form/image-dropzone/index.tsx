@@ -59,7 +59,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
                             fill
                             crop="fill"
                             alt=""
-                            sizes="100vw"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className='rounded-xl'
                         />
                     </div>

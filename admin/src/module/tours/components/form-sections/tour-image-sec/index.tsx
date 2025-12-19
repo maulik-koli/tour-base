@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { CreateTourFormType, TourFormType } from '../../../utils/schema'
+import { CreateTourFormType } from '../../../utils/schema'
 
 import ImageDropzone from '@/components/form/image-dropzone'
 import TourFormCardWrapper from '../../tour-form-card-wrapper'
