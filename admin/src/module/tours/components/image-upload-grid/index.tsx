@@ -2,7 +2,7 @@ import React from 'react'
 import { CldImage } from 'next-cloudinary';
 import { useController, useFormContext } from 'react-hook-form'
 import { useUploadImage } from '@/hooks/useUploadImage';
-import { TourFormType } from '../../utils/schema';
+import { CreateTourFormType } from '../../utils/schema';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
@@ -13,11 +13,11 @@ import { Button } from '@/components/ui/button';
 
 
 const ImageUploadGrid: React.FC = () => {
-    const  { control }  = useFormContext<TourFormType>();
+    const  { control }  = useFormContext<CreateTourFormType>();
 
     const { field } = useController({
         control,
-        name: "images",
+        name: "tour.images",
     });
 
     const values = (field.value || []) as string[];
@@ -91,7 +91,7 @@ const ImageUploadGrid: React.FC = () => {
                                 fill
                                 crop="fill"
                                 alt=""
-                                sizes="100vw"
+                                sizes="(max-width: 768px) 100vw, 50vw"
                                 className='rounded-lg'
                             />
                             {/* Remove Button */}

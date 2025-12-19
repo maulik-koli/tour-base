@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { CustomError, errorResponse } from '../utils/response';
 import { log } from '../utils/log';
 import { logger } from '../utils/logger';
+import { ADMIN_AUTH } from '../modules/admin/admin.utils';
 
 
 export const globalErrorHandler  = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -32,6 +33,10 @@ export const globalErrorHandler  = (err: any, req: Request, res: Response, next:
         code: status,
         // stack: err.stack,
     });
+
+    if(status === 401) {
+        res.clearCookie(ADMIN_AUTH.COOKIE_NAME)
+    }
 
     errorResponse(res, { status, message });
 };

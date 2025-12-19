@@ -1,3 +1,6 @@
+import dayjs from "dayjs"
+import utc from 'dayjs/plugin/utc';
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -16,3 +19,9 @@ export const logger = (text: string, data: any): void => {
 
   console.log(`%c${text}`, style, data)
 }
+
+dayjs.extend(utc);
+
+export const formatDate = (time: string) => dayjs
+  .utc(time)
+  .format('DD MMM YYYY');

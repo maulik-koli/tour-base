@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator'
 import { FieldLabel } from '@/components/ui/field'
 import { Typography } from '@/components/ui/typography'
 import { Switch } from '@/components/ui/switch'
-import { CreateTourFormType, TourFormType } from '../../../utils/schema'
+import { CreateTourFormType } from '../../../utils/schema'
 
 
 const TourOverviewSection: React.FC = () => {
@@ -35,13 +35,25 @@ const TourOverviewSection: React.FC = () => {
                     <InputField
                         label="YouTube Video URL"
                         placeholder="https://www.youtube.com/watch?v=..."
-                        onChange={field.onChange}
-                        value={field.value || ""}
+                        onChange={(value) => field.onChange(value !== '' ? value : null)}
+                        value={field.value || ''}
                     />
                 )}
             />
-            <Separator className='col-span-2' />
-            <div className='flex justify-between items-center'>
+            <Controller
+                control={control}
+                name='tour.tagLine'
+                render={({ field, fieldState }) => (
+                    <InputField
+                        label="Tour Tag Line"
+                        placeholder="Enter tour tag line"
+                        onChange={field.onChange}
+                        value={field.value}
+                        errMsg={fieldState.error?.message}
+                    />
+                )}
+            />
+            <div className='flex justify-between items-center bg-primary/10 p-2 rounded-md '>
                 <div className='flex flex-col gap-1'>
                     <FieldLabel>Tour Status</FieldLabel>
                     <Typography variant="small">Tour is visible to customers</Typography>
@@ -50,7 +62,7 @@ const TourOverviewSection: React.FC = () => {
                     control={control}
                     name='tour.isActive'
                     render={({ field }) => (
-                        <Switch checked={field.value} onCheckedChange={field.onChange} />
+                        <Switch checked={field.value || false} onCheckedChange={field.onChange} />
                     )}
                 />
             </div>

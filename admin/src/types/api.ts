@@ -9,3 +9,12 @@ export interface ApiError {
     status: number;
     message: string;
 }
+
+export type PaginationType = {
+    page: number;
+    limit: number;
+    totalPages: number;
+    totalItems: number;
+    isPrevPage: boolean;
+    isNextPage: boolean;
+}

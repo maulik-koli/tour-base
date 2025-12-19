@@ -17,7 +17,7 @@ interface InputFieldProps extends Omit<React.ComponentProps<"input">, "onChange"
 
 
 const InputField: React.FC<InputFieldProps> = ({ 
-    type, onChange, label, labelNode, errMsg, containerClass, leftIcon, rightIcon, className, ...props
+    type = "text", onChange, label, labelNode, errMsg, containerClass, leftIcon, rightIcon, className, ...props
 }) => {
     return (
         <div className={cn('flex flex-col gap-1.5', containerClass)}>
@@ -41,6 +41,7 @@ const InputField: React.FC<InputFieldProps> = ({
                         className
                     )}
                     {...props}
+                    value={props.value || ""}
                 />
                 {rightIcon && (
                     <div className='absolute right-3 text-muted-foreground'>

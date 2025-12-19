@@ -1,10 +1,11 @@
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { CreateTourFormType, TourFormType } from '@/module/tours//utils/schema'
+import { CreateTourFormType } from '@/module/tours//utils/schema'
 
 import TourFormCardWrapper from '@/module/tours/components/tour-form-card-wrapper'
 import ArrayListInput from '@/module/tours/components/array-list-input'
 import TextareaComponent from '@/components/form/textarea'
+import TagInputs from '../../tag-input'
 
 
 const TourDetailsSection: React.FC = () => {
@@ -26,6 +27,7 @@ const TourDetailsSection: React.FC = () => {
                     />
                 )}
             />
+            <TagInputs label='Categories' />
             <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                 <ArrayListInput
                     control={control}
