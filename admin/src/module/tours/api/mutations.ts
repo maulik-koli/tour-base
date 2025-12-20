@@ -1,23 +1,22 @@
 import { useMutation, UseMutationOptions } from "@tanstack/react-query";
 import { safeAxios } from "@/lib/api/axios";
-import { login } from "./apis";
+import { createTour } from "./apis";
 
-import { LoginPayload, LoginResponse } from "./types";
+import { CreateTourResponse, CreateToutPayload } from "./types";
 import { ApiResponse, ApiError } from "@/types/api";
 import { MUTATION_REGISTRY } from "@/constants/apiRegistery";
 
 
-export const useAdminLogin = (
+export const useCreateTour = (
     options?: UseMutationOptions<
-        ApiResponse<LoginResponse>,
+        ApiResponse<CreateTourResponse>,
         ApiError,
-        LoginPayload
+        CreateToutPayload
     >
 ) => {
-    
     return useMutation({
-        mutationKey: [MUTATION_REGISTRY.login],
-        mutationFn: (payload) => safeAxios(() => login(payload)),
+        mutationKey: [MUTATION_REGISTRY.createTour],
+        mutationFn: (payload) => safeAxios(() => createTour(payload)),
         ...options,
     });
-};
+}

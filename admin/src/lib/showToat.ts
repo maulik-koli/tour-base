@@ -2,19 +2,19 @@
 import { toast } from "sonner";
 
 interface ToastOptions {
-    title: string;
-    description?: string;
     actionLabel?: string;
     action?: () => void;
 }
 
 const base = (
     type: "success" | "error" | "info" | "warning",
-    options: ToastOptions
+    title: string, 
+    description?: string,
+    options?: ToastOptions
 ) => {
-    toast[type](options.title, {
-        description: options.description,
-        action: options.actionLabel
+    toast[type](title, {
+        description: description,
+        action: options?.actionLabel
         ? {
             label: options.actionLabel,
             onClick: options.action!,
@@ -25,13 +25,21 @@ const base = (
 
 
 export const showToast = {
-    success: (opts: ToastOptions) => base("success", opts),
+    success: (
+        title: string, description?: string, options?: ToastOptions
+    ) => base("success", title, description, options),
 
-    error: (opts: ToastOptions) => base("error", opts),
+    error: (
+        title: string, description?: string, options?: ToastOptions
+    ) => base("error", title, description, options),
 
-    info: (opts: ToastOptions) => base("info", opts),
+    info: (
+        title: string, description?: string, options?: ToastOptions
+    ) => base("info", title, description, options),
 
-    warning: (opts: ToastOptions) => base("warning", opts),
+    warning: (
+        title: string, description?: string, options?: ToastOptions
+    ) => base("warning", title, description, options),
 
     loading: (message: string = "Loading...") => toast.loading(message),
 

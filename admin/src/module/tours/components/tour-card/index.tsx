@@ -7,7 +7,7 @@ import { cn, formatDate } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import { TourListType } from '../../apis/types'
+import { TourListType } from '../../api/types'
 import FallbackImage from '@/components/fallback-image'
 
 interface TourCardProps {
@@ -64,4 +64,4 @@ const TourCard: React.FC<TourCardProps> = ({ tour, className }) => {
     )
 }
 
-export default TourCard
+export default React.memo(TourCard)

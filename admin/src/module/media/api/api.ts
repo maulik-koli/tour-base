@@ -1,23 +1,10 @@
 import axios from "axios";
-import api from "@/lib/axios";
-import { 
-    CloudinaryUploadPayload,
-    CloudinaryUploadResponse, CreateTourResponse, CreateToutPayload, GetTourResponse, GetToursParams, MediaSignatureResponse, MediaUploadPayload
-} from "./types";
+import api from "@/lib/api/axios";
 import { ApiResponse } from "@/types/api";
+import { 
+    CloudinaryUploadPayload, CloudinaryUploadResponse, MediaSignatureResponse, MediaUploadPayload 
+} from "./types";
 import { logger } from "@/lib/utils";
-
-
-export const createTour = async (payload: CreateToutPayload): Promise<ApiResponse<CreateTourResponse>> => {
-    const res = await api.post("/tour", payload);
-    return res.data;
-}
-
-export const getTours = async (params?: GetToursParams): Promise<ApiResponse<GetTourResponse>> => {
-    const res = await api.get("/tour/list", { params });
-    return res.data;
-}
-
 
 export const createSignature = async (payload: MediaUploadPayload): Promise<ApiResponse<MediaSignatureResponse>> => {
     const res = await api.post("/media/signature", payload);

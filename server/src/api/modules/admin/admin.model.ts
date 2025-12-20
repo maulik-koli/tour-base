@@ -1,6 +1,5 @@
 import mongoose, { Document, Schema, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { log } from '@/api/utils/log';
 
 export interface IAdmin {
     name: string;
@@ -45,9 +44,6 @@ adminSchema.pre('save', async function () {
 
 
 adminSchema.methods.comparePassword = async function (candidatePassword: string) {
-    log.info('Comparing password', {
-        cp: candidatePassword, tp: this.password
-    });
     return await bcrypt.compare(candidatePassword, this.password);
 };
 

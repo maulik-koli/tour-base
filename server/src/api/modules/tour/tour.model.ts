@@ -61,7 +61,7 @@ const tourSchema = new Schema<TourDocument>({
     excludes: { type: [String], required: true },
     categories: { type: [Schema.Types.ObjectId], ref: 'Category', default: [] },
 
-    slug: { type: String, required: true, unique: true },
+    slug: { type: String, required: true },
 
     dayPlans: { type: [dayDetailsSchema], required: true },
     isActive: { type: Boolean, required: true },
@@ -100,7 +100,7 @@ tourSchema.pre("findOneAndUpdate", function (this) {
 })
 
 
-tourSchema.index({ slug: 1 });
+tourSchema.index({ slug: 1 }, { unique: true });
 
 const Tour = model<TourDocument>("Tour", tourSchema);
 
