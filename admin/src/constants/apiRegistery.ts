@@ -5,7 +5,7 @@ export const QUERY_REGISTRY = {
     getTours : "get-tours",
 }
 
-export const MUSTAION_REGISTRY = {
+export const MUTATION_REGISTRY = {
     login: 'admin-login',
     createSignature: "get-media-signature",
     uploadToCloudinary: "upload-to-cloudinary",

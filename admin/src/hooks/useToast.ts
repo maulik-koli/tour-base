@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import { toast } from "sonner"
 
-interface ActioonOption {
+interface ActionOption {
     actionLabel?: string;
     action?: () => void;
 }
@@ -14,7 +14,7 @@ export const useToast = () => {
         type: "success" | "error" | "info" | "warning",
         title: string, 
         description?: string, 
-        action?: ActioonOption
+        action?: ActionOption
     ) => {
         toast[type](title, {
             description: description,
@@ -28,19 +28,19 @@ export const useToast = () => {
     };
 
     const success = (
-        title: string, description?: string, action?: ActioonOption
+        title: string, description?: string, action?: ActionOption
     ) => base("success", title, description, action);
 
     const error = (
-        title: string, description?: string, action?: ActioonOption
+        title: string, description?: string, action?: ActionOption
     ) => base("error", title, description, action);
 
     const info = (
-        title: string, description?: string, action?: ActioonOption
+        title: string, description?: string, action?: ActionOption
     ) => base("info", title, description, action);
     
     const warning = (
-        title: string, description?: string, action?: ActioonOption
+        title: string, description?: string, action?: ActionOption
     ) => base("warning", title, description, action);
 
     const loading = (message: string = "Loading...") => {

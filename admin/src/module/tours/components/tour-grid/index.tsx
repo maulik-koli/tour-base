@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import TourCard from '../tour-card'
 import TourFilter from '../tour-filter'
-import { TOURS } from '../../utils/tempConst'
 import { useDebounce } from '@/hooks/useDebounce'
-import { useGetTours } from '../../apis/queries'
+import { useGetTours } from '../../api/queries'
+import { useToast } from '@/hooks/useToast'
+import { logger } from '@/lib/utils'
+import { CustomSpinner } from '@/components/ui/spinner'
+import Icon from '@/components/icons'
+import { Typography } from '@/components/ui/typography'
+import ErrorBlock from '@/components/error-block'
 
 export type FilterType = {
     search: string | undefined;
@@ -21,13 +26,10 @@ const TourGrid: React.FC = () => {
 
     const debouncedSearch = useDebounce(filters.search, 300);
 
-    const { data, error, isLoading, refetch } = useGetTours({
+    const { data, error, isLoading } = useGetTours({
         search: debouncedSearch,
         sort: filters.sort,
     });
-    // here we call the list api and all
-    // pass the query params to the tour filter if there is any
-    // have to wrapp the grid componetn with memo to avoid re rendering on filter change
 
     const handleFilterChange = (name: FilterFields, value: string | undefined) => {
         setFilters((prev) => ({
@@ -36,21 +38,28 @@ const TourGrid: React.FC = () => {
         }));
     }
 
-    useEffect(() => {
-        refetch();
-    }, [debouncedSearch, filters.sort]);
 
     const getContent = () => {
         if (isLoading) {
-            return <div>Loading...</div>;
+            return <CustomSpinner 
+                className='w-full min-h-80 flex items-center justify-center' 
+            />
         }
 
         if (error) {
-            return <div>Error loading tours.</div>;
+            return <ErrorBlock 
+                type='error' 
+                message={error.message} 
+                description='Please try again later.'
+            />;
         }
 
         if(!data || (data && data.data?.tours.length === 0)) {
-            return <div>No tours found.</div>;
+            return <ErrorBlock 
+                type='no-data'
+                message='No tours found.'
+                description='Please change your search criteria or create a new tour.'
+            />
         }
 
         return (

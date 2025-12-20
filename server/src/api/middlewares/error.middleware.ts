@@ -35,7 +35,11 @@ export const globalErrorHandler  = (err: any, req: Request, res: Response, next:
     });
 
     if(status === 401) {
-        res.clearCookie(ADMIN_AUTH.COOKIE_NAME)
+        res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
+            httpOnly: true,
+            secure: true,
+            sameSite: "strict",
+        })
     }
 
     errorResponse(res, { status, message });

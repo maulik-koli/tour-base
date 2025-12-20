@@ -3,13 +3,10 @@ import { ADMIN_AUTH, AdminAuth } from "../modules/admin/admin.utils";
 
 import { asyncWrapper } from "../utils/apiHelper";
 import { CustomError } from "../utils/response";
-import { log } from "../utils/log";
 
 
 export const authMiddleware = asyncWrapper(async (req, res, next) => {
     const token = req.cookies[ADMIN_AUTH.COOKIE_NAME];
-
-    log.info('checking in middleware', token);
 
     if (!token) {
         throw new CustomError(401, "Admin token is required");

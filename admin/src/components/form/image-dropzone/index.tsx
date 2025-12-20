@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { CldImage } from 'next-cloudinary';
-import { useUploadImage } from '@/hooks/useUploadImage';
+import { useUploadImage } from '@/module/media/utils/useUploadImage';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';

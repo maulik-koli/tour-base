@@ -5,11 +5,12 @@ import {
 import { getPackagesByTourId } from "../packages/packages.service";
 
 import { asyncWrapper } from "@/api/utils/apiHelper";
-import { successResponse } from "@/api/utils/response";
+import { CustomError, successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 
 
 export const createTourController = asyncWrapper(async (req, res) => {
+    throw new CustomError(401, "checking unauthorized");
     const payload = req.body as CreateTourPayload;
 
     const newTour = await createTour(payload);

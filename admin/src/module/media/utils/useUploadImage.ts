@@ -3,8 +3,8 @@ import { useDropzone } from "react-dropzone";
 import { AxiosError } from "axios";
 
 import { logger } from "@/lib/utils";
-import { UPLOAD_CONFIG, UploadConfigsType } from "@/lib/mediaUpload";
-import { useCreateSignature, useUploadToCloudinary } from "@/module/tours/apis/mutations";
+import { UPLOAD_CONFIG, UploadConfigsType } from "@/module/media/utils/mediaUpload";
+import { useCreateSignature, useUploadToCloudinary } from "@/module/media/api/mutations";
 
 type UseUploadImageArgs = {
     imageType: UploadConfigsType;

@@ -15,7 +15,7 @@ import {
     ToursFormDaysSections
 } from '../form-sections'
 import { logger } from '@/lib/utils'
-import { useCreateTour } from '../../apis/mutations'
+import { useCreateTour } from '../../api/mutations'
 import { useToast } from '@/hooks/useToast'
 import { useRouter } from 'next/navigation'
 

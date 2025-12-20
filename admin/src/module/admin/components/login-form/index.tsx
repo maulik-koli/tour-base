@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/useToast"
 import { LoginPayload } from "../../api/types"
 import { flatZodError } from "@/lib/flatZodError"
 import { adminLoginSchema, loginFormDefaultValues } from "../../utils/schema"
-import { logger } from "@/lib/utils"
 
 import InputField from "@/components/form/input-field"
 import { Button } from "@/components/ui/button"
@@ -32,10 +31,6 @@ const Loginform : React.FC = () => {
         toast.success(data.message)
         router.push('/')
       },
-      onError: (error) => {
-        logger('errror in onsubmit', error)
-        toast.error(error.message)
-      }
     })
   }
 

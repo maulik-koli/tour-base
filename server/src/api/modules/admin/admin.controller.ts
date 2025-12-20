@@ -58,7 +58,11 @@ export const adminLogoutController = asyncWrapper(async (req, res) => {
     admin.token = null;
     await admin.save();
 
-    res.clearCookie(ADMIN_AUTH.COOKIE_NAME);
+    res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+    });
 
     successResponse(res, {
         status: 200,
@@ -118,7 +122,11 @@ export const adminChangePasswordController = asyncWrapper(async (req, res) => {
     admin.token = null;
     await admin.save();
 
-    res.clearCookie(ADMIN_AUTH.COOKIE_NAME);
+    res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
+        httpOnly: true,
+        secure: true,
+        sameSite: "strict",
+    });
 
     successResponse(res, {
         status: 200,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { CldImage } from 'next-cloudinary';
 import { useController, useFormContext } from 'react-hook-form'
-import { useUploadImage } from '@/hooks/useUploadImage';
+import { useUploadImage } from '@/module/media/utils/useUploadImage';
 import { CreateTourFormType } from '../../utils/schema';
 import { cn } from '@/lib/utils';
 

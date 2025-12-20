@@ -36,4 +36,4 @@ const TourFilter: React.FC<TourFilterProps> = ({ filter, onChange }) => {
     )
 }
 
-export default TourFilter
+export default React.memo(TourFilter)
