@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
-import TourHeader from '@/module/tours/components/tour-header'
-import TourGrid from '@/module/tours/components/tour-grid'
+import TourHeader from '@module/tours/components/tour-header'
+import TourGrid from '@module/tours/components/tour-grid'
 
 
 const TourPage: React.FC = () => {

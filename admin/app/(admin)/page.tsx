@@ -1,5 +1,5 @@
-import { Typography } from '@/components/ui/typography'
 import React from 'react'
+import { Typography } from '@ui/typography'
 
 const DashboardPage: React.FC = () => {
     return (

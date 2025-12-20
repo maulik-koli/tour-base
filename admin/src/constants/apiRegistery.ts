@@ -3,6 +3,7 @@ export const COOKIE_NAME = "__secure-atkn"
 
 export const QUERY_REGISTRY = {
     getTours : "get-tours",
+    getCategoryOptions: "get-category-options",
 }
 
 export const MUTATION_REGISTRY = {

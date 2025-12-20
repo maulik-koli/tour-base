@@ -1,13 +1,12 @@
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
+import { CreateTourFormType } from '@module/tours/utils/schema'
 
-import TourFormCardWrapper from '../../tour-form-card-wrapper'
-import InputField from '@/components/form/input-field'
-import { Separator } from '@/components/ui/separator'
-import { FieldLabel } from '@/components/ui/field'
-import { Typography } from '@/components/ui/typography'
-import { Switch } from '@/components/ui/switch'
-import { CreateTourFormType } from '../../../utils/schema'
+import TourFormCardWrapper from '../tour-form-card-wrapper'
+import { InputField } from '@/components/form'
+import { FieldLabel } from '@ui/field'
+import { Typography } from '@ui/typography'
+import { Switch } from '@ui/switch'
 
 
 const TourOverviewSection: React.FC = () => {

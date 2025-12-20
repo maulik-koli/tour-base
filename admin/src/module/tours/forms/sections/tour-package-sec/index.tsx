@@ -1,17 +1,15 @@
 import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { CreateTourFormType, PackageFormType } from '@/module/tours/utils/schema';
+import { CreateTourFormType, PackageFormType } from '@module/tours/utils/schema';
 import { TourStarHirarchyOptions } from '@/constants/selectOptions';
 
 import Icon from '@/components/icons';
-import InputField from '@/components/form/input-field';
-import CounterInput from '@/components/form/counter-input';
-import SelectField from '@/components/form/select-field';
-import TourFormCardWrapper from '../../tour-form-card-wrapper';
-import CollapsibleComponent from '@/components/ui/collapsible/index';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
-import HotelInput from '../../hotel-inpput';
+import TourFormCardWrapper from '../tour-form-card-wrapper';
+import CollapsibleComponent from '@ui/collapsible/index';
+import { InputField, CounterInput, SelectField } from '@/components/form';
+import { HotelInput } from '@module/tours/forms/fields';
+import { Button } from '@ui/button';
+import { Typography } from '@ui/typography';
 
 const DEFAULT_PACKAGE : PackageFormType = {
     name: "",

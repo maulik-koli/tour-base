@@ -1,14 +1,14 @@
 "use client"
 import React from 'react'
-import { Typography } from '@/components/ui/typography'
+import { useRouter } from 'next/navigation'
+import { cn, formatDate } from '@/lib/utils'
+import { TourListType } from '@module/tours/api/types'
 
 import Icon from '@/components/icons'
-import { cn, formatDate } from '@/lib/utils'
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
-import { TourListType } from '../../api/types'
 import FallbackImage from '@/components/fallback-image'
+import { Typography } from '@ui/typography'
+import { Separator } from '@ui/separator'
+import { Button } from '@ui/button'
 
 interface TourCardProps {
     tour: TourListType
@@ -46,9 +46,11 @@ const TourCard: React.FC<TourCardProps> = ({ tour, className }) => {
                         <Icon name="Package" width={16} height={16} stroke="currentColor" />
                         <Typography variant="small">{tour.packagesCount} Packages</Typography>
                     </div>
-                    <div className='flex gap-2 items-center'>
+                    <div className='flex gap-1 items-center'>
                         <Icon name="IndianRupee" width={16} height={16} stroke="currentColor" />
-                        <Typography variant="small">{tour.minPrice} - {tour.maxPrice}</Typography>
+                        <Typography variant="small">
+                            {tour.minPrice === tour.maxPrice ? tour.minPrice : `${tour.minPrice} - ${tour.maxPrice}`}
+                        </Typography>
                     </div>
                 </div>
                 <Separator />

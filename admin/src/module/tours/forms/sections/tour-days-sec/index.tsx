@@ -1,14 +1,14 @@
 import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { CreateTourFormType, DayDetailsType, TourFormType } from '@/module/tours/utils/schema';
+import { CreateTourFormType, DayDetailsType } from '@module/tours/utils/schema';
 
 import Icon from '@/components/icons';
-import TourFormCardWrapper from '@/module/tours/components/tour-form-card-wrapper'
-import InputField from '@/components/form/input-field';
-import RichTextEditor from '@/module/tours/components/rich-text-editor';
-import CollapsibleComponent from '@/components/ui/collapsible/index';
-import { Button } from '@/components/ui/button';
-import { Typography } from '@/components/ui/typography';
+import CollapsibleComponent from '@ui/collapsible/index';
+import TourFormCardWrapper from '../tour-form-card-wrapper'
+import { RichTextEditor } from '@module/tours/forms/fields';
+import { InputField } from '@/components/form';
+import { Button } from '@ui/button';
+import { Typography } from '@ui/typography';
 
 const DEFAILT_DAY_PLAN: DayDetailsType = {
     subtitle: '',

@@ -32,12 +32,12 @@ const FallbackImage: React.FC<CldImageProps> = (props) => {
         };
     }, []);
 
+
     const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
         e.preventDefault();
         e.stopPropagation();
         setImageError(true);
     }
-
 
     return (
         <CldImage

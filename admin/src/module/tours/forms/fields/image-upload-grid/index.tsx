@@ -1,15 +1,15 @@
 import React from 'react'
 import { CldImage } from 'next-cloudinary';
 import { useController, useFormContext } from 'react-hook-form'
-import { useUploadImage } from '@/module/media/utils/useUploadImage';
-import { CreateTourFormType } from '../../utils/schema';
+import { useUploadImage } from '@module/media/utils/useUploadImage';
+import { CreateTourFormType } from '@module/tours/utils/schema';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
-import { FieldDescription, FieldLabel } from '@/components/ui/field'
-import { CustomSpinner } from '@/components/ui/spinner';
-import { Typography } from '@/components/ui/typography';
-import { Button } from '@/components/ui/button';
+import { FieldDescription, FieldLabel } from '@ui/field'
+import { CustomSpinner } from '@ui/spinner';
+import { Typography } from '@ui/typography';
+import { Button } from '@ui/button';
 
 
 const ImageUploadGrid: React.FC = () => {
@@ -21,7 +21,6 @@ const ImageUploadGrid: React.FC = () => {
     });
 
     const values = (field.value || []) as string[];
-
 
     const handleRemove = (index: number) => {
         const newValues = values.filter((_, i) => i !== index);
@@ -46,7 +45,6 @@ const ImageUploadGrid: React.FC = () => {
         },
     });
     
-
 
     return (
         <div className='flex flex-col gap-1.5'>

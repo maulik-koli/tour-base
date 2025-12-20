@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useGetTours } from '@module/tours/api/queries'
+import { useDebounce } from '@/hooks/useDebounce'
+
 import TourCard from '../tour-card'
 import TourFilter from '../tour-filter'
-import { useDebounce } from '@/hooks/useDebounce'
-import { useGetTours } from '../../api/queries'
-import { useToast } from '@/hooks/useToast'
-import { logger } from '@/lib/utils'
-import { CustomSpinner } from '@/components/ui/spinner'
-import Icon from '@/components/icons'
-import { Typography } from '@/components/ui/typography'
 import ErrorBlock from '@/components/error-block'
+import { CustomSpinner } from '@ui/spinner'
 
 export type FilterType = {
     search: string | undefined;
