@@ -2,67 +2,51 @@
 import React, { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateTourFormType, createTourSchema, defaultTourFormValues } from '../../utils/schema'
+import { useToast } from '@/hooks/useToast'
+import { CreateTourFormType, createTourSchema, defaultTourFormValues } from '@module/tours/utils/schema'
+import { flatZodError } from '@/lib/flatZodError'
 
 import Icon from '@/components/icons'
-import TourFormPackageSection from '../form-sections/tour-package-sec'
-import { Typography } from '@/components/ui/typography'
-import { Button } from '@/components/ui/button'
+import TourFormPackageSection from '../sections/tour-package-sec'
+import { Typography } from '@ui/typography'
+import { Button } from '@ui/button'
 import { 
     TourOverviewSection, 
     TourDetailsSection, 
     TourImageSection,
     ToursFormDaysSections
-} from '../form-sections'
+} from '../sections'
 import { logger } from '@/lib/utils'
-import { useCreateTour } from '../../api/mutations'
-import { useToast } from '@/hooks/useToast'
-import { useRouter } from 'next/navigation'
 
 
-const CreateTourForm: React.FC = () => {
-    const router = useRouter();
-    const { mutate, isPending } = useCreateTour();
-    const toast = useToast();
+interface CreateTourFormProps {
+    onSubmit: (data: CreateTourFormType) => void
+}
 
+
+const CreateTourForm: React.FC<CreateTourFormProps> = ({ onSubmit }) => {
     const form = useForm<CreateTourFormType>({
         resolver: zodResolver(createTourSchema),
         mode: 'onSubmit',
         defaultValues: defaultTourFormValues
     })
 
-    
+    const toast = useToast();
+
     useEffect(() => {
         if(Object.keys(form.formState.errors).length > 0) {
-            logger("data", form.getValues());
-            logger("error", form.formState.errors);
+            logger("Form data", form.getValues())
+            const error = flatZodError(createTourSchema, form.getValues())
+            if(error) toast.error(error)
         }
     }, [form.formState.errors]);
-
-
-    const onSumbit = (data: CreateTourFormType) => {
-        logger("data onSumbit", data);
-        mutate(data, {
-            onSuccess: (res) => {
-                toast.success("Tour created successfully!");
-                logger("Create Tour Response", res);
-                router.push(`/tours`);
-            },
-            onError: (err) => {
-                toast.error(err.message || "Failed to create tour. Please try again.");
-                logger("Create Tour Error", err);
-            }
-        })
-    }
-
-    toast.isLoading(isPending, "Creating Tour...");
 
     
     return (
         <>
             <div className='flex items-center justify-between'>
                 <Typography variant="h1">Create Tour</Typography>
-                <Button type='submit' onClick={form.handleSubmit(onSumbit)}>
+                <Button type='submit' onClick={form.handleSubmit(onSubmit)}>
                     <Icon name='Save' className='mr-2' />
                     Save Tour
                 </Button>

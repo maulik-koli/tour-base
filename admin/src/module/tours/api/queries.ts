@@ -21,8 +21,6 @@ export const useGetTours = (
         queryFn: () => safeAxios(() => getTours(params)),
         staleTime: 1000 * 60,
         retry: false,
-        retryOnMount: false,
-        refetchOnWindowFocus: false,
         ...options,
     });
 };

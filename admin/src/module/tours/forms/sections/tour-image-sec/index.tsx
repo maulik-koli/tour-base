@@ -1,11 +1,11 @@
 "use client"
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
-import { CreateTourFormType } from '../../../utils/schema'
+import { CreateTourFormType } from '@module/tours/utils/schema'
 
-import ImageDropzone from '@/components/form/image-dropzone'
-import TourFormCardWrapper from '../../tour-form-card-wrapper'
-import ImageUploadGrid from '../../image-upload-grid'
+import TourFormCardWrapper from '../tour-form-card-wrapper'
+import { ImageUploadGrid } from '@module/tours/forms/fields'
+import { ImageDropzone } from '@/components/form'
 
 
 const TourImageSection: React.FC = () => {

@@ -3,8 +3,8 @@ import React from 'react'
 import { useRouter } from 'next/navigation' 
 
 import Icon from '@/components/icons'
-import { Button } from '@/components/ui/button'
-import { Typography } from '@/components/ui/typography'
+import { Button } from '@ui/button'
+import { Typography } from '@ui/typography'
 
 
 const TourHeader: React.FC = () => {

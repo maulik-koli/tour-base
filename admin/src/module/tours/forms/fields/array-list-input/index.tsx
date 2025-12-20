@@ -1,8 +1,8 @@
 import { Control, FieldValues, Path, useController } from 'react-hook-form'
 import { cn } from '@/lib/utils';
 
-import InputField from '@/components/form/input-field';
 import Icon from '@/components/icons';
+import InputField from '@/components/form/input-field';
 import { Button } from '@/components/ui/button';
 import { FieldLabel } from '@/components/ui/field';
 

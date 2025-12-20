@@ -1,8 +1,9 @@
 import React from 'react'
+import { CreateTourFormType, HotelFormType } from '../../../utils/schema'
+
+import Icon from '@/components/icons'
 import { FieldLabel } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
-import Icon from '@/components/icons'
-import { CreateTourFormType, HotelFormType } from '../../utils/schema'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
 import { Typography } from '@/components/ui/typography'
 import InputField from '@/components/form/input-field'
