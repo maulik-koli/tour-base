@@ -1,11 +1,11 @@
 import React from 'react'
-import { CldImage } from 'next-cloudinary';
 import { useController, useFormContext } from 'react-hook-form'
 import { useUploadImage } from '@module/media/utils/useUploadImage';
 import { CreateTourFormType } from '@module/tours/utils/schema';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
+import FallbackImage from '@/components/fallback-image';
 import { FieldDescription, FieldLabel } from '@ui/field'
 import { CustomSpinner } from '@ui/spinner';
 import { Typography } from '@ui/typography';
@@ -84,7 +84,7 @@ const ImageUploadGrid: React.FC = () => {
                             key={index}
                             className="group relative max-h-40 aspect-square bg-muted rounded-lg overflow-hidden border border-border "
                         >
-                            <CldImage 
+                            <FallbackImage 
                                 src={value}
                                 fill
                                 crop="fill"

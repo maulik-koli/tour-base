@@ -3,8 +3,10 @@ import React, { useEffect } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/useToast'
+import { useSubmitTour } from '@module/tours/hooks/useSubmitTour'
 import { CreateTourFormType, createTourSchema, defaultTourFormValues } from '@module/tours/utils/schema'
 import { flatZodError } from '@/lib/flatZodError'
+
 
 import Icon from '@/components/icons'
 import TourFormPackageSection from '../sections/tour-package-sec'
@@ -19,18 +21,14 @@ import {
 import { logger } from '@/lib/utils'
 
 
-interface CreateTourFormProps {
-    onSubmit: (data: CreateTourFormType) => void
-}
-
-
-const CreateTourForm: React.FC<CreateTourFormProps> = ({ onSubmit }) => {
+const CreateTourForm: React.FC = () => {
     const form = useForm<CreateTourFormType>({
         resolver: zodResolver(createTourSchema),
         mode: 'onSubmit',
         defaultValues: defaultTourFormValues
     })
 
+    const { onCreateSubmit } = useSubmitTour();
     const toast = useToast();
 
     useEffect(() => {
@@ -46,7 +44,7 @@ const CreateTourForm: React.FC<CreateTourFormProps> = ({ onSubmit }) => {
         <>
             <div className='flex items-center justify-between'>
                 <Typography variant="h1">Create Tour</Typography>
-                <Button type='submit' onClick={form.handleSubmit(onSubmit)}>
+                <Button type='submit' onClick={form.handleSubmit(onCreateSubmit)}>
                     <Icon name='Save' className='mr-2' />
                     Save Tour
                 </Button>

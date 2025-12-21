@@ -1,7 +1,10 @@
 import React from 'react'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { CreateTourFormType, PackageFormType } from '@module/tours/utils/schema';
+import { Controller, set, useFieldArray, useFormContext } from 'react-hook-form';
+import { CreateTourFormType } from '@module/tours/utils/schema';
+import { DEFAULT_PACKAGE } from '@module/packages/utils/schema';
 import { TourStarHirarchyOptions } from '@/constants/selectOptions';
+import { usePackageActions } from '@module/packages/hooks/usePackageActions';
+import { PackageFieldType } from '@module/packages/utils/helper';
 
 import Icon from '@/components/icons';
 import TourFormCardWrapper from '../tour-form-card-wrapper';
@@ -11,35 +14,69 @@ import { HotelInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
 
-const DEFAULT_PACKAGE : PackageFormType = {
-    name: "",
-    days: 0,
-    nights: 0,
-    startCity: "",
-    endCity: "",
-    pricePerPerson: 0,
-    starHierarchy: 1,
-    hotels: [],
+interface TourFormPackageSectionProps {
+    type?: 'create' | 'update';
 }
 
 
-const TourFormPackageSection: React.FC = () => {
-    const { control } = useFormContext<CreateTourFormType>();
+const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = "create" }) => {
+    const { control, getValues, setValue } = useFormContext<CreateTourFormType>();
     
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'packages',
     });
+
+    const { 
+        handleAddPackage, 
+        handleUpdatePackage, 
+        handleDeletePackage, 
+        isLoading 
+    } = usePackageActions();
+
+    const isUpdateMode = type === 'update';
+
+    const handleSavePackage = async (index: number) => {
+        const data = getValues(`packages.${index}`) as PackageFieldType;
+
+        if(isUpdateMode) {
+            const isAddPckage = !data._id;
+
+            if(isAddPckage) {
+                const resData = await handleAddPackage(data);
+
+                if(resData) setValue(`packages.${index}`, resData);
+            } else {
+                const resData = await handleUpdatePackage(data);
+                if(resData) setValue(`packages.${index}`, resData);
+            }
+        }
+    }
+
+    const handleRemovePackage = async (index: number) => {
+        const data = getValues(`packages.${index}`) as PackageFieldType;
+
+        if(isUpdateMode && data._id) {
+            await handleDeletePackage(data._id);
+            remove(index);
+        }
+        else {
+            remove(index);
+        }
+    }
     
+
     return (
         <TourFormCardWrapper 
             cardTitle="Packages" 
             contentClassName='flex flex-col gap-4'
+            isChildrenEmpty={fields.length === 0}
             headerNode={
                 <Button
                     type='button'
                     className='text-xs'
                     onClick={() => append(DEFAULT_PACKAGE)}
+                    disabled={isUpdateMode && isLoading}
                 >
                     <Icon name="Plus" />
                     Add Packge
@@ -55,22 +92,26 @@ const TourFormPackageSection: React.FC = () => {
                                     Package No. {index + 1}
                                 </Typography>
                                 <div className='flex items-center gap-2 w-fit'>
-                                    <Button
-                                        variant="secondary"
-                                        type='button'
-                                        size="sm"
-                                        onClick={() => remove(index)}
-                                        className='bg-green-400 text-foreground hover:bg-green-400/80 h-8'
-                                    >
-                                        Save
-                                    </Button>
+                                    {isUpdateMode && (
+                                        <Button
+                                            variant="secondary"
+                                            type='button'
+                                            size="sm"
+                                            onClick={() => handleSavePackage(index)}
+                                            className='bg-green-400 text-foreground hover:bg-green-400/80 h-8'
+                                            disabled={isUpdateMode && isLoading}
+                                        >
+                                            Save
+                                        </Button>
+                                    )}
                                     <Button
                                         size="icon"
                                         variant="outline"
                                         type='button'
-                                        onClick={() => remove(index)}
+                                        onClick={() => handleRemovePackage(index)}
                                         className='text-destructive border-none'
-                                        disabled={fields.length === 1}
+                                        disabled={isUpdateMode && isLoading}
+
                                     >
                                         <Icon name="Trash2" width={16} height={16}  />
                                     </Button>
