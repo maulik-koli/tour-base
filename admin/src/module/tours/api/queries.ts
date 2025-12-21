@@ -1,14 +1,33 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { safeAxios } from "@/lib/api/axios";
-import { getTours } from "./apis";
+import { getTour, getTours } from "./api";
 
-import { GetTourResponse, GetToursParams } from "./types";
+import { GetToursResponse, GetToursParams, GetTourResponse, GetTourParam } from "./types";
 import { ApiError, ApiResponse } from "@/types/api";
 import { QUERY_REGISTRY } from "@/constants/apiRegistery";
 
 
 export const useGetTours = (
     params?: GetToursParams,
+    options?: UseQueryOptions<
+        ApiResponse<GetToursResponse>,
+        ApiError,
+        ApiResponse<GetToursResponse>
+    >,
+): UseQueryResult<ApiResponse<GetToursResponse>, ApiError> => {
+
+    return useQuery({
+        queryKey: [QUERY_REGISTRY.getTours, params],
+        queryFn: () => safeAxios(() => getTours(params)),
+        staleTime: 1000 * 60,
+        retry: false,
+        ...options,
+    });
+};
+
+
+export const useGetTour = (
+    params: GetTourParam,
     options?: UseQueryOptions<
         ApiResponse<GetTourResponse>,
         ApiError,
@@ -18,8 +37,7 @@ export const useGetTours = (
 
     return useQuery({
         queryKey: [QUERY_REGISTRY.getTours, params],
-        queryFn: () => safeAxios(() => getTours(params)),
-        staleTime: 1000 * 60,
+        queryFn: () => safeAxios(() => getTour(params)),
         retry: false,
         ...options,
     });

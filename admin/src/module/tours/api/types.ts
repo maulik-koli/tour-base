@@ -1,13 +1,10 @@
-import { CreateTourFormType } from "../utils/schema";
+import { CreateTourFormType, TourFormType } from "@module/tours/utils/schema";
+import { PackageResponse } from "@module/packages/api/types";
 import { PaginationType } from "@/types/api";
 
 export type CreateToutPayload = CreateTourFormType
 
-export interface CreateTourResponse extends CreateTourFormType {
-    id: string;
-    createdAt: string;
-    updatedAt: string;
-}
+export type CreateTourResponse = null
 
 export type TourListType = {
     _id: string,
@@ -29,7 +26,36 @@ export interface GetToursParams {
     limit?: number;
 }
 
-export interface GetTourResponse {
+export interface GetToursResponse {
     pagination: PaginationType;
     tours: TourListType[];
 }
+
+
+
+interface TourParam {
+    slug: string;
+}
+
+export type GetTourParam = TourParam;
+
+export interface GetTourResponse {
+    tour: TourFormType & {
+        _id: string;
+        slug: string;
+        createdAt: string;
+        updatedAt: string;
+    };
+    packages: PackageResponse[];
+}
+
+export type UpdateTourParam = TourParam;
+
+export type UpdateTourPayload = TourFormType;
+
+export interface UpdateTourResponse extends TourFormType {
+    _id: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
+};

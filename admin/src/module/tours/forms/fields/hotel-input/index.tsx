@@ -1,21 +1,16 @@
 import React from 'react'
-import { CreateTourFormType, HotelFormType } from '../../../utils/schema'
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
+import { CreateTourFormType } from '@module/tours/utils/schema'
 
 import Icon from '@/components/icons'
-import { FieldLabel } from '@/components/ui/field'
-import { Button } from '@/components/ui/button'
-import { Controller, useFieldArray, useFormContext } from 'react-hook-form'
-import { Typography } from '@/components/ui/typography'
-import InputField from '@/components/form/input-field'
+import { InputField } from '@/components/form'
+import { FieldLabel } from '@ui/field'
+import { Button } from '@ui/button'
+import { Typography } from '@ui/typography'
+import { DEFAULT_HOTEL } from '@module/packages/utils/schema'
 
 interface HotelInputProps {
     packageIndex: number;
-}
-
-const DEFAULT_HOTEL: HotelFormType = {
-    city: "",
-    hotelName: "",
-    nightNo: 1,
 }
 
 
@@ -32,7 +27,13 @@ const HotelInput: React.FC<HotelInputProps> = ({ packageIndex }) => {
         <div className='flex flex-col gap-1.5'>
             <div className='flex items-center gap-4'>
                 <FieldLabel className='text-base font-medium text-foreground'>Hotels</FieldLabel>
-                <Button type='button' onClick={() => append(DEFAULT_HOTEL)} variant='outline' size='icon' className='h-7 w-7'>
+                <Button 
+                    type='button'
+                    variant='outline' 
+                    onClick={() => append(DEFAULT_HOTEL)}
+                    size='icon' 
+                    className='h-7 w-7'
+                >
                     <Icon name='Plus' />
                 </Button>
             </div>

@@ -30,6 +30,7 @@ const ToursFormDaysSections: React.FC = () => {
         <TourFormCardWrapper
             cardTitle="Days Plan"
             contentClassName='flex flex-col gap-4'
+            isChildrenEmpty={fields.length === 0}
             headerNode={
                 <Button 
                     size="sm"
@@ -54,14 +55,13 @@ const ToursFormDaysSections: React.FC = () => {
                                     type='button'
                                     onClick={() => remove(index)}
                                     className='text-destructive border-none'
-                                    disabled={fields.length === 1}
                                 >
                                     <Icon name="Trash2" width={16} height={16}  />
                                 </Button>
                             </div>
                         ),
                         children: (
-                            <div className='flex flex-col gap-4 pb-2'>
+                            <div className='space-y-6 pb-2'>
                                 <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
                                     <Controller
                                         control={control}

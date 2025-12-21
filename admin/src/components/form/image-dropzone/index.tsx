@@ -1,13 +1,13 @@
 "use client"
 import React from 'react'
-import { CldImage } from 'next-cloudinary';
 import { useUploadImage } from '@/module/media/utils/useUploadImage';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
-import { FieldDescription, FieldLabel } from '@/components/ui/field';
-import { CustomSpinner } from '@/components/ui/spinner';
-import { Typography } from '@/components/ui/typography';
+import FallbackImage from '@/components/fallback-image';
+import { FieldDescription, FieldLabel } from '@ui/field';
+import { CustomSpinner } from '@ui/spinner';
+import { Typography } from '@ui/typography';
 
 interface ImageDropzoneProps {
     value: string | null;
@@ -54,7 +54,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
                     </div>   
                 ) : previewImage ? (
                     <div className='relative w-full h-full bg-muted rounded-xl'>
-                        <CldImage 
+                        <FallbackImage 
                             src={previewImage}
                             fill
                             crop="fill"

@@ -12,12 +12,12 @@ import { log } from "@/api/utils/log";
 export const createTourController = asyncWrapper(async (req, res) => {
     const payload = req.body as CreateTourPayload;
 
-    const newTour = await createTour(payload);
+    await createTour(payload);
 
     successResponse(res, {
         message: "Tour created successfully",
         status: 201,
-        data: newTour,
+        data: null,
     })
 });
 
