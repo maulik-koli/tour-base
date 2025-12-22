@@ -1,14 +1,8 @@
 'use client'
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { GetToursParams } from "@modules/tours/api/types";
 
-type TourFiltersReturnType = {
-    maxPrice: number | undefined;
-    duration: string | undefined;
-    sort: string | undefined;
-    category: string | undefined;
-    search: string | undefined;
-}
 
 
 export const useTourFilters = () => {
@@ -17,7 +11,7 @@ export const useTourFilters = () => {
     const debourceRef = useRef<NodeJS.Timeout | null>(null);
 
     // url to filter object
-    const filter = useMemo<TourFiltersReturnType>(() => {
+    const filter = useMemo<GetToursParams>(() => {
         return {
             maxPrice: searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : undefined,
             duration: searchParams.get('duration') || undefined,
@@ -25,17 +19,17 @@ export const useTourFilters = () => {
             category: searchParams.get('category') || undefined,
             search: searchParams.get('search') || undefined,
         }
-    }, []);
+    }, [searchParams]);
 
 
-    const [localFilter, setLocalFilter] =  useState<TourFiltersReturnType>(filter);
+    const [localFilter, setLocalFilter] =  useState<GetToursParams>(filter);
 
     useEffect(() => {
         const updatedFilter = {...filter};
         setLocalFilter((pre) => ({...pre, ...updatedFilter}));
     }, [filter]);
 
-    const applyFilters = useCallback((newFilter: TourFiltersReturnType, debounce = true) => {
+    const applyFilters = useCallback((newFilter: GetToursParams, debounce = true) => {
         setLocalFilter(newFilter);
 
         if(debounce) {
@@ -53,7 +47,7 @@ export const useTourFilters = () => {
     }, [])
 
     // value to url
-    const updateUrl = (newFilter: TourFiltersReturnType) => {
+    const updateUrl = (newFilter: GetToursParams) => {
         const params = new URLSearchParams();
 
         if(newFilter.maxPrice) params.set('maxPrice', String(newFilter.maxPrice));

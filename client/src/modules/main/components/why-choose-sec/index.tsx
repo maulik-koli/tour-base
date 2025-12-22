@@ -43,7 +43,7 @@ const WhyChooseUsSections: React.FC = () => {
 
             <div className='w-full flex gap-12 justify-between items-stretch'>
                 {WHY_CHOOSE_US.map((item, index) => (
-                    <div key={index} className='h-full min-h-65 flex flex-col gap-6 items-center w-full bg-card p-6 rounded-lg shadow text-center hover:shadow-md'>
+                    <div key={index} className='h-full min-h-74 flex flex-col gap-6 items-center w-full bg-card p-6 rounded-lg shadow text-center hover:shadow-md'>
                         <div className='w-16 h-16 min-w-16 min-h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center'>
                             <Icon name={item.icon}  width={36} height={36} />
                         </div>

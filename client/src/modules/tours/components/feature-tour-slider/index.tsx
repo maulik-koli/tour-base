@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
-import CardSliderWrapper from '@/modules/main/components/card-slider-wrapper'
-import TourCard from '@/modules/tours/components/tour-card'
-import SectionHeader from '@/modules/main/components/section-header'
-import { DUMMY_TOURS } from '@/modules/tours/api/types'
+import CardSliderWrapper from '@modules/main/components/card-slider-wrapper'
+import TourCard from '@modules/tours/components/tour-card'
+import SectionHeader from '@modules/main/components/section-header'
+import { DUMMY_TOURS } from '@modules/tours/api/types'
 
 
 const FeatureTourSlider: React.FC = () => {

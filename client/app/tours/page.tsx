@@ -1,8 +1,8 @@
 "use client"
 import React from 'react'
-import { Typography } from '@/components/ui/typography'
-import TourFilterHeader from '@/modules/tours/components/tour-filter-header'
-import TourListGrid from '@/modules/tours/components/tour-list-grid'
+import TourFilterHeader from '@modules/tours/components/tour-filter-header'
+import TourListGrid from '@modules/tours/components/tour-list-grid'
+import { Typography } from '@ui/typography'
 
 export type ViewMode = 'grid' | 'list';
 

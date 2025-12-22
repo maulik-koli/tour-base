@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DurationOptionsType, SortOptionsType } from "@/constant/select-options";
+import { DurationOptionsType, SortOptionsType } from "@/constants/select-options";
 
 export type FilterType = {
     sortBy: SortOptionsType; // for now just string then will add enum
