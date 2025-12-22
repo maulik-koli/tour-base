@@ -26,6 +26,8 @@ export interface ITour {
     images: string[];
     thumbnailImage: string;
     youtubeVideoUrl?: string;
+
+    isFeatured: boolean;
 }
 
 export interface TourDocument extends ITour, Document {
@@ -69,6 +71,8 @@ const tourSchema = new Schema<TourDocument>({
     images: { type: [String], required: true },
     thumbnailImage: { type: String, required: true },
     youtubeVideoUrl: { type: String, default: null },
+
+    isFeatured: { type: Boolean, default: false },
 }, {
     timestamps: true,
     versionKey: false
