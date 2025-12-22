@@ -369,3 +369,67 @@ const applySearchFilter = async function(query: TourListQueries, tourMatch: any)
             },
         };
 }
+
+
+export const setFeaturedTour = async (slug: string, isFeatured: boolean) => {
+    const updateFields: any = { isFeatured };
+
+    if (isFeatured) {
+        const count = await Tour.countDocuments({ isFeatured: true });
+        if (count >= 6) {
+            throw new CustomError(400, "Cannot feature more than 6 tours");
+        }
+        updateFields.isActive = true;
+    }
+
+    const tour = await Tour.findOneAndUpdate(
+        { slug },
+        { $set: updateFields },
+        { new: true }
+    ).lean();
+
+    if (!tour) {
+        throw new CustomError(404, "Tour not found");
+    }
+}
+
+
+export const getFeaturedTours = async () => {
+    const tours = await Tour.aggregate([
+        { $match: { isFeatured: true, isActive: true } },
+        {
+            $lookup: {
+                from: "packages",
+                localField: "_id",
+                foreignField: "tourId",
+                as: "packages"
+            }
+        },
+        {
+            $addFields: {
+                minPrice: { $min: "$packages.pricePerPerson" },
+                maxPrice: { $max: "$packages.pricePerPerson" },
+                minDays: { $min: "$packages.days" },
+                maxDays: { $max: "$packages.days" },
+                packageCount: { $size: "$packages" },
+            },
+        },
+        {
+            $project: {
+                name: 1,
+                slug: 1,
+                tagLine: 1,
+                thumbnailImage: 1,
+                minPrice: 1,
+                maxPrice: 1,
+                minDays: 1,
+                maxDays: 1,
+                packageCount: 1,
+                createdAt: 1,
+                updatedAt: 1,
+            }
+        }
+    ]);
+
+    return tours;
+}

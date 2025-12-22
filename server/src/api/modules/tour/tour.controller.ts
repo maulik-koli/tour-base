@@ -1,6 +1,6 @@
 import { CreateTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
 import { 
-    createTour, deleteTour, findTour, getAdminToursList, getTourBySlug, getToursList, updateTour
+    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getTourBySlug, getToursList, setFeaturedTour, updateTour
 } from "./tour.service";
 import { getPackagesByTourId } from "../packages/packages.service";
 
@@ -100,5 +100,30 @@ export const getTourController = asyncWrapper(async (req, res) => {
         message: "Tour fetched successfully",
         status: 200,
         data: { tour, packages },
+    });
+});
+
+
+export const setFeaturedTourController = asyncWrapper(async (req, res) => {
+    const slug = req.params.slug;
+    const { isFeatured } = req.body;
+
+    await setFeaturedTour(slug, isFeatured);
+
+    successResponse(res, {
+        message: "Tour featured status updated successfully",
+        status: 200,
+        data: null,
+    });
+});
+
+
+export const getFeaturedToursController = asyncWrapper(async (req, res) => {
+    const tours = await getFeaturedTours();
+
+    successResponse(res, {
+        message: "Featured tours fetched successfully",
+        status: 200,
+        data: tours,
     });
 });

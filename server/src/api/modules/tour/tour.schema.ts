@@ -65,6 +65,10 @@ export const tourListQueriesZodSchema = z.object({
     limit: z.coerce.number().int().min(1).max(50).default(15),
 });
 
+export const setFeaturedTourZodSchema = z.object({
+    isFeatured: z.boolean(),
+});
+
 
 export type TourPayload = z.infer<typeof tourZodSchema>;
 export type CreateTourPayload = z.infer<typeof createTourSchema>;
