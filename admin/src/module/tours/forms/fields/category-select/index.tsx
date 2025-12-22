@@ -17,27 +17,27 @@ const CategorySelect: React.FC = () => {
         name: 'tour.categories',
     })
     
-    const idValues = field.value as string[];
+    const values = field.value as string[];
 
     const { data, isLoading, error } = useGetCategoryOptions();
 
     const categoryMap = useMemo(() => {
         if (!data?.data) return new Map<string, string>()
-        return new Map(data.data.map(c => [c._id, c.name]))
+        return new Map(data.data.map(c => [c.value, c.name]))
     }, [data])
 
     const displayCategories = useMemo(() => {
-        return idValues.map(id => categoryMap.get(id) ?? id)
-    }, [idValues, categoryMap])
+        return values.map(value => categoryMap.get(value) ?? value)
+    }, [values, categoryMap])
 
 
     const handleAdd = (value: string) => {
-        if(idValues.includes(value)) return;
-        field.onChange([...idValues, value]);
+        if(values.includes(value)) return;
+        field.onChange([...values, value]);
     };
 
     const handleRemove = (index: number) => {
-        field.onChange(idValues.filter((_, i) => i !== index));
+        field.onChange(values.filter((_, i) => i !== index));
     };
 
 
@@ -50,7 +50,7 @@ const CategorySelect: React.FC = () => {
                         <div className='w-full h-full flex items-center justify-center'>
                             <CustomSpinner />
                         </div>   
-                    ) : idValues.length === 0 ? (
+                    ) : values.length === 0 ? (
                         <div className='w-full h-full flex items-center justify-center'>
                             <Typography variant="small" className='font-medium'>Empty</Typography>
                         </div>   
@@ -84,7 +84,7 @@ const CategorySelect: React.FC = () => {
                             onChange={(value) => handleAdd(value)}
                             options={data.data.map((category) => ({
                                 label: category.name,
-                                value: category._id,
+                                value: category.value,
                             }))}
                             value={undefined}
                             placeholder='Select Category'

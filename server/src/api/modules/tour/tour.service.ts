@@ -179,12 +179,14 @@ export const getToursList = async (query: TourListQueries) => {
         isActive: true,
     };
 
+    // SEARCH: Only applies name + pagination, ignores all other filters
     if (search) {
         tourMatch.name = { $regex: search, $options: "i" };
+        return await applySearchFilter(query, tourMatch);
     }
 
     if (category) {
-        tourMatch.categories = new mongoose.Types.ObjectId(category);
+        tourMatch.categories = { $in: [category] };
     }
 
 
@@ -228,6 +230,7 @@ export const getToursList = async (query: TourListQueries) => {
                     $filter: {
                         input: "$packages",
                         as: "pkg",
+                        // If no conditions, include all packages; otherwise apply AND logic
                         cond: packageFilterConditions.length > 0 
                             ? { $and: packageFilterConditions }
                             : true,
@@ -235,6 +238,7 @@ export const getToursList = async (query: TourListQueries) => {
                 },
             },
         },
+        // Only return tours that have at least one matching package
         {
             $match: {
                 "matchedPackages.0": { $exists: true },
@@ -242,17 +246,18 @@ export const getToursList = async (query: TourListQueries) => {
         },
         {
             $addFields: {
-                minPackagePrice: { $min: "$matchedPackages.pricePerPerson" },
-                maxPackagePrice: { $max: "$matchedPackages.pricePerPerson" },
-                minPackageDays: { $min: "$matchedPackages.days" },
-                maxPackageDays: { $max: "$matchedPackages.days" },
+                minPrice: { $min: "$matchedPackages.pricePerPerson" },
+                maxPrice: { $max: "$matchedPackages.pricePerPerson" },
+                minDays: { $min: "$matchedPackages.days" },
+                maxDays: { $max: "$matchedPackages.days" },
+                packageCount: { $size: "$matchedPackages" },
             },
         },
-        { $sort: SORT_FIELD_MAP[sort] },
         {
             $facet: {
                 metadata: [{ $count: "total" }],
                 data: [
+                    { $sort: SORT_FIELD_MAP[sort] },
                     { $skip: skip },
                     { $limit: limit },
                     {
@@ -261,10 +266,11 @@ export const getToursList = async (query: TourListQueries) => {
                             slug: 1,
                             tagLine: 1,
                             thumbnailImage: 1,
-                            minPackagePrice: 1,
-                            maxPackagePrice: 1,
-                            minPackageDays: 1,
-                            maxPackageDays: 1,
+                            minPrice: 1,
+                            maxPrice: 1,
+                            minDays: 1,
+                            maxDays: 1,
+                            packageCount: 1,
                             createdAt: 1,
                             updatedAt: 1,
                         },
@@ -274,7 +280,9 @@ export const getToursList = async (query: TourListQueries) => {
         },
     ];
 
-   const result = await Tour.aggregate(pipeline);
+    const result = await Tour.aggregate(pipeline, {
+        collation: { locale: 'en', strength: 2 }
+    });
 
     const tours = result[0]?.data || [];
     const total = result[0]?.metadata[0]?.total || 0;
@@ -290,4 +298,74 @@ export const getToursList = async (query: TourListQueries) => {
     };
 
     return { tours, pagination };
+}
+
+
+const applySearchFilter = async function(query: TourListQueries, tourMatch: any) {
+    const { page, limit, sort } = query;
+
+    const skip = (page - 1) * limit;
+
+    const pipeline = [
+        { $match: tourMatch },
+        {
+            $lookup: {
+                from: "packages",
+                localField: "_id",
+                foreignField: "tourId",
+                as: "packages",
+            },
+        },
+        {
+            $addFields: {
+                minPrice: { $min: "$packages.pricePerPerson" },
+                maxPrice: { $max: "$packages.pricePerPerson" },
+                minDays: { $min: "$packages.days" },
+                maxDays: { $max: "$packages.days" },
+                packageCount: { $size: "$packages" },
+            },
+        },
+         { $sort: SORT_FIELD_MAP[sort] },
+        {
+            $facet: {
+                metadata: [{ $count: "total" }],
+                data: [
+                    { $skip: skip },
+                    { $limit: limit },
+                    {
+                        $project: {
+                            name: 1,
+                            slug: 1,
+                            tagLine: 1,
+                            thumbnailImage: 1,
+                            minPrice: 1,
+                            maxPrice: 1,
+                            minDays: 1,
+                            maxDays: 1,
+                            packageCount: 1,
+                            createdAt: 1,
+                            updatedAt: 1,
+                        },
+                    },
+                ],
+            },
+        },
+    ];
+
+        const result = await Tour.aggregate(pipeline);
+        const tours = result[0]?.data || [];
+        const total = result[0]?.metadata[0]?.total || 0;
+        const totalPages = Math.ceil(total / limit);
+
+        return {
+            tours,
+            pagination: {
+                page,
+                limit,
+                totalItems: total,
+                totalPages,
+                isNextPage: page < totalPages,
+                isPrevPage: page > 1,
+            },
+        };
 }

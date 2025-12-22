@@ -59,7 +59,7 @@ const tourSchema = new Schema<TourDocument>({
     description: { type: String, required: true },
     includes: { type: [String], required: true },
     excludes: { type: [String], required: true },
-    categories: { type: [Schema.Types.ObjectId], ref: 'Category', default: [] },
+    categories: { type: [String], ref: 'Category', default: [] },
 
     slug: { type: String, required: true },
 

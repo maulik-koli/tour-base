@@ -5,7 +5,7 @@ import { Autoplay } from "swiper/modules";
 import { cn } from '@/lib/utils';
 
 import Image from 'next/image';
-import SectionHeader from '../section-header';
+import SectionHeader from '@modules/main/components/section-header';
 import { Typography } from '@/components/ui/typography';
 
 import "swiper/css";
@@ -58,7 +58,8 @@ export const TOUR_CATEGORIES = [
 ]
 
 
-const ImageSlider: React.FC = () => {
+const CategorySlider: React.FC = () => {
+    // will call api here
     return (
         <section className="w-full py-20 overflow-hidden bg-background">
             <SectionHeader
@@ -111,4 +112,4 @@ const ImageSlider: React.FC = () => {
     )
 }
 
-export default ImageSlider
+export default CategorySlider

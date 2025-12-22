@@ -19,7 +19,6 @@ export const useGetTours = (
     return useQuery({
         queryKey: [QUERY_REGISTRY.getTours, params],
         queryFn: () => safeAxios(() => getTours(params)),
-        staleTime: 1000 * 60,
         retry: false,
         ...options,
     });
