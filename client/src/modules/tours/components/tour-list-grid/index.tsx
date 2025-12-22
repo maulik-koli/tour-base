@@ -2,7 +2,7 @@ import React from 'react'
 import { ViewMode } from '@app/tours/page'
 import { useTourFilters } from '@/hooks/useTourFilters';
 import { useGetTours } from '@modules/tours/api/queries';
-import { cn, logger } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 import TourCard  from '../tour-card';
 import ErrorBlock from '@/components/error-block';
@@ -16,7 +16,6 @@ interface TourListGridProps {
 
 const TourListGrid: React.FC<TourListGridProps> = ({ viewMode }) => {
     const { filter } = useTourFilters()
-    logger('TourListGrid - Current Filters:', filter);
 
     const { data, isLoading, error } = useGetTours({ 
         category: filter.category,

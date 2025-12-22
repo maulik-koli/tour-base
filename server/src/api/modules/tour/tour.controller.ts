@@ -5,7 +5,7 @@ import {
 import { getPackagesByTourId } from "../packages/packages.service";
 
 import { asyncWrapper } from "@/api/utils/apiHelper";
-import { successResponse } from "@/api/utils/response";
+import { CustomError, successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 
 
@@ -94,10 +94,11 @@ export const getTourController = asyncWrapper(async (req, res) => {
     const slug = req.params.slug;
 
     const tour = await findTour(slug);
+    const packages = await getPackagesByTourId(tour._id);
 
     successResponse(res, {
         message: "Tour fetched successfully",
         status: 200,
-        data: tour,
+        data: { tour, packages },
     });
 });

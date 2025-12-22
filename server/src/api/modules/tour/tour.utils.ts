@@ -27,10 +27,10 @@ export type SortField = typeof SORT_VALUE[number];
 
 export const SORT_FIELD_MAP: Record<SortField, any> = {
     name_asc: { name: 1 },
-    price_asc: { minPackagePrice: 1 },
-    price_desc: { maxPackagePrice: -1 },
-    duration_asc: { minPackageDays: 1 },
-    duration_desc: { maxPackageDays: -1 },
+    price_asc: { minPrice: 1 },
+    price_desc: { maxPrice: -1 },
+    duration_asc: { minDays: 1 },
+    duration_desc: { maxDays: -1 },
 }
 
 

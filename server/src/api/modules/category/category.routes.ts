@@ -27,12 +27,6 @@ router.get(
     getCategoriesController
 );
 
-router.get(
-    '/options', 
-    authMiddleware, 
-    getCategoryOptionsController
-);
-
 router.patch(
     '/:categoryId', 
     authMiddleware, 
@@ -45,5 +39,12 @@ router.delete(
     authMiddleware, 
     deleteCategoryController
 );
+
+// public api
+router.get(
+    '/options',
+    getCategoryOptionsController
+);
+
 
 export default router;

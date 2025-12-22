@@ -1,14 +1,6 @@
 import z from "zod";
-import { Types } from "mongoose";
 import { packageZodSchema } from "../packages/packages.schema";
 import { ADMIN_SORT_VALUE, DURATION_VALUE, isHtmlContentEmpty, SORT_VALUE } from "./tour.utils";
-
-
-const mongooseIdSchema = z
-        .string()
-        .refine((val) => Types.ObjectId.isValid(val), {
-            message: 'Invalid ID',
-        });
 
 
 const listOfStringsSchema = z.array(
@@ -36,7 +28,7 @@ export const tourZodSchema = z.object({
     description: z.string().min(10, 'Description must be at least 10 characters').trim(),
     includes: listOfStringsSchema,
     excludes: listOfStringsSchema,
-    categories: z.array(mongooseIdSchema),
+    categories: z.array(z.string().min(1, 'Invalid category ID')),
     
     dayPlans: z.array(dayDetailsZodSchema),
     isActive: z.boolean(),

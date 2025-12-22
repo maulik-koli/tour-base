@@ -9,6 +9,7 @@ import Icon from '@/components/icons'
 import { SliderComponent, InputField, SelectField } from '@/components/form'
 import { Separator } from '@ui/separator'
 import { Button } from '@ui/button'
+import CategorySelect from '@modules/category/components/category-select'
 
 interface TourFilterHeaderProps {
     viewMode: ViewMode;
@@ -93,12 +94,10 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
                             value={filter.duration || DURATION_OPTIONS[0].value}
                             containerClass='w-full'
                         />
-                        <SelectField
+                        <CategorySelect
                             label='Category'
-                            onChange={(value) => applyFilters({ ...filter, category: value })}
-                            options={CATEGORY_OPTIONS}
-                            value={filter.category || CATEGORY_OPTIONS[0].value}
-                            containerClass='w-full'
+                            handleChange={(value) => applyFilters({ ...filter, category: value })}
+                            className='w-full'
                         />
                     </div>
                 </>
