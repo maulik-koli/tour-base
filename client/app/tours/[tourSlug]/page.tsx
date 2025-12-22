@@ -1,37 +1,65 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'next/navigation'
-import { logger } from '@/lib/utils';
+import { useGetTourDetail } from '@modules/tours/api/queries';
 
 import TourDetailComponent from '@/modules/tours/components/tour-detail-component';
 import TourThumbnail from '@/modules/tours/components/tour-thumbnail';
 import TourPackageSide from '@/modules/tours/components/tour-package-side';
 import TourPackageTabs from '@/modules/tours/components/tour-package-tabs';
 import HelpBlock from '@/components/help-black';
+import ErrorBlock from '@/components/error-block';
+import { SpinnerOverlay } from '@ui/spinner';
 
 
 const TourDetailPage: React.FC = () => {
     const { tourSlug } = useParams();
-    
-    // call api with tourSlug
-    const callApi = () => {
-        logger("Tour Slug:", tourSlug); 
+    const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+
+    const { data, isLoading, error } = useGetTourDetail({
+        slug: tourSlug as string
+    })
+
+    if (isLoading) {
+        return <SpinnerOverlay />
     }
+    else if (error) {
+        return <ErrorBlock type='error' message={error.message} />
+    }
+    else if (!data?.data?.tour || !data?.data?.packages || !data?.data.tour) {
+        return <ErrorBlock type='no-data' message="Tour not found!" />
+    }
+
+    const tourData = data.data.tour;
+    const packagesData = data.data.packages;
+    
     
     return (
         <div className='flex flex-col'>
-            <TourThumbnail />
+            <TourThumbnail
+                name={tourData.name}
+                thumbnailImage={tourData.thumbnailImage}
+                packages={packagesData}
+            />
             <div className='w-full py-12 px-20'>
                 <div className="grid grid-cols-3 gap-12">
                     <div className="col-span-2 flex flex-col space-y-8">
-                        <TourDetailComponent />
-                        <TourPackageTabs />
+                        <TourDetailComponent tour={tourData} />
+                        <TourPackageTabs 
+                            packages={packagesData}
+                            handleSelectPackage={(id) => setSelectedPackage(id)}
+                            selectedPackageId={selectedPackage}
+                        />
                     </div>
 
                     <div className="col-span-1">
                         <div className='sticky top-22 self-start'>
                             <div className='flex flex-col space-y-6 max-h-[calc(100vh-3rem)] overflow-y-auto scroll-container'>
-                                <TourPackageSide />
+                                <TourPackageSide
+                                    packages={packagesData}
+                                    handleSelectPackage={(id) => setSelectedPackage(id)}
+                                    selectedPackageId={selectedPackage}
+                                />
                                 <HelpBlock />
                             </div>
                         </div>

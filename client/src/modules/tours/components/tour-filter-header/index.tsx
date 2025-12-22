@@ -1,16 +1,14 @@
 "use client"
 import React, { useState } from 'react'
 import { useTourFilters } from '@/hooks/useTourFilters'
-import { CATEGORY_OPTIONS, DURATION_OPTIONS, SORT_OPTIONS } from '@/constant/select-options'
+import { CATEGORY_OPTIONS, DURATION_OPTIONS, SORT_OPTIONS } from '@/constants/select-options'
 import { ViewMode } from '@app/tours/page'
 import { cn } from '@/lib/utils'
 
 import Icon from '@/components/icons'
-import SliderComponent from '@/components/form/slider-component'
-import InputField from '@/components/form/input-field'
-import SelectField from '@/components/form/select-field'
-import { Separator } from '@/components/ui/separator'
-import { Button } from '@/components/ui/button'
+import { SliderComponent, InputField, SelectField } from '@/components/form'
+import { Separator } from '@ui/separator'
+import { Button } from '@ui/button'
 
 interface TourFilterHeaderProps {
     viewMode: ViewMode;
@@ -21,7 +19,6 @@ interface TourFilterHeaderProps {
 const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleViewMode }) => {
     const { filter, applyFilters } = useTourFilters()
     const [filterPannel, setFilterPannel] = useState<boolean>(false);
-    
 
     return (
         <div className='w-full p-4 bg-card rounded-xl border border-border'>

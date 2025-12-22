@@ -2,7 +2,7 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Scrollbar } from 'swiper/modules';
-import { TourCardType } from '@/modules/tours/api/types';
+import { TourListType } from '@/modules/tours/api/types';
 
 import "swiper/css";
 // import "swiper/css/navigatio";
@@ -11,8 +11,8 @@ import "swiper/css/pagination";
 
 
 interface CardSliderWrapperProps {
-    tours: TourCardType[];
-    children: (tour: TourCardType) => React.ReactNode;
+    tours: TourListType[];
+    children: (tour: TourListType) => React.ReactNode;
 }
 
 

@@ -41,7 +41,9 @@ import {
     CircleX,
     CircleCheck,
     Phone,
-    Clock
+    Clock,
+    OctagonX,
+    SearchX
 } from "lucide-react"
 
 
@@ -88,5 +90,7 @@ export const LUCIDE_ICON_MAP = {
     CircleX,
     CircleCheck,
     Phone,
-    Clock
+    Clock,
+    OctagonX,
+    SearchX
 }

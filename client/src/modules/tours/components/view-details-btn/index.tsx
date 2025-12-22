@@ -17,7 +17,7 @@ const ViewDetailsButton: React.FC<ViewDetailsButtonProps> = ({ slug }) => {
     return (
         <Button
             type='button' 
-            onClick={() => redirectToDetails("some-slug")}
+            onClick={() => redirectToDetails(slug)}
         >
             View Details
         </Button>
