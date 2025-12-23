@@ -77,11 +77,12 @@ export type TourPackage = {
     updatedAt: string;
 };
 
-
 export interface GetTourDetailResponse {
     tour: Tour;
     packages: TourPackage[];
 }
+
+export type FeatureToursResponse = TourListType[];
 
 export const DUMMY_TOURS: TourListType[] = [
     {

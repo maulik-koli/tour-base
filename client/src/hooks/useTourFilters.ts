@@ -1,8 +1,6 @@
-'use client'
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { GetToursParams } from "@modules/tours/api/types";
-
 
 
 export const useTourFilters = () => {

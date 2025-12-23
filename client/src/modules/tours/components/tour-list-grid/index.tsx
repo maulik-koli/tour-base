@@ -1,3 +1,4 @@
+"use client"
 import React from 'react'
 import { ViewMode } from '@app/tours/page'
 import { useTourFilters } from '@/hooks/useTourFilters';
