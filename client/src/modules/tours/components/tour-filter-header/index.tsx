@@ -1,15 +1,15 @@
 "use client"
 import React, { useState } from 'react'
 import { useTourFilters } from '@/hooks/useTourFilters'
-import { CATEGORY_OPTIONS, DURATION_OPTIONS, SORT_OPTIONS } from '@/constants/select-options'
+import { DURATION_OPTIONS, SORT_OPTIONS } from '@/constants/select-options'
 import { ViewMode } from '@app/tours/page'
 import { cn } from '@/lib/utils'
 
 import Icon from '@/components/icons'
+import CategorySelect from '@modules/category/components/category-select'
 import { SliderComponent, InputField, SelectField } from '@/components/form'
 import { Separator } from '@ui/separator'
 import { Button } from '@ui/button'
-import CategorySelect from '@modules/category/components/category-select'
 
 interface TourFilterHeaderProps {
     viewMode: ViewMode;

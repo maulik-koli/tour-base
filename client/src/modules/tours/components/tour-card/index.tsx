@@ -63,7 +63,7 @@ const TourContent: React.FC<{ tour: TourListType }> = function({ tour }) {
                 <div className='flex items-center gap-2'>
                     <Icon name='CalendarDays' width={20} height={20} />
                     <Typography variant="p" className='text-muted-foreground font-medium'>
-                        {tour.minDays} Days to {tour.maxDays} Days
+                        {tour.minDays === tour.maxDays ? `${tour.minDays} Days` : `${tour.minDays} Days to ${tour.maxDays} Days`}
                     </Typography>
                 </div>
                 <div className='flex items-center gap-2'>

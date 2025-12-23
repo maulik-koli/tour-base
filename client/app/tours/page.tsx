@@ -1,8 +1,9 @@
 "use client"
-import React from 'react'
+import React, { Suspense } from 'react'
 import TourFilterHeader from '@modules/tours/components/tour-filter-header'
 import TourListGrid from '@modules/tours/components/tour-list-grid'
 import { Typography } from '@ui/typography'
+import { CustomSpinner } from '@ui/spinner'
 
 export type ViewMode = 'grid' | 'list';
 
@@ -25,9 +26,13 @@ const ToursPage: React.FC = () => {
                 </Typography>
             </div>
 
-            <TourFilterHeader viewMode={viewMode} onToggleViewMode={toggleViewMode} />
+            <Suspense fallback={<div><CustomSpinner /></div>}>
+                <TourFilterHeader viewMode={viewMode} onToggleViewMode={toggleViewMode} />
+            </Suspense>
 
-            <TourListGrid viewMode={viewMode} />
+            <Suspense fallback={<div><CustomSpinner /></div>}>
+                <TourListGrid viewMode={viewMode} />
+            </Suspense>
         </div>
     )
 }
