@@ -1,11 +1,11 @@
 import { asyncWrapper } from "@/api/utils/apiHelper";
-import { CreateCategoryPayload, UpdateCategoryPayload } from "./category.schema";
-import { createCategory, deleteCategory, findCategory, getCategories, getCategoryOptions, toggleCategory, updateCategory } from "./category.service";
+import { CategoryPayload } from "./category.schema";
+import { createCategory, deleteCategory, findCategory, getCategories, getCategoryOptions, updateCategory } from "./category.service";
 import { successResponse } from "@/api/utils/response";;
 
 
 export const createCategoryController = asyncWrapper(async (req, res) => {
-    const payload = req.body as CreateCategoryPayload;
+    const payload = req.body as CategoryPayload;
 
     await createCategory(payload);
 
@@ -19,7 +19,7 @@ export const createCategoryController = asyncWrapper(async (req, res) => {
 
 export const updateCategoryController = asyncWrapper(async (req, res) => {
     const categoryId = req.params.categoryId;
-    const payload = req.body as UpdateCategoryPayload;
+    const payload = req.body as CategoryPayload;
 
     const category = await findCategory(categoryId);
 
@@ -36,29 +36,14 @@ export const updateCategoryController = asyncWrapper(async (req, res) => {
 export const deleteCategoryController = asyncWrapper(async (req, res) => {
     const categoryId = req.params.categoryId;
 
-    await findCategory(categoryId);
+    const category = await findCategory(categoryId);
 
-    await deleteCategory(categoryId);
+    await deleteCategory(categoryId, category.value);
 
     successResponse(res, {
         message: 'Category deleted successfully',
         status: 200,
         data: null,
-    });
-});
-
-
-export const toggleCategoryController = asyncWrapper(async (req, res) => {
-    const categoryId = req.params.categoryId;
-
-    const category = await findCategory(categoryId);
-
-    const updatedCategory = await toggleCategory(category);
-
-    successResponse(res, {
-        status: 200,
-        message: 'Category status change successfully',
-        data: updatedCategory,
     });
 });
 

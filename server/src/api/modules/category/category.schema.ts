@@ -7,7 +7,4 @@ export const categoryZodSchema = z.object({
     image: z.string().trim().min(1, "Image is required"),
 }).strict();
 
-export const categoryPartialZodSchema = categoryZodSchema.partial().strict();
-
-export type CreateCategoryPayload = z.infer<typeof categoryZodSchema>;
-export type UpdateCategoryPayload = z.infer<typeof categoryPartialZodSchema>
+export type CategoryPayload = z.infer<typeof categoryZodSchema>;

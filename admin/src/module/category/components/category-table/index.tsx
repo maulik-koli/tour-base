@@ -1,67 +1,108 @@
 "use client"
-import React from 'react'
-import Icon from '@/components/icons'
-import { Button } from '@ui/button'
-import { Card, CardContent, CardHeader } from '@ui/card'
-import { Typography } from '@ui/typography'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import FallbackImage from '@/components/fallback-image'
+import React, { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useGetCategories } from '@module/category/api/queries'
+import { useCategoryStore } from '@/store'
 
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid  foasubfaoufb asoufb asoubf fasubfoasubf aoufb fsaubfoasu bfou",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card a0usfoausb foausbf oausb fo",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-]
+import Icon from '@/components/icons'
+import ErrorBlock from '@/components/error-block'
+import FallbackImage from '@/components/fallback-image'
+import { Button } from '@ui/button'
+import { Typography } from '@ui/typography'
+import { Card, CardContent, CardHeader } from '@ui/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { CustomSpinner } from '@ui/spinner'
+
 
 const CategoryTable: React.FC = () => {
     const router = useRouter();
+    const { setCategories } = useCategoryStore();
+    const { data, isLoading, error } = useGetCategories();
+
+    useEffect(() => {
+        if(isLoading && error) return;
+        
+        if(data && data.data) {
+            setCategories(data.data);
+        }
+    }, [data, setCategories, isLoading, error])
+    
+
+    const getContent = () => {
+         if (isLoading) {
+            return (
+                <TableRow>
+                    <TableCell colSpan={4}>
+                        <CustomSpinner className='w-full h-30 flex items-center justify-center' />
+                    </TableCell>
+                </TableRow>
+            )
+        }
+
+        if (error) {
+            return (
+                <TableRow>
+                    <TableCell colSpan={4}>
+                        <ErrorBlock
+                            type='error' 
+                            message={error?.message} 
+                            description='Please try again later.'
+                            className='min-h-30'
+                        />
+                    </TableCell>
+                </TableRow>
+            )
+        }
+
+        if(!data || (data && data.data?.length === 0)) {
+            return (
+                <TableRow>
+                    <TableCell colSpan={4}>
+                        <ErrorBlock 
+                            type='no-data'
+                            message='No tours found.'
+                            description='Please change your search criteria or create a new tour.'
+                            className='min-h-30'
+                        />
+                    </TableCell>
+                </TableRow>
+            )
+        }
+
+        return (
+            <>
+                {data.data?.map((category) => (
+                    <TableRow key={category._id}>
+                        <TableCell>
+                            <div className='relative w-15 aspect-square bg-muted rounded-xl overflow-hidden'>
+                                <FallbackImage 
+                                    src={category.image}
+                                    alt={category.name}
+                                    fill
+                                    crop="fill"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
+                                    className='rounded-xl'
+                                />
+                            </div>
+                        </TableCell>
+                        <TableCell className='max-w-70 truncate font-medium'>{category.name}</TableCell>
+                        <TableCell className='max-w-30 truncate'>{category.value}</TableCell>
+                        <TableCell>
+                            <Button 
+                                variant="outline"
+                                size="icon"
+                                type='button'
+                                onClick={() => router.push(`/category/${category.value}`)}
+                            >
+                                <Icon name="Pencil" />
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </>
+        )
+    }
+
 
     return (
         <Card className='w-full col-span-8'>
@@ -84,34 +125,7 @@ const CategoryTable: React.FC = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {invoices.map((invoice) => (
-                                <TableRow key={invoice.invoice}>
-                                    <TableCell>
-                                        <div className='relative w-15 aspect-square bg-muted rounded-xl overflow-hidden'>
-                                            <FallbackImage 
-                                                src="randomg url"
-                                                fill
-                                                crop="fill"
-                                                alt=""
-                                                sizes="(max-width: 768px) 100vw, 50vw"
-                                                className='rounded-xl'
-                                            />
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className='max-w-70 truncate font-medium'>{invoice.paymentStatus}</TableCell>
-                                    <TableCell className='max-w-30 truncate'>{invoice.paymentMethod}</TableCell>
-                                    <TableCell>
-                                        <Button 
-                                            variant="outline"
-                                            size="icon"
-                                            type='button'
-                                            onClick={() => router.push(`/category/${invoice.invoice}`)}
-                                        >
-                                            <Icon name="Pencil" />
-                                        </Button>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {getContent()}
                         </TableBody>
                         </Table>
                 </CardContent>

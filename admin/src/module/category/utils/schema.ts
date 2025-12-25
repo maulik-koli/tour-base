@@ -7,15 +7,13 @@ export const categorySchema = z.object({
     image: z.string().trim().min(1, "Image is required"),
 }).strict();
 
-export const categoryPartialSchema = categorySchema.partial().strict();
-
-export type CreateCategoryFormType = z.infer<typeof categorySchema>;
-export type UpdateCategoryFormType = z.infer<typeof categoryPartialSchema>
+export type CategoryFormType = z.infer<typeof categorySchema>;
 
 
-export const defaultCategoryValues: CreateCategoryFormType = {
+
+export const defaultCategoryValues: CategoryFormType = {
     name: '',
     value: '',
     subtitle: '',
     image: '',
-};
+}
