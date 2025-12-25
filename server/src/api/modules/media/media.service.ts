@@ -9,16 +9,6 @@ cloudinary.config({
     api_secret: env.CLOUDINARY_API_SECRET
 });
 
-// 10 signatures/IP per 15min
-export const signatureLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 10,
-    message: { 
-        status: 429,
-        message: 'Too many signature requests',
-    } satisfies IApiError
-});
-
 
 export const generateSignature = (params: Record<string, unknown>) => {
     const timestamp = Math.round(new Date().getTime() / 1000);

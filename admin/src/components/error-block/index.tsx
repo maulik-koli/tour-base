@@ -1,17 +1,19 @@
 import React from 'react'
 import Icon from '../icons'
 import { Typography } from '../ui/typography'
+import { cn } from '@/lib/utils';
 
 interface ErrorBlockProps {
     type: 'error' | 'no-data';
     message?: string;
     description?: string;
+    className?: string;
 }
 
 
-const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type }) => {
+const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type, className }) => {
     return (
-        <div className='w-full p-4 min-h-80 flex items-center justify-center'>
+        <div className={cn('w-full p-4 min-h-80 flex items-center justify-center', className)}>
             <div className='flex flex-col items-center gap-2'>
                 <Icon name={type === 'error' ? 'OctagonX' : 'SearchX'} className='text-destructive w-12 h-12 mr-2' />
                 <Typography variant="lead" className='text-destructive'>

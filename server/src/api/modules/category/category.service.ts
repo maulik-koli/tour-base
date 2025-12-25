@@ -1,10 +1,10 @@
 import Tour from "../tour/tour.model";
 import Category, { CategoryDocument } from "./category.model";
-import { CreateCategoryPayload, UpdateCategoryPayload } from "./category.schema";
+import { CategoryPayload } from "./category.schema";
 import { CustomError } from "@/api/utils/response";
 
 
-export const createCategory = async (payload: CreateCategoryPayload) => {
+export const createCategory = async (payload: CategoryPayload) => {
     const existingCategory = await Category.exists({ value: payload.value });
 
     if (existingCategory) {
@@ -20,7 +20,6 @@ export const createCategory = async (payload: CreateCategoryPayload) => {
 
     const category = new Category({
         ...payload,
-        isActive: true,
         order: newOrder,
     });
 
@@ -39,7 +38,7 @@ export const findCategory = async (categoryId: string): Promise<CategoryDocument
 }
 
 
-export const updateCategory = async (category: CategoryDocument, payload: UpdateCategoryPayload) => {
+export const updateCategory = async (category: CategoryDocument, payload: CategoryPayload) => {
     Object.assign(category, payload);
     const updatedCategory = await category.save();
 
@@ -47,8 +46,8 @@ export const updateCategory = async (category: CategoryDocument, payload: Update
 }
 
 
-export const deleteCategory = async (categoryId: string) => {
-    const tourCounts = await Tour.countDocuments({ categories: categoryId });
+export const deleteCategory = async (categoryId: string, categoryValue: string) => {
+    const tourCounts = await Tour.countDocuments({ categories: categoryValue });
 
     if (tourCounts > 0) {
         throw new CustomError(
@@ -58,13 +57,6 @@ export const deleteCategory = async (categoryId: string) => {
     }
 
     await Category.findByIdAndDelete(categoryId);
-}
-
-
-export const toggleCategory = async (category: CategoryDocument) => {
-    category.isActive = !category.isActive;
-    const updatedCategory =  await category.save();
-    return updatedCategory.toObject();
 }
 
 
@@ -78,7 +70,7 @@ export const getCategories = async () => {
 
 
 export const getCategoryOptions = async () => {
-    const categories = await Category.find({ isActive: true })
+    const categories = await Category.find()
         .sort({ order: 1 })
         .select('name value')
         .lean();

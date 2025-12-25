@@ -1,6 +1,6 @@
 import express from "express";  
-import { createCategoryController, deleteCategoryController, getCategoriesController, getCategoryOptionsController, toggleCategoryController, updateCategoryController } from "./category.controller";
-import { categoryPartialZodSchema, categoryZodSchema } from "./category.schema";
+import { createCategoryController, deleteCategoryController, getCategoriesController, getCategoryOptionsController, updateCategoryController } from "./category.controller";
+import { categoryZodSchema } from "./category.schema";
 
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 import { validateRequest } from "@/api/middlewares/validate.middlewate";
@@ -16,21 +16,9 @@ router.post(
 );
 
 router.patch(
-    '/:categoryId/toggle', 
-    authMiddleware, 
-    toggleCategoryController
-);
-
-router.get(
-    '/', 
-    authMiddleware, 
-    getCategoriesController
-);
-
-router.patch(
     '/:categoryId', 
     authMiddleware, 
-    validateRequest(categoryPartialZodSchema), 
+    validateRequest(categoryZodSchema), 
     updateCategoryController
 );
 
@@ -41,6 +29,11 @@ router.delete(
 );
 
 // public api
+router.get(
+    '/', 
+    getCategoriesController
+);
+
 router.get(
     '/options',
     getCategoryOptionsController

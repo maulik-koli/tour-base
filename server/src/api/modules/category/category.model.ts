@@ -6,7 +6,6 @@ export interface ICategory {
     subtitle: string;
     image: string;
     order: number;
-    isActive: boolean;
 }
 
 export interface CategoryDocument extends ICategory, Document {
@@ -28,7 +27,6 @@ const categorySchema = new Schema<CategoryDocument>({
     subtitle: { type: String, required: true },
     image: { type: String, required: true },
     order: { type: Number, required: true },
-    isActive: { type: Boolean, default: true },
 }, {
     timestamps: true,
     versionKey: false,

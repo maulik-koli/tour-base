@@ -1,9 +1,12 @@
 "use client"
 import React, { useEffect } from 'react'
-import { useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
+import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { categorySchema, CreateCategoryFormType, defaultCategoryValues } from '@module/category/utils/schema'
+
+import { useCreateCategory } from '@module/category/api/mutations'
 import { useToast } from '@/hooks/useToast'
+import { CategoryFormType, categorySchema, defaultCategoryValues } from '@module/category/utils/schema'
 import { flatZodError } from '@/lib/flatZodError'
 import { logger } from '@/lib/utils'
 
@@ -13,16 +16,23 @@ import { Button } from '@ui/button'
 
 
 const CreateCategoryComponent: React.FC = () => {
-    const form = useForm<CreateCategoryFormType>({
+    const router = useRouter();
+    const form = useForm<CategoryFormType>({
         resolver: zodResolver(categorySchema),
         defaultValues: defaultCategoryValues
     })
-    const { control, getValues, formState } = form
+    const { getValues, formState } = form
 
+    const { mutate, isPending } = useCreateCategory();
     const toast = useToast();
 
-    const onSubmit = (data: CreateCategoryFormType) => {
-        logger("Category Data:", data)
+    const onSubmit = (data: CategoryFormType) => {
+        mutate(data, {
+            onSuccess: () => {
+                toast.success("Category created successfully");
+                router.push('/');
+            }
+        });
     }
 
     useEffect(() => {
@@ -33,22 +43,26 @@ const CreateCategoryComponent: React.FC = () => {
         }
     }, [formState.errors]);
 
+    toast.isLoading(isPending, "Creating category...");
+
     
     return (
         <Card className='shadow-none'>
-            <form>
-                <CardContent className='flex flex-col gap-4'>
-                    <CategoryForm<CreateCategoryFormType> control={control} />
-                </CardContent>
-                <CardFooter className='flex justify-end pt-0'>
-                    <Button 
-                        type='submit'
-                        onClick={form.handleSubmit(onSubmit)}
-                    >
-                        Create Category
-                    </Button>
-                </CardFooter>
-            </form>
+            <FormProvider {...form}>
+                <form>
+                    <CardContent className='flex flex-col gap-4'>
+                        <CategoryForm />
+                    </CardContent>
+                    <CardFooter className='flex justify-end pt-0'>
+                        <Button 
+                            type='submit'
+                            onClick={form.handleSubmit(onSubmit)}
+                        >
+                            Save
+                        </Button>
+                    </CardFooter>
+                </form>
+            </FormProvider>
         </Card>
     )
 }
