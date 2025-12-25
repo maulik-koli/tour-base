@@ -41,7 +41,8 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
             <div
                 {...getRootProps()}
                 className={cn(
-                    "border-2 border-dashed rounded-xl text-center cursor-pointer transition-all duration-200 min-h-50 max-h-50 flex items-center justify-center hover:border-primary/70",
+                    "border-2 border-dashed rounded-xl text-center cursor-pointer transition-all duration-200 flex items-center justify-center hover:border-primary/70",
+                    "h-50 min-h-50",
                     isDragActive ? "border-primary" : "border-border",
                     imageClassName
                 )}
@@ -53,14 +54,14 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
                         <Typography variant="small">Uploading...</Typography>
                     </div>   
                 ) : previewImage ? (
-                    <div className='relative w-full h-full bg-muted rounded-xl'>
+                    <div className='relative w-full h-50  bg-muted rounded-xl overflow-hidden'>
                         <FallbackImage 
                             src={previewImage}
                             fill
                             crop="fill"
-                            alt=""
+                            alt="uploaded image"
                             sizes="(max-width: 768px) 100vw, 50vw"
-                            className='rounded-xl'
+                            className='rounded-xl overflow-hidden object-fill'
                         />
                     </div>
                 ):(

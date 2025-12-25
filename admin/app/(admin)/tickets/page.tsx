@@ -1,5 +1,5 @@
 import React from 'react'
-import { DefaultPage } from '../page'
+import DefaultPage from '@/components/defult-page'
 
 const TicketsPage: React.FC = () => {
   return (

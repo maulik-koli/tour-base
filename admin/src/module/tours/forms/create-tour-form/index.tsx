@@ -43,7 +43,7 @@ const CreateTourForm: React.FC = () => {
     return (
         <>
             <div className='flex items-center justify-between'>
-                <Typography variant="h1">Create Tour</Typography>
+                <Typography variant="h2">Create Tour</Typography>
                 <Button type='submit' onClick={form.handleSubmit(onCreateSubmit)}>
                     <Icon name='Save' className='mr-2' />
                     Save Tour
