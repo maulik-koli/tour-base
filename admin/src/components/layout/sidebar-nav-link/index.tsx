@@ -22,7 +22,7 @@ const SidebarNavLink: React.FC<NavLinkProps> = ({item, className }) => {
             "flex items-center gap-2 cursor-pointer",
             isActive && "bg-primary/10 text-primary",
             className,
-            "hover:bg-primary/5"
+            "hover:bg-primary/5 p-5"
         )}>
             <Icon name={item.icon} className="w-4 h-4"  />
             <Typography variant="small" className="font-normal">{item.title}</Typography>

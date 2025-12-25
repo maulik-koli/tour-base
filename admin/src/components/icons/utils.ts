@@ -28,7 +28,12 @@ import {
     List,
     Minus,
     OctagonX,
-    SearchX
+    SearchX,
+    MapPinned,
+    Mail,
+    Phone,
+    Ticket,
+    Pencil
 } from "lucide-react"
 
 
@@ -62,5 +67,10 @@ export const LUCIDE_ICON_MAP = {
     List,
     Minus,
     OctagonX,
-    SearchX
+    SearchX,
+    MapPinned,
+    Mail,
+    Phone,
+    Ticket,
+    Pencil
 }

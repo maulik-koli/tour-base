@@ -3,6 +3,7 @@ const PAGES_MAP: Record<string, string> = {
     "tickets": "Tickets",
     "edit": "Edit",
     "create": "Create",
+    "category": "Category",
 }
 
 const deSlugify = (str: string) => {
