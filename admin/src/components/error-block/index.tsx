@@ -14,7 +14,7 @@ interface ErrorBlockProps {
 const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type, className }) => {
     return (
         <div className={cn('w-full p-4 min-h-80 flex items-center justify-center', className)}>
-            <div className='flex flex-col items-center gap-2'>
+            <div className='flex flex-col items-center gap-2 text-center'>
                 <Icon name={type === 'error' ? 'OctagonX' : 'SearchX'} className='text-destructive w-12 h-12 mr-2' />
                 <Typography variant="lead" className='text-destructive'>
                     {message || 'Something went wrong'}

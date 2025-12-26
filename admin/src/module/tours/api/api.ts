@@ -1,6 +1,20 @@
 import api from "@/lib/api/axios";
 import { ApiResponse } from "@/types/api";
-import { CreateTourResponse, CreateToutPayload, GetToursResponse, GetToursParams, GetTourParam, GetTourResponse, UpdateTourParam, UpdateTourPayload, UpdateTourResponse } from "./types";
+import { 
+    CreateTourResponse,
+    CreateToutPayload,
+    GetToursResponse,
+    GetToursParams,
+    GetTourParam,
+    GetTourResponse,
+    UpdateTourPayload,
+    UpdateTourResponse,
+    GetFeatureToursResponse,
+    DeleteTourResponse,
+    DeleteTourPalyload,
+    ToggleFeaturedTourPayload,
+    ToggleFeaturedTourResponse
+} from "./types";
 
 
 export const createTour = async (payload: CreateToutPayload): Promise<ApiResponse<CreateTourResponse>> => {
@@ -18,9 +32,24 @@ export const getTour = async (param: GetTourParam): Promise<ApiResponse<GetTourR
     return res.data;
 }
 
-export const updateTour = async (
-    param: UpdateTourParam, payload: UpdateTourPayload
-): Promise<ApiResponse<UpdateTourResponse>> => {
-    const res = await api.put(`/tour/${param.slug}`, payload);
+export const updateTour = async (payload: UpdateTourPayload): Promise<ApiResponse<UpdateTourResponse>> => {
+    const res = await api.put(`/tour/${payload.slug}`, payload.data);
+    return res.data;
+}
+
+export const getFeaturedTours = async (): Promise<ApiResponse<GetFeatureToursResponse>> => {
+    const res = await api.get("/tour/featured");
+    return res.data;
+}
+
+export const deleteTour = async (payload: DeleteTourPalyload): Promise<ApiResponse<DeleteTourResponse>> => {
+    const res = await api.delete(`/tour/${payload.slug}`);
+    return res.data;
+}
+
+export const toggleFeaturedTour = async (
+    payload: ToggleFeaturedTourPayload
+): Promise<ApiResponse<ToggleFeaturedTourResponse>> => {
+    const res = await api.patch(`/tour/featured/${payload.slug}`, payload.data);
     return res.data;
 }

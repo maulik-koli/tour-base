@@ -7,9 +7,14 @@ import { InputField } from '@/components/form'
 import { FieldLabel } from '@ui/field'
 import { Typography } from '@ui/typography'
 import { Switch } from '@ui/switch'
+import { Separator } from '@ui/separator'
+
+interface TourOverviewSectionProps {
+    featuredButton?: React.ReactNode;
+}
 
 
-const TourOverviewSection: React.FC = () => {
+const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButton }) => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
@@ -52,7 +57,7 @@ const TourOverviewSection: React.FC = () => {
                     />
                 )}
             />
-            <div className='flex justify-between items-center bg-primary/10 p-2 rounded-md '>
+            <div className='flex justify-between items-center bg-primary/10 py-2 px-3.5 rounded-md '>
                 <div className='flex flex-col gap-1'>
                     <FieldLabel>Tour Status</FieldLabel>
                     <Typography variant="small">Tour is visible to customers</Typography>
@@ -65,6 +70,12 @@ const TourOverviewSection: React.FC = () => {
                     )}
                 />
             </div>
+            {featuredButton && (
+                <>
+                    <Separator className='col-span-2' />
+                    {featuredButton}
+                </>
+            )}
         </TourFormCardWrapper>
     )
 }

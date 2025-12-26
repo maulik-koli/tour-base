@@ -43,15 +43,17 @@ export interface GetTourResponse {
     tour: TourFormType & {
         _id: string;
         slug: string;
+        isFeatured: boolean;
         createdAt: string;
         updatedAt: string;
     };
     packages: PackageResponse[];
 }
 
-export type UpdateTourParam = TourParam;
-
-export type UpdateTourPayload = TourFormType;
+export interface UpdateTourPayload { 
+    slug: string;
+    data: TourFormType
+};
 
 export interface UpdateTourResponse extends TourFormType {
     _id: string;
@@ -59,3 +61,36 @@ export interface UpdateTourResponse extends TourFormType {
     createdAt: string;
     updatedAt: string;
 };
+
+export type TourUserListType = {
+    _id: string,
+    name: string,
+    slug: string,
+    tagLine: string,
+    thumbnailImage: string,
+    createdAt: string,
+    updatedAt: string,
+    minPrice: number,
+    maxPrice: number,
+    minDays: number,
+    maxDays: number,
+    packagesCount: number,
+}
+
+export type GetFeatureToursResponse = TourUserListType[];
+
+export interface DeleteTourPalyload {
+    slug: string;
+}
+
+export type DeleteTourResponse = null;
+
+
+export interface ToggleFeaturedTourPayload {
+    slug: string;
+    data: {
+        isFeatured: boolean;
+    }
+}
+
+export type ToggleFeaturedTourResponse = null

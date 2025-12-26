@@ -1,6 +1,6 @@
 import express from "express";
 import { 
-    createTourController, deleteTourController, getAdminToursListController, getFeaturedToursController, getTourAdminController, getTourController, getToursListController, setFeaturedTourController, updateTourController
+    createTourController, deleteTourController, getAdminToursListController, getFeaturedToursController, getTourAdminController, getTourController, getToursListController, toggleFeaturedTourController, updateTourController
 } from "./tour.controller";
 import { createTourSchema, setFeaturedTourZodSchema, tourListAdminQueriesZodSchema, tourListQueriesZodSchema, tourZodSchema } from "./tour.schema";
 import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
@@ -31,7 +31,7 @@ router.put(
 
 router.delete(
     "/:slug", 
-    authMiddleware, 
+    authMiddleware,
     deleteTourController
 );
 
@@ -46,7 +46,7 @@ router.patch(
     "/featured/:slug", 
     authMiddleware, 
     validateRequest(setFeaturedTourZodSchema),
-    setFeaturedTourController
+    toggleFeaturedTourController
 )
 
 // public routes

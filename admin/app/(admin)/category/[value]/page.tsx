@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useCategoryStore } from '@/store'
 
@@ -12,9 +12,11 @@ import { Button } from '@ui/button'
 const CategoryDetail: React.FC = () => {
     const router = useRouter();
     const { value } = useParams();
-    const { categories } = useCategoryStore();
+    const categories = useCategoryStore(s => s.categories);
 
-    const categoryData = categories.find(cat => cat.value === value);
+    const categoryData = useMemo(() => 
+        categories.find(cat => cat.value === value), 
+    [categories, value]);
 
     return (
         <div className='w-full px-8 py-6 bg-background gap-6 flex flex-col'>
@@ -35,7 +37,8 @@ const CategoryDetail: React.FC = () => {
                 </div>
 
             ) : (
-                <UpdateCategoryComponent 
+                <UpdateCategoryComponent
+                    key={categoryData._id || (value as string)}
                     data={{
                         image: categoryData.image,
                         name: categoryData.name,

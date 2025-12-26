@@ -1,18 +1,30 @@
 "use client"
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import { useGetTour } from '@module/tours/api/queries'
-import { SpinnerOverlay } from '@ui/spinner'
+
 import ErrorBlock from '@/components/error-block'
 import UpdateTourForm from '@module/tours/forms/update-tour-form'
+import { SpinnerOverlay } from '@ui/spinner'
+
 
 const TourPage: React.FC = () => {
     const tour = useParams().tour;
-    const { data, error, isLoading } = useGetTour({ slug: tour as string });
+    const [isMount, setIsMount] = React.useState(false);
+    const { data, error, isLoading, refetch } = useGetTour({ slug: tour as string });
+
+    useEffect(() => {
+        refetch();
+    }, [tour, refetch]);
+
+    useEffect(() => {
+        if(isMount) return;
+        setIsMount(true);
+    }, []);
 
     
     const getContent = () => {
-        if (isLoading) {
+        if (isLoading || !isMount) {
             return <SpinnerOverlay />
         }
         else if (error) {
@@ -23,15 +35,13 @@ const TourPage: React.FC = () => {
         }
         else {
             return (
-                <div className='flex flex-col gap-4'>
-                    <UpdateTourForm data={data.data} />
-                </div>
+                <UpdateTourForm data={data.data} />
             )
         }
     }
 
     return (
-        <div className='py-3 px-8 bg-background'>
+        <div className='px-8 py-6 flex flex-col gap-6 bg-background'>
             {getContent()}
         </div>
     )

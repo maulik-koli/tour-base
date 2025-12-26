@@ -16,7 +16,7 @@ import { CustomSpinner } from '@ui/spinner'
 
 const CategoryTable: React.FC = () => {
     const router = useRouter();
-    const { setCategories } = useCategoryStore();
+    const setCategories = useCategoryStore(s => s.setCategories);
     const { data, isLoading, error } = useGetCategories();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ const CategoryTable: React.FC = () => {
     
 
     const getContent = () => {
-         if (isLoading) {
+        if (isLoading) {
             return (
                 <TableRow>
                     <TableCell colSpan={4}>
