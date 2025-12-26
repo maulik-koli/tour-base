@@ -74,3 +74,4 @@ export type TourPayload = z.infer<typeof tourZodSchema>;
 export type CreateTourPayload = z.infer<typeof createTourSchema>;
 export type TourListAdminQueries = z.infer<typeof tourListAdminQueriesZodSchema>;
 export type TourListQueries = z.infer<typeof tourListQueriesZodSchema>;
+export type SetFeaturedTourPayload = z.infer<typeof setFeaturedTourZodSchema>;

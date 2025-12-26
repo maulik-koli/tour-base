@@ -5,12 +5,14 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useToast } from '@/hooks/useToast'
-import { useDeleteCategory, useUpdateCategory } from '@module/category/api/mutations'
+import { useUpdateCategory } from '@module/category/api/mutations'
 import { categorySchema, CategoryFormType } from '@module/category/utils/schema'
 import { flatZodError } from '@/lib/flatZodError'
 import { logger } from '@/lib/utils'
 
+import Icon from '@/components/icons'
 import CategoryForm from '../category-form'
+import DeleteCategoryButton from '../delete-category-btn'
 import { Card, CardContent, CardFooter } from '@ui/card'
 import { Button } from '@ui/button'
 
@@ -25,16 +27,15 @@ const UpdateCategoryComponent: React.FC<UpdateCategoryComponentProps> = ({ data,
         resolver: zodResolver(categorySchema),
         defaultValues: data
     })
-    const { getValues, formState } = form
+    const { getValues, formState: { errors, isDirty } } = form
 
-    const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory();
-    const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
+    const { mutate, isPending } = useUpdateCategory();
     const toast = useToast();
 
     const onSubmit = (data: CategoryFormType) => {
         const payload = { _id, data };
 
-        updateCategory(payload, {
+        mutate(payload, {
             onSuccess: () => {
                 toast.success("Category updated successfully");
                 router.push('/');
@@ -42,26 +43,15 @@ const UpdateCategoryComponent: React.FC<UpdateCategoryComponentProps> = ({ data,
         });
     }
 
-    const handleDelete = () => {
-        deleteCategory({ _id }, {
-            onSuccess: () => {
-                toast.success("Category deleted successfully");
-                router.push('/');
-            }
-        });
-    }
-
-
     useEffect(() => {
-        if(Object.keys(form.formState.errors).length > 0) {
+        if(Object.keys(errors).length > 0) {
             logger("Form data", getValues())
             const error = flatZodError(categorySchema, getValues())
             if(error) toast.error(error)
         }
-    }, [formState.errors]);
+    }, [errors]);
 
-    toast.isLoading(isUpdating, "Updating category...");
-    toast.isLoading(isDeleting, "Deleting category...");
+    toast.isLoading(isPending, "Updating category...");
 
     
     return (
@@ -72,17 +62,13 @@ const UpdateCategoryComponent: React.FC<UpdateCategoryComponentProps> = ({ data,
                         <CategoryForm />
                     </CardContent>
                     <CardFooter className='flex justify-end items-center gap-4 pt-0'>
-                        <Button 
-                            type='button'
-                            variant="destructive"
-                            onClick={handleDelete}
-                        >
-                            Delete
-                        </Button>
+                        <DeleteCategoryButton _id={_id} />
                         <Button 
                             type='submit'
                             onClick={form.handleSubmit(onSubmit)}
+                            disabled={!isDirty || isPending}
                         >
+                            <Icon name="Save" />
                             Save
                         </Button>
                     </CardFooter>

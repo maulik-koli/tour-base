@@ -20,7 +20,7 @@ export const useSubmitTour = () => {
     const { 
         mutate: updateTour, 
         isPending: isUpdatingTour
-    } = useUpdateTour({ slug: tourSlug });
+    } = useUpdateTour();
 
 
     const onCreateSubmit = (data: CreateTourFormType) => {
@@ -30,31 +30,27 @@ export const useSubmitTour = () => {
                 toast.success("Tour created successfully!");
                 router.push(`/tours`);
             },
-            onError: (err) => {
-                toast.error(err.message || "Failed to create tour. Please try again.");
-                logger("Create Tour Error", err);
-            }
         })
     }
 
 
     const onUpdateSubmit = (data: CreateTourFormType) => {
-        logger("data onSumbit", data);
-        updateTour(data.tour, {
+        const payload = {
+            slug: tourSlug,
+            data: data.tour
+        };
+        
+        updateTour(payload, {
             onSuccess: (res) => {
                 toast.success("Tour updated successfully!");
                 logger("Update Tour Response", res);
                 router.push(`/tours`);
             },
-            onError: (err) => {
-                toast.error(err.message || "Failed to update tour. Please try again.");
-                logger("Update Tour Error", err);
-            }
         });
     }
 
     toast.isLoading(isCreatingTour, "Creating Tour...");
     toast.isLoading(isUpdatingTour, "Updating Tour...");
 
-    return { onCreateSubmit, onUpdateSubmit };
+    return { onCreateSubmit, onUpdateSubmit, isCreatingTour, isUpdatingTour };
 }

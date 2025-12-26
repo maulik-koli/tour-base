@@ -7,6 +7,7 @@ export const QUERY_REGISTRY = {
 
     getCategoryOptions: "get-category-options",
     getCategories: "get-categories",
+    getFeaturedTours: "get-featured-tours",
 }
 
 
@@ -18,6 +19,8 @@ export const MUTATION_REGISTRY = {
 
     createTour: "create-new-tour",
     updateTour: "update-tour",
+    deleteTour: "delete-tour",
+    toggleFeaturedTour: "toggle-featured-tour",
 
     addPackage: "add-package",
     updatePackage: "update-package",

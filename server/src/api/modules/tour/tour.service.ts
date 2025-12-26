@@ -371,7 +371,7 @@ const applySearchFilter = async function(query: TourListQueries, tourMatch: any)
 }
 
 
-export const setFeaturedTour = async (slug: string, isFeatured: boolean) => {
+export const toggleFeaturedTour = async (slug: string, isFeatured: boolean) => {
     const updateFields: any = { isFeatured };
 
     if (isFeatured) {

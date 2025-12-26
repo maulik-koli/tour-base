@@ -1,11 +1,11 @@
-import { CreateTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
+import { CreateTourPayload, SetFeaturedTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
 import { 
-    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getTourBySlug, getToursList, setFeaturedTour, updateTour
+    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getTourBySlug, getToursList, toggleFeaturedTour, updateTour
 } from "./tour.service";
 import { getPackagesByTourId } from "../packages/packages.service";
 
 import { asyncWrapper } from "@/api/utils/apiHelper";
-import { CustomError, successResponse } from "@/api/utils/response";
+import { successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 
 
@@ -104,11 +104,11 @@ export const getTourController = asyncWrapper(async (req, res) => {
 });
 
 
-export const setFeaturedTourController = asyncWrapper(async (req, res) => {
+export const toggleFeaturedTourController = asyncWrapper(async (req, res) => {
     const slug = req.params.slug;
-    const { isFeatured } = req.body;
+    const { isFeatured } = req.body as SetFeaturedTourPayload;
 
-    await setFeaturedTour(slug, isFeatured);
+    await toggleFeaturedTour(slug, isFeatured);
 
     successResponse(res, {
         message: "Tour featured status updated successfully",

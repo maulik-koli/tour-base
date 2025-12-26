@@ -1,10 +1,12 @@
+"use client"
 import React from 'react'
-import { Controller, set, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { CreateTourFormType } from '@module/tours/utils/schema';
 import { DEFAULT_PACKAGE } from '@module/packages/utils/schema';
 import { TourStarHirarchyOptions } from '@/constants/selectOptions';
 import { usePackageActions } from '@module/packages/hooks/usePackageActions';
 import { PackageFieldType } from '@module/packages/utils/helper';
+import { useModelStore } from '@/store';
 
 import Icon from '@/components/icons';
 import TourFormCardWrapper from '../tour-form-card-wrapper';
@@ -21,6 +23,8 @@ interface TourFormPackageSectionProps {
 
 const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = "create" }) => {
     const { control, getValues, setValue } = useFormContext<CreateTourFormType>();
+    const showModel = useModelStore(s => s.showModel);
+    
     
     const { fields, append, remove } = useFieldArray({
         control,
@@ -64,7 +68,25 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
             remove(index);
         }
     }
-    
+
+    const handleSaveClick = (index: number) => {
+        showModel(() => handleSavePackage(index), {
+            title: 'Save Package',
+            description: 'Do you want to save the changes made to this package?',
+            actionText: 'Save',
+            canclelText: 'Cancel',
+        });
+    }
+
+    const handleDeleteClick = (index: number) => {
+        showModel(() => handleRemovePackage(index), {
+            title: 'Delete Package',
+            description: 'Are you sure you want to delete this package?',
+            actionText: 'Delete',
+            canclelText: 'Cancel',
+        });
+    }
+
 
     return (
         <TourFormCardWrapper 
@@ -97,7 +119,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                             variant="secondary"
                                             type='button'
                                             size="sm"
-                                            onClick={() => handleSavePackage(index)}
+                                            onClick={() => handleSaveClick(index)}
                                             className='bg-green-400 text-foreground hover:bg-green-400/80 h-8'
                                             disabled={isUpdateMode && isLoading}
                                         >
@@ -108,7 +130,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         size="icon"
                                         variant="outline"
                                         type='button'
-                                        onClick={() => handleRemovePackage(index)}
+                                        onClick={() => handleDeleteClick(index)}
                                         className='text-destructive border-none'
                                         disabled={isUpdateMode && isLoading}
 

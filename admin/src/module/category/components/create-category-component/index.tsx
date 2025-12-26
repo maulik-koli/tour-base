@@ -10,6 +10,7 @@ import { CategoryFormType, categorySchema, defaultCategoryValues } from '@module
 import { flatZodError } from '@/lib/flatZodError'
 import { logger } from '@/lib/utils'
 
+import Icon from '@/components/icons'
 import CategoryForm from '../category-form'
 import { Card, CardContent, CardFooter } from '@ui/card'
 import { Button } from '@ui/button'
@@ -58,6 +59,7 @@ const CreateCategoryComponent: React.FC = () => {
                             type='submit'
                             onClick={form.handleSubmit(onSubmit)}
                         >
+                            <Icon name="Save" />
                             Save
                         </Button>
                     </CardFooter>
