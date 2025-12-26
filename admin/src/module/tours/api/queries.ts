@@ -27,6 +27,7 @@ export const useGetTours = (
 
 export const useGetTour = (
     params: GetTourParam,
+    enabled: boolean = true,
     options?: UseQueryOptions<
         ApiResponse<GetTourResponse>,
         ApiError,
@@ -38,7 +39,7 @@ export const useGetTour = (
         queryKey: [QUERY_REGISTRY.getTours, params],
         queryFn: () => safeAxios(() => getTour(params)),
         retry: false,
-        enabled: false,
+        enabled: enabled,
         ...options,
     });
 };

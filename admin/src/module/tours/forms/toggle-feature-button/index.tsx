@@ -47,7 +47,7 @@ const ToggleFeaturedButton: React.FC<ToggleFeaturedButtonProps> = ({ slug, isFea
 
 
     return (
-        <div className='flex justify-between items-center  py-2 px-3.5 rounded-md '>
+        <div className='flex justify-between items-center py-4 px-3 rounded-md bg-muted/50'>
             <div className='flex flex-col gap-1'>
                 <FieldLabel>Featured Tour State</FieldLabel>
                 <Typography variant="small">Tour that are in featured slider of home page</Typography>

@@ -12,10 +12,11 @@ interface DayDetailsDocument extends IDayDetail, Document {
 }
 
 export interface ITour {
-    name: string;
     slug: string;
+    name: string;
     tagLine: string;
-    description: string; // html string of whole tour
+    
+    description: string;
     includes: string[];
     excludes: string[];
     categories: Types.ObjectId[];
@@ -24,8 +25,9 @@ export interface ITour {
     isActive: boolean;
 
     images: string[];
+    galleryImages: string[];
     thumbnailImage: string;
-    youtubeVideoUrl?: string;
+    youtubeVideoUrl: string | null;
 
     isFeatured: boolean;
 }
@@ -48,7 +50,7 @@ export type TourFields = keyof TourLean;
 const dayDetailsSchema = new Schema<DayDetailsDocument>({
     title: { type: String, required: true },
     subtitle: { type: String, default: null },
-    description: { type: String, default: null },
+    description: { type: String, required: true },
 }, { 
     _id: false, 
     versionKey: false 
@@ -57,18 +59,19 @@ const dayDetailsSchema = new Schema<DayDetailsDocument>({
 
 const tourSchema = new Schema<TourDocument>({
     name: { type: String, required: true },
+    slug: { type: String, required: true },
     tagLine: { type: String, required: true },
+
     description: { type: String, required: true },
     includes: { type: [String], required: true },
     excludes: { type: [String], required: true },
     categories: { type: [String], ref: 'Category', default: [] },
 
-    slug: { type: String, required: true },
-
     dayPlans: { type: [dayDetailsSchema], required: true },
     isActive: { type: Boolean, required: true },
 
-    images: { type: [String], required: true },
+    images: { type: [String], default: [] },
+    galleryImages: { type: [String], default: [] },
     thumbnailImage: { type: String, required: true },
     youtubeVideoUrl: { type: String, default: null },
 

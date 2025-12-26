@@ -18,6 +18,7 @@ export interface ITourPackage {
     nights: number;
 
     pricePerPerson: number;
+    childrenPrice: number;
     starHierarchy: number; // hierarchy of the package value
     
     startCity: string;
@@ -55,6 +56,7 @@ const packageSchema = new Schema<TourPackageDocument>({
     nights: { type: Number, required: true },
 
     pricePerPerson: { type: Number, required: true },
+    childrenPrice: { type: Number, required: true },
     starHierarchy: { type: Number, required: true },
 
     startCity: { type: String, required: true },

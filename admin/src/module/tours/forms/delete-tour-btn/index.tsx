@@ -7,6 +7,7 @@ import { useModelStore } from '@/store';
 
 import Icon from '@/components/icons';
 import { Button } from '@ui/button';
+import { logger } from '@/lib/utils';
 
 interface DeleteTourButtonProps {
     slug: string;
@@ -22,8 +23,9 @@ const DeleteTourButton: React.FC<DeleteTourButtonProps> = ({ slug, className }) 
     const handleDelete = () => {
         mutate({ slug }, {
             onSuccess: () => {
+                logger("handleDelete", slug);
                 toast.success("Tour deleted successfully");
-                router.push('/tours');
+                router.replace('/tours');
             }
         });
     }

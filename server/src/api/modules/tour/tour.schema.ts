@@ -3,6 +3,24 @@ import { packageZodSchema } from "../packages/packages.schema";
 import { ADMIN_SORT_VALUE, DURATION_VALUE, isHtmlContentEmpty, SORT_VALUE } from "./tour.utils";
 
 
+const htmlContentSchema = (minLength: number, fieldName: string = 'Content') => {
+    return z.string()
+        .refine((html) => !isHtmlContentEmpty(html), {
+            message: `${fieldName} cannot be empty`,
+        })
+        .refine((html) => {
+            const textContent = html
+                .replace(/<[^>]*>/g, '')
+                .replace(/&nbsp;/gi, ' ')
+                .replace(/&#?[a-z0-9]+;/gi, ' ')
+                .trim();
+            return textContent.length >= minLength;
+        }, {
+            message: `${fieldName} must contain at least ${minLength} characters of actual text`,
+        });
+};
+
+
 const listOfStringsSchema = z.array(
     z.string()
     .min(2, 'Each item must be at least 2 characters')
@@ -14,18 +32,14 @@ const dayDetailsZodSchema = z.object({
     title: z.string().min(3, 'Title must be at least 3 characters').trim(),
     subtitle: z.string().nullable(),
     description: z.string().min(10, 'Description must be at least 10 characters').trim(),
-})
-.refine((data) => !isHtmlContentEmpty(data.description), {
-    message: 'Description cannot be empty',
-    path: ['description'],
-})
+});
 
 
 
 export const tourZodSchema = z.object({
     name: z.string().min(3, 'Name must be at least 3 characters').trim(),
     tagLine: z.string().min(5, 'Tag line must be at least 5 characters').trim(),
-    description: z.string().min(10, 'Description must be at least 10 characters').trim(),
+    description: htmlContentSchema(10, 'Description'),
     includes: listOfStringsSchema,
     excludes: listOfStringsSchema,
     categories: z.array(z.string().min(1, 'Invalid category ID')),
@@ -34,6 +48,7 @@ export const tourZodSchema = z.object({
     isActive: z.boolean(),
 
     images: z.array(z.string().min(1, 'Invalid image path').trim()),
+    galleryImages: z.array(z.string().min(1, 'Invalid image path').trim()),
     thumbnailImage: z.string().min(1, 'Invalid thumbnail image path').trim(),
     youtubeVideoUrl: z.url('Invalid YouTube video URL').nullable(),
 });

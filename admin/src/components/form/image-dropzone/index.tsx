@@ -54,7 +54,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
                         <Typography variant="small">Uploading...</Typography>
                     </div>   
                 ) : previewImage ? (
-                    <div className='relative w-full h-50  bg-muted rounded-xl overflow-hidden'>
+                    <div className='relative w-full h-full min-h-50 bg-muted rounded-xl overflow-hidden'>
                         <FallbackImage 
                             src={previewImage}
                             fill

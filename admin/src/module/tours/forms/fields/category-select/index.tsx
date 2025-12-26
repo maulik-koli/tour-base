@@ -44,7 +44,7 @@ const CategorySelect: React.FC = () => {
     return (
         <div className='flex flex-col gap-1.5'>
             <FieldLabel>Tour Category</FieldLabel>
-            <div className='w-full rounded-md bg-card p-3 border border-border flex flex-col gap-2'>
+            <div className='w-full rounded-md bg-card p-3 border border-border flex flex-col gap-3'>
                 <div className='p-4 bg-input border border-border rounded-md'>
                     {isLoading ? (
                         <div className='w-full h-full flex items-center justify-center'>

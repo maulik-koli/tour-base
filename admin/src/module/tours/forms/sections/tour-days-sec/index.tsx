@@ -1,6 +1,6 @@
 import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
-import { CreateTourFormType, DayDetailsType } from '@module/tours/utils/schema';
+import { CreateTourFormType, DEFAILT_DAY_PLAN } from '@module/tours/utils/schema';
 
 import Icon from '@/components/icons';
 import CollapsibleComponent from '@ui/collapsible/index';
@@ -9,12 +9,6 @@ import { RichTextEditor } from '@module/tours/forms/fields';
 import { InputField } from '@/components/form';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
-
-const DEFAILT_DAY_PLAN: DayDetailsType = {
-    subtitle: '',
-    title: '',
-    description: '',
-};
 
 
 const ToursFormDaysSections: React.FC = () => {
@@ -44,6 +38,9 @@ const ToursFormDaysSections: React.FC = () => {
             }
         >
             <CollapsibleComponent
+                contentClassName='px-4'
+                triggerClassName='px-4'
+                className='gap-4'
                 items={fields.map((_, index) => {
                     return {
                         label: (
@@ -62,7 +59,7 @@ const ToursFormDaysSections: React.FC = () => {
                         ),
                         children: (
                             <div className='space-y-6 pb-2'>
-                                <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
+                                <div className='grid grid-cols-2 gap-6'>
                                     <Controller
                                         control={control}
                                         name={`tour.dayPlans.${index}.title`}

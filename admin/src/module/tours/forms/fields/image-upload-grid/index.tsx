@@ -1,7 +1,6 @@
 import React from 'react'
-import { useController, useFormContext } from 'react-hook-form'
+import { Control, FieldValues, Path, useController } from 'react-hook-form'
 import { useUploadImage } from '@module/media/utils/useUploadImage';
-import { CreateTourFormType } from '@module/tours/utils/schema';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
@@ -11,13 +10,22 @@ import { CustomSpinner } from '@ui/spinner';
 import { Typography } from '@ui/typography';
 import { Button } from '@ui/button';
 
+interface ImageUploadGridProps<T extends FieldValues> {
+    control: Control<T>;
+    name: Path<T>;
+    label?: string;
+}
 
-const ImageUploadGrid: React.FC = () => {
-    const  { control }  = useFormContext<CreateTourFormType>();
+
+const ImageUploadGrid = <T extends FieldValues>({
+    name,
+    control,
+    label,
+} : ImageUploadGridProps<T>) => {
 
     const { field } = useController({
         control,
-        name: "tour.images",
+        name,
     });
 
     const values = (field.value || []) as string[];
@@ -48,7 +56,7 @@ const ImageUploadGrid: React.FC = () => {
 
     return (
         <div className='flex flex-col gap-1.5'>
-            <FieldLabel>Gallery Images</FieldLabel>
+            <FieldLabel>{label}</FieldLabel>
             <div
                 {...getRootProps()}
                 className={cn(
@@ -77,14 +85,14 @@ const ImageUploadGrid: React.FC = () => {
                 )}
             </div>
             {uploadError && <FieldDescription>{uploadError}</FieldDescription>}
-            <div className='mt-1.5'>
-                <div className='grid grid-cols-3'>
-                   {values.map((value, index) => (
+            <div className='mt-4'>
+                <div className='grid grid-cols-3 gap-6'>
+                    {values.map((value, index) => (
                         <div 
                             key={index}
                             className="group relative max-h-40 aspect-square bg-muted rounded-lg overflow-hidden border border-border "
                         >
-                            <FallbackImage 
+                            <FallbackImage
                                 src={value}
                                 fill
                                 crop="fill"
@@ -92,7 +100,6 @@ const ImageUploadGrid: React.FC = () => {
                                 sizes="(max-width: 768px) 100vw, 50vw"
                                 className='rounded-lg'
                             />
-                            {/* Remove Button */}
                             <Button
                                 type="button"
                                 variant="destructive"
@@ -104,7 +111,7 @@ const ImageUploadGrid: React.FC = () => {
                                 <Icon name='X' width={8} height={8} stroke='currentColor' />
                             </Button>
                         </div>
-                ))}
+                    ))}
                 </div>
             </div>
         </div>

@@ -1,12 +1,12 @@
 "use client";
+import React, { useEffect, useState } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import { getExtensions } from "./extensions";
+import { cn } from "@/lib/utils";
 
 import Icon from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { FieldLabel } from "@/components/ui/field";
-import { cn } from "@/lib/utils";
-import { useEditor, EditorContent } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
-import { useEffect, useState } from "react";
 
 interface RichTextEditorProps {
     value: string;
@@ -17,16 +17,7 @@ interface RichTextEditorProps {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label }) => {
     const editor = useEditor({
-        extensions: [
-            StarterKit.configure({
-                bulletList: {
-                    HTMLAttributes: { class: "list-disc ml-5" },
-                },
-                orderedList: {
-                    HTMLAttributes: { class: "list-decimal ml-5" },
-                },
-            }),
-        ],
+        extensions: getExtensions(),
         content: value,
         immediatelyRender: false,
         onUpdate: ({ editor }) => {
@@ -37,8 +28,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
 
     const [active, setActive] = useState({
         bold: false,
+        underline: false,
         bulletList: false,
         orderedList: false,
+        link: false,
     });
 
     useEffect(() => {
@@ -47,8 +40,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
         const updateActive = () => {
             setActive({
                 bold: !!editor.isActive("bold"),
+                underline: !!editor.isActive("underline"),
                 bulletList: !!editor.isActive("bulletList"),
                 orderedList: !!editor.isActive("orderedList"),
+                link: !!editor.isActive("link"),
             });
         };
 
@@ -65,6 +60,40 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
         };
     }, [editor]);
 
+    const setLink = () => {
+        if (!editor) return;
+
+        const previousUrl = editor.getAttributes("link").href;
+        const url = window.prompt("URL (e.g., https://example.com)", previousUrl);
+        // for now just have add prompt, later can have a better UI like modal (if needed)
+
+        if (url === null) return;
+
+        if (url === "") {
+            editor.chain().focus().extendMarkRange("link").unsetLink().run();
+            return;
+        }
+
+        editor.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
+    };
+
+    const setColor = () => {
+        if (!editor) return;
+
+        const color = window.prompt("Enter color (e.g., #ff0000 or red)");
+        // for now just have add prompt, later can have a better UI like modal (if needed)
+
+        if (color) {
+            editor.chain().focus().setColor(color).run();
+        }
+    };
+
+    const handleContainerClick = (e: React.MouseEvent) => {
+        if (e.target === e.currentTarget && editor) {
+            editor.chain().focus('end').run();
+        }
+    };
+
     if (!editor) return null;
 
 
@@ -72,7 +101,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
         <div className='flex flex-col gap-1.5'>
             {label && <FieldLabel>{label}</FieldLabel>}
             <div className="w-full border border-border rounded-md bg-card">
-                <div className="flex gap-2 bg-secondary/50 rounded-t-md p-2 border-b border-border">
+                <div className="flex gap-2 bg-secondary/50 rounded-t-md p-3 border-b border-border">
                     <Button
                         type="button"
                         size="icon"
@@ -81,6 +110,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
                         className={cn(active.bold && "bg-primary/30 text-secondary-foreground")}
                     >
                         <Icon name="Bold" width={16} height={16} />
+                    </Button>
+
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={() => editor.chain().focus().toggleUnderline().run()}
+                        className={cn(active.underline && "bg-primary/30 text-secondary-foreground")}
+                    >
+                        <Icon name="Underline" width={16} height={16} />
                     </Button>
 
                     <Button
@@ -102,11 +141,31 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
                     >
                         <Icon name="ListOrdered" width={16} height={16} />
                     </Button>
+
+                    <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={setLink}
+                        className={cn(active.link && "bg-primary/30 text-secondary-foreground")}
+                    >
+                        <Icon name="Link" width={16} height={16} />
+                    </Button>
+
+                     <Button
+                        type="button"
+                        size="icon"
+                        variant="outline"
+                        onClick={setColor}
+                    >
+                        <Icon name="Palette" width={16} height={16} />
+                    </Button>
                 </div>
 
                 <EditorContent
                     editor={editor}
-                    className="tiptap-editor max-w-none min-h-40 p-2"
+                    className="tiptap-editor max-w-none overflow-y-auto min-h-40 max-h-100 p-3"
+                    onClick={handleContainerClick}
                 />
             </div>
         </div>

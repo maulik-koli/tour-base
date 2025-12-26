@@ -15,5 +15,6 @@ export const preparePackagePayload = (data: PackageFieldType): PackageFormType =
         pricePerPerson: data.pricePerPerson,
         startCity: data.startCity,
         starHierarchy: data.starHierarchy,
+        childrenPrice: data.childrenPrice,
     }
 }
