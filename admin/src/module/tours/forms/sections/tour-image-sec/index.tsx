@@ -12,7 +12,17 @@ const TourImageSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <TourFormCardWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-y-4 gap-x-8">
+        <TourFormCardWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
+            <ImageUploadGrid
+                control={control}
+                name="tour.images"
+                label="Slider Images"
+            />
+            <ImageUploadGrid
+                control={control}
+                name="tour.galleryImages"
+                label="Gallery Images"
+            />
             <Controller
                 control={control}
                 name='tour.thumbnailImage'
@@ -21,11 +31,10 @@ const TourImageSection: React.FC = () => {
                         label='Thumbnail Image'
                         onChange={field.onChange}
                         value={field.value}
-                        imageClassName="h-full max-h-78"
+                        imageClassName="h-full max-h-80 min-h-60"
                     />
                 )}
             />
-            <ImageUploadGrid />
         </TourFormCardWrapper>
     )
 }

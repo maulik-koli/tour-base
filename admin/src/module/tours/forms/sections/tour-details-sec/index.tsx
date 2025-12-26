@@ -3,26 +3,22 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { CreateTourFormType } from '@module/tours//utils/schema'
 
 import TourFormCardWrapper from '../tour-form-card-wrapper'
-import { ArrayListInput, CategorySelect } from '@module/tours/forms/fields'
-import { TextareaComponent } from '@/components/form'
+import { ArrayListInput, CategorySelect, RichTextEditor } from '@module/tours/forms/fields'
 
 
 const TourDetailsSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <TourFormCardWrapper cardTitle="Details" contentClassName='flex flex-col gap-4'>
+        <TourFormCardWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
             <Controller
                 control={control}
                 name='tour.description'
-                render={({ field, fieldState }) => (
-                    <TextareaComponent
-                        label="Tour Description"
-                        placeholder="Enter tour description"
+                render={({ field }) => (
+                    <RichTextEditor
+                        label="Description"
                         onChange={field.onChange}
-                        value={field.value}
-                        rows={8}
-                        errMsg={fieldState.error?.message}
+                        value={field.value || ""}
                     />
                 )}
             />

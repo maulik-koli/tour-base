@@ -45,7 +45,7 @@ const HotelInput: React.FC<HotelInputProps> = ({ packageIndex }) => {
                 ) : (
                     <div className='flex flex-col gap-3'>
                         {fields.map((field, index) => (
-                            <div key={field.id} className='flex bg-card justify-between gap-2 p-2 border border-border rounded-md'>
+                            <div key={field.id} className='flex bg-card justify-between gap-4 px-3 py-4 border border-border rounded-md'>
                                 <Controller
                                     control={control}
                                     name={`packages.${packageIndex}.hotels.${index}.nightNo`}

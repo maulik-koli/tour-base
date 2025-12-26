@@ -11,17 +11,16 @@ import { SpinnerOverlay } from '@ui/spinner'
 const TourPage: React.FC = () => {
     const tour = useParams().tour;
     const [isMount, setIsMount] = React.useState(false);
-    const { data, error, isLoading, refetch } = useGetTour({ slug: tour as string });
+
+    const { data, error, isLoading } = useGetTour(
+        { slug: tour as string },
+        isMount
+    );
 
     useEffect(() => {
-        refetch();
-    }, [tour, refetch]);
-
-    useEffect(() => {
-        if(isMount) return;
+        if (isMount) return;
         setIsMount(true);
-    }, []);
-
+    }, [isMount]);
     
     const getContent = () => {
         if (isLoading || !isMount) {

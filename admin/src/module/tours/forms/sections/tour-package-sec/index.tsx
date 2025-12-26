@@ -15,6 +15,7 @@ import { InputField, CounterInput, SelectField } from '@/components/form';
 import { HotelInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
+import { logger } from '@/lib/utils';
 
 interface TourFormPackageSectionProps {
     type?: 'create' | 'update';
@@ -42,6 +43,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
 
     const handleSavePackage = async (index: number) => {
         const data = getValues(`packages.${index}`) as PackageFieldType;
+        logger("Saving package data", data);
 
         if(isUpdateMode) {
             const isAddPckage = !data._id;
@@ -51,6 +53,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
 
                 if(resData) setValue(`packages.${index}`, resData);
             } else {
+                logger("Updating package data", data);
                 const resData = await handleUpdatePackage(data);
                 if(resData) setValue(`packages.${index}`, resData);
             }
@@ -106,6 +109,9 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
             }
         >
             <CollapsibleComponent
+                className='gap-4'
+                contentClassName='px-4 border-t'
+                triggerClassName='px-4'
                 items={fields.map((_, index) => {
                     return {
                         label: (
@@ -141,8 +147,8 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                             </div>
                         ),
                         children: (
-                            <div className='flex flex-col gap-4 border-t pt-6 pb-3'>
-                                <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
+                            <div className='flex flex-col gap-4 pb-3'>
+                                <div className='grid grid-cols-2 gap-6'>
                                     <Controller
                                         control={control}
                                         name={`packages.${index}.name`}
@@ -156,7 +162,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                             />
                                         )}
                                     />
-                                    <div className='grid grid-cols-3 gap-5'>
+                                    <div className='grid grid-cols-2 gap-6'>
                                         <Controller
                                             control={control}
                                             name={`packages.${index}.days`}
@@ -165,7 +171,6 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                                     value={field.value}
                                                     onChange={field.onChange}
                                                     label='Days'
-                                                    containerClassName="min-w-25"
                                                 />
                                             )}
                                         />
@@ -177,22 +182,6 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                                     value={field.value}
                                                     onChange={field.onChange}
                                                     label='Nights'
-                                                    containerClassName="min-w-25"
-                                                />
-                                            )}
-                                        />
-                                        <Controller
-                                            control={control}
-                                            name={`packages.${index}.pricePerPerson`}
-                                            render={({ field, fieldState }) => (
-                                                <InputField
-                                                    type='number'
-                                                    min={0}
-                                                    label="Package Price"
-                                                    placeholder="Enter package price per person"
-                                                    onChange={(value) => field.onChange(Number(value))}
-                                                    value={String(field.value)}
-                                                    errMsg={fieldState.error?.message}
                                                 />
                                             )}
                                         />
@@ -224,7 +213,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         )}
                                     />
                                 </div>
-                                <div className='flex items-center justify-between'>
+                                <div className='grid grid-cols-3 gap-6'>
                                     <Controller
                                         control={control}
                                         name={`packages.${index}.starHierarchy`}
@@ -235,6 +224,36 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                                 onChange={(value) => field.onChange(Number(value))}
                                                 value={field.value.toString()}
                                                 containerClass='min-w-50'
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name={`packages.${index}.pricePerPerson`}
+                                        render={({ field, fieldState }) => (
+                                            <InputField
+                                                type='number'
+                                                min={0}
+                                                label="Package Price"
+                                                placeholder="Enter package price per person"
+                                                onChange={(value) => field.onChange(Number(value))}
+                                                value={String(field.value)}
+                                                errMsg={fieldState.error?.message}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name={`packages.${index}.childrenPrice`}
+                                        render={({ field, fieldState }) => (
+                                            <InputField
+                                                type='number'
+                                                min={0}
+                                                label="Children Price"
+                                                placeholder="Enter package price for 6-11 years old"
+                                                onChange={(value) => field.onChange(Number(value))}
+                                                value={String(field.value)}
+                                                errMsg={fieldState.error?.message}
                                             />
                                         )}
                                     />

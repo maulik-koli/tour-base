@@ -13,6 +13,7 @@ export const packageZodSchema = z.object({
     nights: z.number().int().nonnegative('Night must be positive or zero'),
 
     pricePerPerson: z.number().int().min(1, 'Price per person must be positive and greater than zero'),
+    childrenPrice: z.number().int().min(0, 'Children price must be positive or zero'),
     starHierarchy: z.number()
         .int()
         .min(1, 'Star number must be at least 1')
@@ -34,6 +35,7 @@ export const DEFAULT_PACKAGE : PackageFormType = {
     startCity: "",
     endCity: "",
     pricePerPerson: 0,
+    childrenPrice: 0,
     starHierarchy: 1,
     hotels: [],
 }

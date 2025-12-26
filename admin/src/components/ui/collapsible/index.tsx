@@ -9,54 +9,61 @@ type CollapsibleItemType = {
 
 interface CollapsibleComponentProps {
     items: CollapsibleItemType[];
+    className?: string;
+    triggerClassName?: string;
+    contentClassName?: string;
 }
 
 
 const CollapsibleComponent =  React.forwardRef<HTMLDivElement, CollapsibleComponentProps>(
-    ({ items }, ref) => {
-        const [openStates, setOpenStates] = useState<boolean[]>(() => items.map(() => false));
+    ({ items, className, triggerClassName, contentClassName }, ref) => {
 
-        useEffect(() => {
-            setOpenStates(items.map(() => false));
-        }, [items.length]);
+    const [openStates, setOpenStates] = useState<boolean[]>(() => items.map(() => false));
 
-        const toggleItem = (index: number, open: boolean) => {
-            setOpenStates((prev) =>
-                prev.map((v, i) => (i === index ? open : v))
-            );
-        };
+    useEffect(() => {
+        setOpenStates(items.map(() => false));
+    }, [items.length]);
+
+    const toggleItem = (index: number, open: boolean) => {
+        setOpenStates((prev) =>
+            prev.map((v, i) => (i === index ? open : v))
+        );
+    };
 
 
-        return (
-            <div className='flex flex-col gap-2' ref={ref} >
-                {items.map(({label, children}, index) => (
-                    <Collapsible
-                        key={index}
-                        open={openStates[index] ?? false}
-                        onOpenChange={(open) => toggleItem(index, open)}
-                    >
-                        <CollapsibleTrigger asChild>
-                            <div
-                                className={cn(
-                                    "w-full p-2 cursor-pointer",
-                                    openStates[index]
+    return (
+        <div className={cn('flex flex-col gap-2', className)} ref={ref} >
+            {items.map(({label, children}, index) => (
+                <Collapsible
+                    key={index}
+                    open={openStates[index] ?? false}
+                    onOpenChange={(open) => toggleItem(index, open)}
+                >
+                    <CollapsibleTrigger asChild>
+                        <div
+                            className={cn(
+                                "w-full p-2 cursor-pointer",
+                                openStates[index]
                                     ? "rounded-t-md border-x border-t"
-                                    : "rounded-md border"
-                                )}
-                            >
-                                {label}
-                            </div>
-                        </CollapsibleTrigger>
+                                    : "rounded-md border",
+                                triggerClassName
+                            )}
+                        >
+                            {label}
+                        </div>
+                    </CollapsibleTrigger>
 
-                        <CollapsibleContent className='w-full border-x border-b border-border p-2 rounded-b-md'>
-                            {children}
-                        </CollapsibleContent>
-                    </Collapsible>
-                ))}
-            </div>
-        )
-    }
-);
+                    <CollapsibleContent className={cn(
+                        'w-full border-x border-b border-border p-2 rounded-b-md',
+                        contentClassName
+                    )}>
+                        {children}
+                    </CollapsibleContent>
+                </Collapsible>
+            ))}
+        </div>
+    )
+});
 
 CollapsibleComponent.displayName = "CollapsibleComponent";
 export default CollapsibleComponent;

@@ -15,13 +15,17 @@ const TourFormCardWrapper: React.FC<TourFormCardWrapperProps> = ({
     cardTitle, children, contentClassName, headerNode, isChildrenEmpty= false
 }) => {
     return (
-        <Card className='gap-2.5 shadow-none border border-border'>
-            <CardHeader className={cn(headerNode && "flex items-center justify-between")}>
-                <CardTitle className={typographyVariants({ variant: 'h4' })}>{cardTitle}</CardTitle>
+        <Card className='gap-0 py-0 shadow-none border border-border'>
+            <CardHeader className={cn(
+                "gap-0 pt-3", 
+                headerNode && "flex items-center justify-between",
+                isChildrenEmpty && "pb-3"
+            )}>
+                <CardTitle className={cn(typographyVariants({ variant: 'h3' }))}>{cardTitle}</CardTitle>
                 {headerNode}
             </CardHeader>
             {isChildrenEmpty ? null : (
-                <CardContent className={cn(contentClassName)}>
+                <CardContent className={cn("pb-6 pt-3", contentClassName)}>
                     {children}
                 </CardContent>
             )}

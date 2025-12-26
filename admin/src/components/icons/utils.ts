@@ -33,7 +33,10 @@ import {
     Mail,
     Phone,
     Ticket,
-    Pencil
+    Pencil,
+    Underline,
+    Link,
+    Palette
 } from "lucide-react"
 
 
@@ -72,5 +75,8 @@ export const LUCIDE_ICON_MAP = {
     Mail,
     Phone,
     Ticket,
-    Pencil
+    Pencil,
+    Underline,
+    Link,
+    Palette
 }

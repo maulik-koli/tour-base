@@ -41,6 +41,7 @@ export const useUpdateTour = (
         mutationFn: (payload) => safeAxios(() => updateTour(payload)),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [QUERY_REGISTRY.getTours] });
+            queryClient.invalidateQueries({ queryKey: [QUERY_REGISTRY.getTour] });
         },
         ...options,
     });
@@ -58,7 +59,16 @@ export const useDeleteTour = (
     return useMutation({
         mutationKey: [MUTATION_REGISTRY.deleteTour],
         mutationFn: (payload) => safeAxios(() => deleteTour(payload)),
-        onSuccess: () => {
+        onMutate: async (payload) => {
+            await queryClient.cancelQueries({ 
+                queryKey: [QUERY_REGISTRY.getTours, { slug: payload.slug }]
+            });
+        },
+        onSuccess: (_, payload) => {
+            queryClient.removeQueries({ 
+                queryKey: [QUERY_REGISTRY.getTours, { slug: payload.slug }] 
+            });
+
             queryClient.invalidateQueries({ queryKey: [QUERY_REGISTRY.getTours] });
         },
         ...options,
