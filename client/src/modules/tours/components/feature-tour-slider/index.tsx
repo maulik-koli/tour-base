@@ -16,11 +16,13 @@ const FeatureTourSlider: React.FC = () => {
         if (isLoading) {
             return <CustomSpinner />
         }
-        if (error || !data || !data.data) {
+
+        if (error || !data || !data.data || data.data.length === 0) {
             return <ErrorBlock
                 type='error' 
                 message={error ? error.message : 'Failed to load featured tours.'} 
                 description='Please try again later.'
+                className='min-h-60'
             />;
         }
 

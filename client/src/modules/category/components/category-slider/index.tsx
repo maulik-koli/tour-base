@@ -2,73 +2,48 @@
 import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import { useGetCategories } from '@modules/category/api/queries';
 import { cn } from '@/lib/utils';
 
-import Image from 'next/image';
+import ErrorBlock from '@/components/error-block';
+import FallbackImage from '@/components/fallback-image';
 import SectionHeader from '@modules/main/components/section-header';
 import { Typography } from '@/components/ui/typography';
+import { CustomSpinner } from '@ui/spinner';
 
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
-export const TOUR_CATEGORIES = [
-    {
-        id: 1,
-        value: "beach",
-        label: "Beach Getaways",
-        image: "/hero-for-now.avif",
-        tagline: "Relax by the sea, sunsets & coastal vibes",
-    },
-    {
-        id: 2,
-        value: "hill-station",
-        label: "Hill Escapes",
-        image: "/hero-for-now.avif",
-        tagline: "Cool weather, mountains & scenic views",
-    },
-    {
-        id: 3,
-        value: "spiritual",
-        label: "Spiritual Journeys",
-        image: "/hero-for-now.avif",
-        tagline: "Sacred temples & peaceful retreats",
-    },
-    {
-        id: 4,
-        value: "nature",
-        label: "Nature & Wildlife",
-        image: "/hero-for-now.avif",
-        tagline: "Forests, rivers & untouched beauty",
-    },
-    {
-        id: 5,
-        value: "heritage",
-        label: "Heritage & Culture",
-        image: "/hero-for-now.avif",
-        tagline: "Forts, traditions & timeless stories",
-    },
-    {
-        id: 6,
-        value: "adventure",
-        label: "Adventure Trips",
-        image: "/hero-for-now.avif",
-        tagline: "Trekking, rafting & thrill experiences",
-    },
-]
-
 
 const CategorySlider: React.FC = () => {
-    // will call api here
-    return (
-        <section className="w-full py-20 overflow-hidden bg-background">
-            <SectionHeader
-                title={<>
-                    Find Your <span className="text-primary">Perfect</span> Travel Experience
-                </>}
-                subtitle="From peaceful spiritual journeys to relaxing beach escapes and thrilling adventures across India."
-            />
+    const { data, isLoading, error } = useGetCategories();
+    
 
+    const getContent = () => {
+        if (isLoading) {
+            return <CustomSpinner className='w-full min-h-80 flex items-center justify-center' />
+        }
+
+        if (error) {
+            return <ErrorBlock
+                type='error' 
+                message={error?.message} 
+                description='Please try again later.'
+                className='min-h-80'
+            />;
+        }
+
+        if(!data || (data && data.data?.length === 0)) {
+            return <ErrorBlock 
+                type='no-data'
+                message='No featured tours found.'
+                description='You have not marked any tours as featured yet.'
+                className='min-h-30'
+            />
+        }
+
+        return (
             <Swiper
                 modules={[Autoplay]}
                 slidesPerView={3}
@@ -81,8 +56,8 @@ const CategorySlider: React.FC = () => {
                 }}
                 className="overflow-visible!"
             >
-                {TOUR_CATEGORIES.map((item) => (
-                    <SwiperSlide key={item.id}>
+                {data.data?.map((item) => (
+                    <SwiperSlide key={item._id}>
                         {({ isActive }) => (
                             <div
                                 className={cn(
@@ -90,24 +65,44 @@ const CategorySlider: React.FC = () => {
                                     isActive ? "scale-105 shadow-2xl" : "scale-95 opacity-80"
                                 )}
                             >
-                                <Image
+                                <FallbackImage
                                     src={item.image}
-                                    alt={item.label}
+                                    alt={item.name}
                                     fill
+                                    crop="fill"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                     className="object-cover"
                                 />
 
                                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
                                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                                    <Typography variant="h4" className="text-primary-foreground font-semibold">{item.label}</Typography>
-                                    <Typography variant="p" className=" text-primary-foreground/80">{item.tagline}</Typography>
+                                    <Typography variant="h4" className="text-primary-foreground font-semibold">
+                                        {item.name}
+                                    </Typography>
+                                    <Typography variant="p" className=" text-primary-foreground/80">
+                                        {item.subtitle}
+                                    </Typography>
                                 </div>
                             </div>
                         )}
                     </SwiperSlide>
                 ))}
             </Swiper>
+        )
+    }
+
+
+    return (
+        <section className="w-full py-20 overflow-hidden bg-background">
+            <SectionHeader
+                title={<>
+                    Find Your <span className="text-primary">Perfect</span> Travel Experience
+                </>}
+                subtitle="From peaceful spiritual journeys to relaxing beach escapes and thrilling adventures across India."
+            />
+
+            {getContent()}
         </section>
     )
 }

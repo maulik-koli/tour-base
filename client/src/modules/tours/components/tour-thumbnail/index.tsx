@@ -1,19 +1,25 @@
 'use client'
 import React, { useMemo } from 'react'
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
 import { TourPackage } from '@modules/tours/api/types'
 
 import Icon from '@/components/icons'
 import FallbackImage from '@/components/fallback-image'
 import { Typography } from '@ui/typography'
 
+import "swiper/css";
+import "swiper/css/effect-fade";
+
 interface TourThumbnailProps {
     name: string;
     thumbnailImage: string;
     packages: TourPackage[];
+    images: string[];
 }
 
 
-const TourThumbnail: React.FC<TourThumbnailProps> = ({ name, thumbnailImage, packages }) => {
+const TourThumbnail: React.FC<TourThumbnailProps> = ({ name, thumbnailImage, packages, images }) => {
     const { minDays, maxDays } = useMemo(() => {
         return {
             minDays: Math.min(...packages.map(p => p.days)),
@@ -21,16 +27,40 @@ const TourThumbnail: React.FC<TourThumbnailProps> = ({ name, thumbnailImage, pac
         }
     }, [packages])
 
+    const allImages = useMemo(() => {
+        return [thumbnailImage, ...images];
+    }, [thumbnailImage, images]);
+
     return (
         <div className='relative w-full h-96 min-h-96 overflow-hidden'>
-            <FallbackImage
-                src={thumbnailImage}
-                alt={name}
-                crop="fill"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className='object-cover'
-            />
+            <div className='absolute inset-0 z-0'>
+                <Swiper
+                    modules={[Autoplay, EffectFade]}
+                    effect="fade"
+                    fadeEffect={{ crossFade: true }}
+                    autoplay={{
+                        delay: 3000,
+                        disableOnInteraction: false,
+                    }}
+                    loop={true}
+                    speed={1000}
+                    className="w-full h-full"
+                    allowTouchMove={false}
+                >
+                    {allImages.map((image, index) => (
+                        <SwiperSlide key={index}>
+                            <FallbackImage
+                                src={image}
+                                alt={`${name} - Image ${index + 1}`}
+                                crop="fill"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                className='object-cover'
+                            />
+                        </SwiperSlide>
+                    ))}
+                </Swiper>
+            </div>
 
             <div className='absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent' />
 

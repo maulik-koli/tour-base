@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tour } from '@modules/tours/api/types'
+import { Tour, TourPackage } from '@modules/tours/api/types'
 
 import Icon from '@/components/icons'
 import HtmlRichText from '../html-rich-text'
@@ -8,19 +8,20 @@ import FallbackImage from '@/components/fallback-image'
 import { Typography } from '@ui/typography'
 
 interface TourDetailComponentProps {
-    tour: Tour
+    tour: Tour,
+    selectedPackage: TourPackage | undefined;
 }
 // https://www.youtube.com/embed/dQw4w9WgXcQ
 
 
-const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour }) => {
+const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selectedPackage }) => {
+    const packgaesDays = selectedPackage ? selectedPackage.days : tour.dayPlans.length;
+
     return (
         <div className='flex flex-col space-y-12'>
             <div>
                 <Typography variant="h2" className='mb-4'>Overview</Typography>
-                <Typography variant="lead" className='text-muted-foreground'>
-                    {tour.description}
-                </Typography>
+                <HtmlRichText html={tour.description} className='text-muted-foreground' />
             </div>
 
             <div>
@@ -59,7 +60,7 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour }) => {
             <div>
                 <Typography variant="h2" className='mb-4'>Days-wise Details</Typography>
                 <AccordionComponent
-                    items={tour.dayPlans.map((day, index) => ({
+                    items={tour.dayPlans.slice(0, packgaesDays).map((day, index) => ({
                         label: (
                                 <div className='w-full flex items-center gap-3'>
                                     <div className='w-9 h-9 min-h-9 min-w-9 rounded-full flex items-center justify-center bg-primary text-lg font-semibold text-primary-foreground'>

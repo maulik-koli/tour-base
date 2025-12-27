@@ -13,6 +13,7 @@ import {
 import { IconName } from "@/components/icons"
 import NavUser from "../nav-user"
 import SidebarNavLink from "../sidebar-nav-link";
+import LogoutButton from "@module/admin/components/logout-btn";
 
 export type SideBarItem = {
     title: string;
@@ -67,7 +68,7 @@ const AppSidebar: React.FC = () => {
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter>
-                <NavUser user={USER} />
+                <LogoutButton />
             </SidebarFooter>
         </Sidebar>
     )

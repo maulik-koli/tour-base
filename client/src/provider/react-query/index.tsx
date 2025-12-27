@@ -18,8 +18,6 @@ const queryClient = new QueryClient({
                 }
                 return failureCount < 2;
             },
-            refetchOnWindowFocus: false,
-            retryOnMount: false,
         },
         mutations: {
             retry: false,

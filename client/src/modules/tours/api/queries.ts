@@ -19,7 +19,6 @@ export const useGetTours = (
     return useQuery({
         queryKey: [QUERY_REGISTRY.getTours, params],
         queryFn: () => safeAxios(() => getTours(params)),
-        // staleTime: 1000 * 60,
         retry: false,
         ...options,
     });
@@ -38,7 +37,6 @@ export const useGetTourDetail = (
     return useQuery({
         queryKey: [QUERY_REGISTRY.getTour, params],
         queryFn: () => safeAxios(() => getTour(params)),
-        staleTime: 1000 * 60,
         retry: false,
         ...options,
     });
@@ -56,7 +54,6 @@ export const useGetFeaturedTours = (
     return useQuery({
         queryKey: [QUERY_REGISTRY.getFeaturedTours],
         queryFn: () => safeAxios(() => getFeaturedTours()),
-        staleTime: 1000 * 60,
         retry: false,
         ...options,
     });

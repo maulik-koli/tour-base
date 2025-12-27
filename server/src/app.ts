@@ -37,8 +37,10 @@ app.use(hpp());
 
 // Rate Limiting
 const apiLimiter = rateLimit({
-    windowMs: 30 * 60 * 1000,
-    max: 150,
+    windowMs: 60 * 1000,
+    max: 60,
+    standardHeaders: true,
+    legacyHeaders: false,
     message: {
         status: 429,
         message: 'Too many requests, please try again later.'
