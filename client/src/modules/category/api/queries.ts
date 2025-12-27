@@ -1,8 +1,8 @@
 import { useQuery, UseQueryOptions, UseQueryResult } from "@tanstack/react-query";
 import { safeAxios } from "@/lib/api/axios";
-import { getCategoryOptions } from "./api";
+import { getCategories, getCategoryOptions } from "./api";
 
-import { GetCategoryOptionsResponse } from "./types";
+import { GetCategoriesResponse, GetCategoryOptionsResponse } from "./types";
 import { ApiError, ApiResponse } from "@/types/api";
 import { QUERY_REGISTRY } from "@/constants/apiRegistery";
 
@@ -18,7 +18,23 @@ export const useGetCategoryOptions = (
     return useQuery({
         queryKey: [QUERY_REGISTRY.getCategoryOptions],
         queryFn: () => safeAxios(() => getCategoryOptions()),
-        staleTime: 1000 * 60,
+        retry: false,
+        ...options,
+    });
+};
+
+
+export const useGetCategories = (
+    options?: UseQueryOptions<
+        ApiResponse<GetCategoriesResponse>,
+        ApiError,
+        ApiResponse<GetCategoriesResponse>
+    >,
+): UseQueryResult<ApiResponse<GetCategoriesResponse>, ApiError> => {
+    
+    return useQuery({
+        queryKey: [QUERY_REGISTRY.getCategories],
+        queryFn: () => safeAxios(() => getCategories()),
         retry: false,
         ...options,
     });

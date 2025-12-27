@@ -36,7 +36,7 @@ import {
     Pencil,
     Underline,
     Link,
-    Palette
+    Palette,
 } from "lucide-react"
 
 
@@ -78,5 +78,5 @@ export const LUCIDE_ICON_MAP = {
     Pencil,
     Underline,
     Link,
-    Palette
+    Palette,
 }

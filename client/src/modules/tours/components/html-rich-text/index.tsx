@@ -6,14 +6,15 @@ import { typographyVariants } from '@ui/typography';
 
 interface HtmlRichTextProps {
     html: string;
+    className?: string;
 }
 
-const HtmlRichText: React.FC<HtmlRichTextProps> = ({ html }) => {
+const HtmlRichText: React.FC<HtmlRichTextProps> = ({ html, className }) => {
     const sanitizedHtml = DOMPurify.sanitize(html);
 
     return (
         <div
-            className={cn("prose", typographyVariants({ variant: 'p' }))}
+            className={cn("prose", typographyVariants({ variant: 'p' }), className)}
             dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
         />
     )

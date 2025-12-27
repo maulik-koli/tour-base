@@ -2,6 +2,8 @@
 export const COOKIE_NAME = "__secure-atkn"
 
 export const QUERY_REGISTRY = {
+    getProfile: "admin-get-profile",
+
     getTours : "get-tours",
     getTour : "get-tour",
 
@@ -13,6 +15,7 @@ export const QUERY_REGISTRY = {
 
 export const MUTATION_REGISTRY = {
     login: 'admin-login',
+    logout: 'admin-logout',
 
     createSignature: "get-media-signature",
     uploadToCloudinary: "upload-to-cloudinary",

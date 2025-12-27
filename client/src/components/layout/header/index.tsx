@@ -9,7 +9,7 @@ const HEADER_DATA = [
     { title: 'Home', href: '/' },
     { title: 'Tours', href: '/tours' },
     { title: 'Contact', href: '/contact-us' },
-    { title: 'Resent Ticket', href: '/resent-ticket' },
+    { title: 'Ticket', href: '/ticket' },
 ]
 
 

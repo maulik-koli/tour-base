@@ -32,6 +32,7 @@ const TourDetailPage: React.FC = () => {
 
     const tourData = data.data.tour;
     const packagesData = data.data.packages;
+    const selectedPackageData = packagesData.find(pkg => pkg._id === selectedPackage);
     
     
     return (
@@ -40,11 +41,15 @@ const TourDetailPage: React.FC = () => {
                 name={tourData.name}
                 thumbnailImage={tourData.thumbnailImage}
                 packages={packagesData}
+                images={tourData.images}
             />
             <div className='w-full py-12 px-20'>
                 <div className="grid grid-cols-3 gap-12">
                     <div className="col-span-2 flex flex-col space-y-8">
-                        <TourDetailComponent tour={tourData} />
+                        <TourDetailComponent 
+                            tour={tourData}
+                            selectedPackage={selectedPackageData}
+                        />
                         <TourPackageTabs 
                             packages={packagesData}
                             handleSelectPackage={(id) => setSelectedPackage(id)}

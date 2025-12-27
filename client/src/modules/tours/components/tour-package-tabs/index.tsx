@@ -61,6 +61,12 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                                     </Typography>
                                 </div>
                                 <div className='flex items-center justify-between'>
+                                    <Typography variant="p">Price for 6-11 years old</Typography>
+                                    <Typography variant="h4" className='font-semibold text-primary'>
+                                        ₹ {selectedPackage.childrenPrice || selectedPackage.pricePerPerson}
+                                    </Typography>
+                                </div>
+                                <div className='flex items-center justify-between'>
                                     <Typography variant="p">Duration</Typography>
                                     <Typography variant="p" className='font-semibold'>
                                         {selectedPackage.days} Days / {selectedPackage.nights} Nights
