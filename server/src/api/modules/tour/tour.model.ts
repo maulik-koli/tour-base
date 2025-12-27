@@ -7,9 +7,7 @@ export interface IDayDetail {
     description: string;
 }
 
-interface DayDetailsDocument extends IDayDetail, Document {
-    _id: Types.ObjectId;
-}
+interface DayDetailsDocument extends IDayDetail, Document {}
 
 export interface ITour {
     slug: string;
