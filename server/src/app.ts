@@ -14,6 +14,7 @@ import tourRoutes from '@api/modules/tour/tour.routes';
 import packageRoutes from '@api/modules/packages/packages.routes';
 import mediaRoutes from '@api/modules/media/media.routes';
 import categoryRoutes from '@api/modules/category/category.routes';
+import bookingRoutes from '@api/modules/booking/booking.routes';
 
 const app: Application = express();
 
@@ -55,6 +56,7 @@ app.use('/api/tour', tourRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/category', categoryRoutes);
+app.use('/api/booking', bookingRoutes);
 
 
 // test route

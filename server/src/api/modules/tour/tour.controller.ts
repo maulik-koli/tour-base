@@ -1,6 +1,6 @@
 import { CreateTourPayload, SetFeaturedTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
 import { 
-    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getTourBySlug, getToursList, toggleFeaturedTour, updateTour
+    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getToursList, toggleFeaturedTour, updateTour
 } from "./tour.service";
 import { getPackagesByTourId } from "../packages/packages.service";
 
@@ -25,7 +25,7 @@ export const createTourController = asyncWrapper(async (req, res) => {
 export const getTourAdminController = asyncWrapper(async (req, res) => {
     const slug = req.params.slug;
 
-    const tour = await getTourBySlug(slug);
+    const tour = await findTour({ slug });
     const packages = await getPackagesByTourId(tour._id);
 
     successResponse(res, {
@@ -93,7 +93,10 @@ export const getToursListController = asyncWrapper(async (req, res) => {
 export const getTourController = asyncWrapper(async (req, res) => {
     const slug = req.params.slug;
 
-    const tour = await findTour(slug);
+    const tour = await findTour({ 
+        slug, 
+        isActive: true
+    });
     const packages = await getPackagesByTourId(tour._id);
 
     successResponse(res, {

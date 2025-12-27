@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Tour, { TourFields } from "./tour.model";
+import Tour, { TourFields, TourLean } from "./tour.model";
 import { CreateTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
 import { addPakagesToTour, deletePackagesByTourId } from "../packages/packages.service";
 
@@ -45,18 +45,8 @@ export const createTour = async (payload: CreateTourPayload) => {
 }
 
 
-export const findTour = async (slug: string) => {
-    const tour = await Tour.findOne({ slug, isActive: true }).lean();
-
-    if(!tour) {
-        throw new CustomError(404, 'Tour not found');
-    }
-    return tour;
-}
-
-
-export const getTourBySlug = async (slug: string, select?: TourFields[]) => {
-    const tour = await Tour.findOne({ slug })
+export const findTour = async (query: Partial<TourLean>, select?: TourFields[]) => {
+    const tour = await Tour.findOne(query)
         .select(select?.join(' ') || '')
         .lean();
 
