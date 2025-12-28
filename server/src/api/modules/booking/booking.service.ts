@@ -1,12 +1,13 @@
-import mongoose, { Types } from "mongoose";
-import Booking, { BookingFields, BookingLean } from "./booking.model";
+import{ Types } from "mongoose";
+import Booking, { BookingFields, BookingLean, BookingStatus } from "./booking.model";
 import Tour from "../tour/tour.model";
 import Package from "../packages/packages.model";
 
 import { BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
-import { CustomError } from "@/api/utils/response";
-import { log } from "@/api/utils/log";
 import { createCashFreeOrder } from "../payment/payment.service";
+import { CustomError } from "@/api/utils/response";
+import { CashfreePaymentWebhookPayload } from "../payment/payment.types";
+import { log } from "@/api/utils/log";
 
 const EXPIRED_AT_TIME = 30 * 60 * 1000; // 30 minutes
 
@@ -29,6 +30,7 @@ export const createBooking = async (payload: CreateBookingPayload) => {
         throw new CustomError(400, "Package does not exists for the given tour");
     }
 
+    // create draft booking
     const booking = await Booking.create({
         tourId: payload.tourId,
         packageId: payload.packageId,
@@ -56,6 +58,7 @@ export const findBooking = async (query: Partial<BookingLean>, select?: BookingF
 
 
 export const customerBooking = async (bookingId: string, payload: CustomerDetailsPayload) => {
+    // get booking details with tourId and packageId
     const booking = await Booking.aggregate([
         { 
             $match: { 
@@ -120,6 +123,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
         throw new CustomError(410, "Booking session expired");
     }
 
+    // commute total amount with customer details and package details of booking
     const commuteTotalAmount = payload.members.reduce((totalAmount, member) => {
         if (member.age < 6) {
             return totalAmount;
@@ -132,6 +136,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
 
     }, 0) || 0;
 
+    // update booking with customer details and total amount
     const result = await Booking.findOneAndUpdate(
         { _id: bookingId, bookingStatus: "DRAFT" },
         {
@@ -160,6 +165,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
 
 
 export const bookingPayment = async (bookingId: string, payload: BookingPaymentPayload) => {
+    // get booking details and validate it
     const booking = await findBooking(
         { _id: new Types.ObjectId(bookingId) }, 
         ['bookingStatus', 'packageDetails', 'expiresAt', 'customerDetails', "totalAmount"]
@@ -181,57 +187,81 @@ export const bookingPayment = async (bookingId: string, payload: BookingPaymentP
         throw new CustomError(500, "Booking total amount is not calculated");
     }
 
+    // make cashfree payment order
     const paymentAmount = payload.paymentOption === "PARTIAL" 
         ? booking.totalAmount * 0.5
         : booking.totalAmount;
 
-    const session = await mongoose.startSession();
-    session.startTransaction();
+    const response = await createCashFreeOrder({
+        paymentAmount, 
+        customerDetails: booking.customerDetails, 
+        bookingId: booking._id.toString()
+    });
 
-    try {
-        
-        const result = await Booking.findOneAndUpdate(
-            { _id: bookingId, bookingStatus: "DETAILS_FILLED" },
-            {
-                $set: {
-                    paymentDetails: {
-                        paymentOption: payload.paymentOption,
-                        paymentAmount: paymentAmount,
-                        paymentStatus: "ACTIVE",
-                    }
+    // update payment details with cashfree response
+    const result = await Booking.findOneAndUpdate(
+        { _id: bookingId, bookingStatus: "DETAILS_FILLED" },
+        {
+            $set: {
+                paymentDetails: {
+                    paymentOption: payload.paymentOption,
+                    order_status: response.order_status,
+                    order_amount: response.order_amount,
+                    cf_order_id: response.cf_order_id.toString(),
+                    order_created_at: response.created_at,
+                    payment_session_id: response.payment_session_id,
                 }
-            },
-            { 
-                new: true,
-                session: session,
             }
-        );
-    
-        log.info('Payment update result:', result);
-    
-        if (!result) {
-            throw new CustomError(409, "Booking payment update conflict. Please try again.");
-        }
+        },
+        { new: true }
+    );
 
-        if (result.paymentDetails === undefined) {
-            throw new CustomError(500, "Booking payment details are not set");
-        }
-
-        const response = await createCashFreeOrder(
-            result.paymentDetails.paymentAmount, 
-            result.customerDetails, 
-            result._id.toString()
-        );
-
-        await session.commitTransaction();
-
-        return response;
+    if (!result) {
+        throw new CustomError(409, "Booking payment update conflict. Please try again.");
     }
-    catch (error) {
-        await session.abortTransaction();
-        throw error;
+
+    return {
+        paymentSessionId: response.payment_session_id,
+        bookingId: result._id,
+    };
+}
+
+
+export const updateBookingPaymentStatus = async (
+    { order, payment } : { 
+        order: CashfreePaymentWebhookPayload['data']['order'], 
+        payment: CashfreePaymentWebhookPayload['data']['payment']
     }
-    finally {
-        session.endSession();
+) => {
+    const booking = await findBooking(
+        { _id: new Types.ObjectId(order.order_id) }, 
+        ['bookingStatus', 'paymentDetails', 'totalAmount']
+    );
+
+    if (!booking) {
+        throw new CustomError(500, "Booking details not found");
+    }
+
+    const bookingStatus: BookingStatus = payment.payment_status === "FAILED"
+        ? "FAILED"
+        : payment.payment_status === "SUCCESS"
+            ? booking.totalAmount === order.order_amount
+                ? "PAID_FULL"
+                : "PAID_PARTIAL"
+            : "FAILED";
+
+    const result = await Booking.findOneAndUpdate(
+        { _id: order.order_id },
+        {
+            $set: {
+                bookingStatus,
+                "paymentDetails.order_status": payment.payment_status,
+            }
+        },
+        { new: true }
+    );
+
+    if (!result) {
+        throw new CustomError(500, "Failed to update booking payment status");
     }
 }
