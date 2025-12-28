@@ -1,12 +1,12 @@
 import { model, Schema } from "mongoose";
 import { Types } from "mongoose";
 
-const bookingStatusEnum = ["DRAFT", "DETAILS_FILLED", "PAID_PARTIAL", "PAID_FULL"] as const;
-const paymentStatusEnum = ["ACTIVE", "PAID", "EXPIRED", "CANCELLED"] as const;
+const bookingStatusEnum = ["DRAFT", "DETAILS_FILLED", "PAID_PARTIAL", "PAID_FULL", "FAILED"] as const;
+const orderStatusEnum = ["ACTIVE", "PAID", "EXPIRED", "CANCELLED"] as const;
 export const paymentOptionsEnum = ["PARTIAL", "FULL"] as const;
 
-type BokkingStatus = typeof bookingStatusEnum[number];
-type PaymentStatus = typeof paymentStatusEnum[number];
+export type BookingStatus = typeof bookingStatusEnum[number];
+export type OrderStatus = typeof orderStatusEnum[number];
 type PaymentOption = typeof paymentOptionsEnum[number];
 
 type CustomerMemberDetails = {
@@ -46,12 +46,12 @@ type PackageDetailsType = {
 
 type PaymentType = {
     paymentOption: PaymentOption;
-    paymentAmount: number;
-
-    paymentStatus: PaymentStatus;
-    cf_order_id?: string;
-    order_created_at?: Date;
-    payment_session_id?: string;
+    
+    order_status: OrderStatus;
+    order_amount: number;
+    cf_order_id: string;
+    order_created_at: string;
+    payment_session_id: string;
 }
 
 interface PaymentDocument extends PaymentType, Document {}
@@ -60,7 +60,7 @@ interface PaymentDocument extends PaymentType, Document {}
 interface IBooking {
     tourId: Types.ObjectId
     packageId: Types.ObjectId
-    bookingStatus: BokkingStatus
+    bookingStatus: BookingStatus
     expiresAt: Date
 
     customerDetails?: CustomerDetailsType
@@ -110,12 +110,12 @@ const customerDetailsSchema = new Schema<CustomerDetailsDocument>({
 
 const paymentDetailsSchema = new Schema<PaymentDocument>({
     paymentOption: { type: String, required: true, enum: paymentOptionsEnum },
-    paymentAmount: { type: Number, required: true },
-
-    paymentStatus: { type: String, required: true, enum: paymentStatusEnum },
-    cf_order_id: { type: String, required: false },
-    order_created_at: { type: Date, required: false },
-    payment_session_id: { type: String, required: false },
+    
+    order_status: { type: String, required: true, enum: orderStatusEnum },
+    order_amount: { type: Number, required: true },
+    cf_order_id: { type: String, required: true },
+    order_created_at: { type: String, required: true },
+    payment_session_id: { type: String, required: true },
 }, {
     versionKey: false,
     _id: false,

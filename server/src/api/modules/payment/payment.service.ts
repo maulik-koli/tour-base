@@ -1,15 +1,29 @@
 import axios from "axios";
+import crypto from "crypto";
 import { env } from "@/api/config/env";
 import { BookingLean } from "../booking/booking.model";
+import { CashFreeOrderResponse } from "./payment.types";
+
 import { CustomError } from "@/api/utils/response";
+import { log } from "@/api/utils/log";
 
 const CASHFREE_API_KEY = env.CASHFREE_API_KEY;
 const CASHFREE_API_SECRET = env.CASHFREE_API_SECRET;
 const CASHFREE_API_VERSION = env.CASHFREE_API_VERSION;
 const CURRENCY = "INR";
 
+const CLIENT_URL = env.CLIENT_URL;
+const PAYMENT_EXPIRY_TIME = 20 * 60 * 1000; // 20 minutes
+
+type CreateCashFreeArgs = {
+    paymentAmount: number;
+    customerDetails: BookingLean['customerDetails'];
+    bookingId: string;
+}
+
+
 export const createCashFreeOrder = async (
-    paymentAmount: number, customerDetails: BookingLean['customerDetails'], bookingId: string
+    { paymentAmount, customerDetails, bookingId } : CreateCashFreeArgs
 ) => {
     const url = "https://sandbox.cashfree.com/pg/orders";
 
@@ -29,6 +43,10 @@ export const createCashFreeOrder = async (
             customer_name: customerDetails?.fullName,
         },
         order_id: bookingId,
+        order_meta: {
+            return_url: `${CLIENT_URL}/payment-status?bookingId=${bookingId}`,
+        },
+        order_expiry_time: new Date(Date.now() + PAYMENT_EXPIRY_TIME).toISOString(),
     }
 
     try {
@@ -36,10 +54,31 @@ export const createCashFreeOrder = async (
             throw new Error("Invalid Payment Amount");
         }
 
-        const response = await axios.post(url, body, { headers });
+        const response = await axios.post<CashFreeOrderResponse>(url, body, { headers });
         return response.data;
     }
-    catch (error) {
+    catch (error: any) {
+        log.error("Error creating Cashfree Order:", {
+            message: error.message,
+            response: error.response?.data,
+        });
         throw new CustomError(500, "Failed to create payment order");
     }
 }
+
+
+export const verifyCashfreeSignature = (rawBody: any, signature: string, timestamp: string): boolean => {
+    const message = timestamp + rawBody
+
+    const expectedSignature = crypto
+        .createHmac("sha256", CASHFREE_API_SECRET)
+        .update(message)
+        .digest("base64");
+
+    log.info("Verifying Cashfree Signature:", {
+        expectedSignature,
+        signature
+    });
+
+    return expectedSignature === signature;
+};
