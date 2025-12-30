@@ -7,7 +7,6 @@ import { log } from '../utils/log';
 export const validateRequest = (schema: ZodType<any>) => {
     return (req: Request, res: Response, next: NextFunction) => {
         try {
-            log.info("Validating request body:", req.body);
             schema.parse(req.body);
             next();
         } 

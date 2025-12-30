@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { slugify } from "./tour.utils";
+import { embededYoutubeUrl, slugify } from "./tour.utils";
 
 export interface IDayDetail {
     title: string;
@@ -84,6 +84,9 @@ tourSchema.pre("save", function (this) {
     if (this.isModified("name")) {
         this.slug = slugify(this.name);
     }
+    if (this.isModified("youtubeVideoUrl")) {
+        this.youtubeVideoUrl = embededYoutubeUrl(this.youtubeVideoUrl);
+    }
 });
 
 
@@ -92,14 +95,25 @@ tourSchema.pre("findOneAndUpdate", function (this) {
     if (!update || Array.isArray(update)) return;
 
     const name = update.name ?? update.$set?.name;
-    if (!name) return;
+    const youtubeVideoUrl = update.youtubeVideoUrl ?? update.$set?.youtubeVideoUrl;
 
-    const newSlug = slugify(name);
-    if (update.$set) {
-        update.$set.slug = newSlug;
-    } else {
-        update.slug = newSlug;
+    if (name) {
+        const newSlug = slugify(name);
+        if (update.$set) {
+            update.$set.slug = newSlug;
+        } else {
+            update.slug = newSlug;
+        }
     }
+    if (youtubeVideoUrl) {
+        const newYoutubeUrl = embededYoutubeUrl(youtubeVideoUrl);
+        if (update.$set) {
+            update.$set.youtubeVideoUrl = newYoutubeUrl;
+        } else {
+            update.youtubeVideoUrl = newYoutubeUrl;
+        }
+    }
+
 
     this.setUpdate(update);
 })

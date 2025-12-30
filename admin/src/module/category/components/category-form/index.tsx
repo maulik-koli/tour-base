@@ -56,6 +56,7 @@ const CategoryForm: React.FC = () => {
                     name='image'
                     render={({ field }) => (
                         <ImageDropzone
+                            imageType='categories'
                             label='Category Image'
                             onChange={field.onChange}
                             value={field.value}

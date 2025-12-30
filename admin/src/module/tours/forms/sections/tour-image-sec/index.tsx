@@ -16,11 +16,13 @@ const TourImageSection: React.FC = () => {
             <ImageUploadGrid
                 control={control}
                 name="tour.images"
+                imageType='tour-slider'
                 label="Slider Images"
             />
             <ImageUploadGrid
                 control={control}
                 name="tour.galleryImages"
+                imageType='tours'
                 label="Gallery Images"
             />
             <Controller
@@ -29,6 +31,7 @@ const TourImageSection: React.FC = () => {
                 render={({ field }) => (
                     <ImageDropzone 
                         label='Thumbnail Image'
+                        imageType='tour-thumbnails'
                         onChange={field.onChange}
                         value={field.value}
                         imageClassName="h-full max-h-80 min-h-60"

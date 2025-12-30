@@ -63,7 +63,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
         { 
             $match: { 
                 _id: new Types.ObjectId(bookingId),
-                bookingStatus: "DRAFT",
+                bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] },
                 // expiresAt: { $gt: "$$NOW" }
             }
         },
@@ -138,7 +138,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
 
     // update booking with customer details and total amount
     const result = await Booking.findOneAndUpdate(
-        { _id: bookingId, bookingStatus: "DRAFT" },
+        { _id: bookingId, bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] } },
         {
             $set: {
                 customerDetails: payload,
