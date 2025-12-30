@@ -7,6 +7,8 @@ import TourDetailComponent from '@/modules/tours/components/tour-detail-componen
 import TourThumbnail from '@/modules/tours/components/tour-thumbnail';
 import TourPackageSide from '@/modules/tours/components/tour-package-side';
 import TourPackageTabs from '@/modules/tours/components/tour-package-tabs';
+import BookContactButtons from '@modules/booking/components/book-contact-btn';
+
 import HelpBlock from '@/components/help-black';
 import ErrorBlock from '@/components/error-block';
 import { SpinnerOverlay } from '@ui/spinner';
@@ -64,6 +66,12 @@ const TourDetailPage: React.FC = () => {
                                     packages={packagesData}
                                     handleSelectPackage={(id) => setSelectedPackage(id)}
                                     selectedPackageId={selectedPackage}
+                                    bookButtons={
+                                        <BookContactButtons
+                                            tourId={tourData._id}
+                                            packageId={selectedPackage || ''}
+                                        />
+                                    }
                                 />
                                 <HelpBlock />
                             </div>

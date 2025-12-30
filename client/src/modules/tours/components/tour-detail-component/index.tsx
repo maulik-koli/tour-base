@@ -11,7 +11,6 @@ interface TourDetailComponentProps {
     tour: Tour,
     selectedPackage: TourPackage | undefined;
 }
-// https://www.youtube.com/embed/dQw4w9WgXcQ
 
 
 const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selectedPackage }) => {
@@ -95,8 +94,8 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
                                 <Typography variant="h4" className='text-green-500 underline'>Inclusions</Typography>
                                 <div className='space-y-2'>
                                     {tour.includes.map((include, index) => (
-                                        <div key={index} className='flex items-center gap-2'>
-                                            <Icon name='CircleCheck' width={20} height={20} className='text-green-500 shrink-0' />
+                                        <div key={index} className='flex items-start gap-2'>
+                                            <Icon name='CircleCheck' width={20} height={20} className='text-green-500 shrink-0 mt-1' />
                                             <Typography variant="p" className='text-muted-foreground'>
                                                 {include}
                                             </Typography>
@@ -110,8 +109,8 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
                                 <Typography variant="h4" className='text-red-500 underline'>Exclusions</Typography>
                                 <div className='space-y-2'>
                                     {tour.excludes.map((exclude, index) => (
-                                        <div key={index} className='flex items-center gap-2'>
-                                            <Icon name='CircleX' width={20} height={20} className='text-red-500 shrink-0' />
+                                        <div key={index} className='flex items-start gap-2'>
+                                            <Icon name='CircleX' width={20} height={20} className='text-red-500 shrink-0 mt-1' />
                                             <Typography variant="p" className='text-muted-foreground'>
                                                 {exclude}
                                             </Typography>

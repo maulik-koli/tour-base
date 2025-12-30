@@ -6,3 +6,8 @@ export const QUERY_REGISTRY = {
     getFeaturedTours: 'get-featured-tours',
     getCategories: 'get-categories',
 } as const;
+
+
+export const MUTATION_REGISTRY = {
+    createBooking: 'create-booking',
+} as const;
