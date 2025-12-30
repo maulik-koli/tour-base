@@ -43,8 +43,20 @@ import {
     Phone,
     Clock,
     OctagonX,
-    SearchX
+    SearchX,
+    MapPinned,
+    Info,
+    ArrowLeft,
+    User,
+    Calculator,
+    CreditCard,
+    FileText,
+    MessageCircle,
+    SquareArrowOutUpRight,
+    TriangleAlert,
+    Bell,
 } from "lucide-react"
+import { WhatsAppIcon } from "./custom"
 
 
 export const LUCIDE_ICON_MAP = {
@@ -92,5 +104,21 @@ export const LUCIDE_ICON_MAP = {
     Phone,
     Clock,
     OctagonX,
-    SearchX
+    SearchX,
+    MapPinned,
+    Info,
+    ArrowLeft,
+    User,
+    Calculator,
+    CreditCard,
+    FileText,
+    MessageCircle,
+    SquareArrowOutUpRight,
+    TriangleAlert,
+    Bell
+}
+
+
+export const CUSTOM_ICON_MAP = {
+    whatspp: WhatsAppIcon,
 }

@@ -1,0 +1,193 @@
+import React from 'react'
+import { Controller, useFieldArray, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CustomerDetailsFormType, customerDetailsSchema, defaultMember, getDefaultCustomerDetails } from '@modules/booking/utils/schema'
+
+import { InputField, DatePicker, SelectField } from '@/components/form'
+import { Typography } from '@ui/typography'
+import { Button } from '@ui/button'
+import { GENDER_OPTIONS } from '@/constants/select-options'
+import Icon from '@/components/icons'
+import { Separator } from '@ui/separator'
+
+
+const CustomerDetailsForm: React.FC = () => {
+    const form = useForm<CustomerDetailsFormType>({
+        resolver: zodResolver(customerDetailsSchema),
+        defaultValues: getDefaultCustomerDetails(),
+    })
+
+    const { control } = form
+
+    const { fields, append, remove } = useFieldArray({
+        control,
+        name: 'members',
+    })
+
+    return (
+        <div className='w-full px-6 py-4 bg-card rounded-md border border-border flex flex-col gap-6'>
+            <Typography variant="h4">Customer Details</Typography>
+            <div className='grid grid-cols-4 gap-6'>
+                <Controller
+                    control={control}
+                    name='fullName'
+                    render={({ field, fieldState }) => (
+                        <InputField
+                            value={field.value}
+                            onChange={field.onChange}
+                            label='Full Name *'
+                            placeholder='name of the things'
+                            containerClass='col-span-2'
+                            errMsg={fieldState.error?.message}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name='phone1'
+                    render={({ field, fieldState }) => (
+                        <InputField
+                            value={field.value}
+                            onChange={field.onChange}
+                            type='number'
+                            label='Phone Number 1 *'
+                            placeholder='Enter phone number'
+                            leftIcon='Phone'
+                            className='no-counter'
+                            containerClass='col-span-1'
+                            errMsg={fieldState.error?.message}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name='phone2'
+                    render={({ field, fieldState }) => (
+                        <InputField
+                            value={field.value || ''}
+                            onChange={(value) => field.onChange(value === '' ? undefined : value)}
+                            type='number'
+                            label='Phone Number 2'
+                            placeholder='Enter phone number'
+                            leftIcon='Phone'
+                            className='no-counter'
+                            containerClass='col-span-1'
+                            errMsg={fieldState.error?.message}
+                        />
+                    )}
+                />
+            </div>
+            <Controller
+                control={control}
+                name='dateOfTravel'
+                render={({ field }) => (
+                    <DatePicker 
+                        label='Travel Date *'
+                        containerClass='max-w-80'
+                        value={field.value.toISOString()}
+                        onChange={(value) => field.onChange(new Date(value))}
+                    />
+                )}
+            />
+            <div className='w-full flex flex-col gap-3'>
+                <div className='w-full flex items-center justify-between gap-6'>
+                    <div className='flex items-center gap-6'>
+                        <Typography variant="lead" className='text-foreground'>Members</Typography>
+                        <Button
+                            variant='link'
+                            size='sm'
+                            onClick={() => append(defaultMember)}
+                        >
+                            Add Member
+                        </Button>
+                    </div>
+                    <Typography variant="small">{fields.length} Travel members</Typography>
+                </div>
+                <div className='w-full flex flex-col gap-4'>
+                    {fields.length === 0 ? (
+                        <div className='w-full bg-muted rounded-md p-4 text-center'>
+                            <Typography variant="muted">No members added. Please add at least one member.</Typography>
+                        </div>
+                    ) : fields.map((members, index) => (
+                        <div key={members.id} className='w-full flex items-center gap-4'>
+                            <div className='w-full px-3 py-2 bg-background rounded-md border border-border flex flex-col gap-3'>
+                                <div className='grid grid-cols-4 gap-6'>
+                                    <Controller
+                                        control={control}
+                                        name={`members.${index}.fullName`}
+                                        render={({ field, fieldState }) => (
+                                            <InputField
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                label='Full Name'
+                                                placeholder='Enter full name'
+                                                containerClass='col-span-2'
+                                                className='bg-card'
+                                                errMsg={fieldState.error?.message}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name={`members.${index}.age`}
+                                        render={({ field, fieldState }) => (
+                                            <InputField
+                                                value={field.value.toString()}
+                                                onChange={(value) => field.onChange(Number(value))}
+                                                type='number'
+                                                label='Age'
+                                                placeholder='Enter age'
+                                                containerClass='col-span-1'
+                                                className='bg-card'
+                                                errMsg={fieldState.error?.message}
+                                            />
+                                        )}
+                                    />
+                                    <Controller
+                                        control={control}
+                                        name={`members.${index}.gender`}
+                                        render={({ field}) => (
+                                            <SelectField
+                                                label='Gender'
+                                                value={field.value}
+                                                onChange={field.onChange}
+                                                options={GENDER_OPTIONS}
+                                                className='bg-card'
+                                                containerClass='col-span-1'
+                                                selectTriggerClass='bg-card'
+                                            />
+                                        )}
+                                    />
+                                </div>
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="icon"
+                                onClick={() => remove(index)}
+                                className=' text-destructive'
+                            >
+                                <Icon name="Trash2" width={16} height={16} />
+                            </Button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <Separator />
+            <div className='w-full rounded-md bg-accent/10 border border-accent/10 p-4 text-center text-sm text-muted-foreground'>
+                <div className='flex items-center gap-2'>
+                    <Icon name="Info" width={18} height={18} className='text-accent mt-1' />
+                    <Typography variant="p" className='text-accent font-medium'>
+                        Important Notes:
+                    </Typography>
+                </div>
+                <ul className='flex flex-col gap-2 list-disc mt-2 ml-10 text-left text-accent-foreground'>
+                    <li>Please add your WhatsApp number to receive booking details and updates</li>
+                    <li>Customer details are for booking purposes - actual travelers should be added as members in the next step</li>
+                    <li>If you're traveling, please add yourself as a member as well</li>
+                </ul>
+            </div>
+        </div>
+    )
+}
+
+export default CustomerDetailsForm

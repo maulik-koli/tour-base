@@ -10,6 +10,7 @@ interface SelectFieldProps extends Omit<React.ComponentProps<typeof Select>, 'on
     containerClass?: string;
     selectTriggerClass?: string;
     placeholder?: string;
+    className?: string;
 }
 
 
@@ -20,16 +21,17 @@ const SelectField: React.FC<SelectFieldProps> = ({
     onChange, 
     placeholder, 
     options,
+    className,
     ...selectProps 
 }) => {
     return (
         <div className={cn('flex flex-col gap-1.5', containerClass)}>
             {label && <FieldLabel>{label}</FieldLabel>}
-            <Select onValueChange={onChange} {...selectProps}>
+            <Select onValueChange={onChange} {...selectProps} >
                 <SelectTrigger type="button" className={cn("w-full h-9", selectTriggerClass)}>
                     <SelectValue placeholder={placeholder}  />
                 </SelectTrigger>
-                <SelectContent position='popper'>
+                <SelectContent position='popper' className={className} >
                     {options.map((opt, index) => (
                         <SelectItem 
                             key={`${opt.label}-${index}`} 

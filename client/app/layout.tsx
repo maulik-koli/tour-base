@@ -8,35 +8,39 @@ import AppProvider from "@/provider";
 import { Toaster } from "@ui/sonner";
 
 const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+    variable: "--font-geist-sans",
+    subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+    variable: "--font-geist-mono",
+    subsets: ["latin"],
 });
 
 
 export default function RootLayout({
-  children,
+    children,
 }: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
-  return (
-    <html lang="en">
-      <body className={cn(
-        `${geistSans.variable} ${geistMono.variable} antialiased`,
-        "flex flex-col bg-background"
-      )}>
-        <AppProvider>
-          <Header />
-          <main>
-            {children}
-          </main>
-          <Toaster position="top-right" />
-        </AppProvider>
-      </body>
-    </html>
-  );
+    return (
+        <html lang="en">
+            <body className={cn(
+                `${geistSans.variable} ${geistMono.variable} antialiased`,
+                "flex flex-col bg-background"
+            )}>
+                {/* <Script
+                    src="https://sdk.cashfree.com/js/v3/cashfree.js"
+                    strategy="beforeInteractive"
+                    onLoad={() => console.log('Cashfree SDK loaded')}
+                    onError={(e) => console.error('Cashfree SDK failed to load', e)}
+                /> */}
+                <AppProvider>
+                    <Header />
+                    <main>{children}</main>
+                    <Toaster position="top-right" />
+                </AppProvider>
+            </body>
+        </html>
+    );
 }

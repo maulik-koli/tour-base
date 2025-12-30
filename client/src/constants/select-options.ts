@@ -42,3 +42,15 @@ export const CATEGORY_OPTIONS_VALUES = [
     "advanture", "cultural", "relaxation", "wildlife", "spiritual", "nature", "heritage"
 ] as const;
 export type CategoryOptionsType = typeof CATEGORY_OPTIONS_VALUES[number];
+
+
+export const GENDER_OPTIONS = [
+    { label: "Male", value: "M" },
+    { label: "Female", value: "F" },
+
+];
+
+export const GENDER_OPTIONS_VALUES = [
+    "M", "F"
+] as const;
+export type GenderOptionsType = typeof GENDER_OPTIONS_VALUES[number];
