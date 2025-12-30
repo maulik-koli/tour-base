@@ -10,6 +10,12 @@
   },
   "keywords": [],
   "types": "commonjs",
+  "_moduleAliases": {
+    "@": "dist",
+    "@api": "dist/api",
+    "@modules": "dist/modules",
+    "@utils": "dist/utils"
+  },
   "author": "",
   "license": "ISC",
   "type": "commonjs",
