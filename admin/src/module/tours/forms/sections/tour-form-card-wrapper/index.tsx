@@ -21,7 +21,7 @@ const TourFormCardWrapper: React.FC<TourFormCardWrapperProps> = ({
                 headerNode && "flex items-center justify-between",
                 isChildrenEmpty && "pb-3"
             )}>
-                <CardTitle className={cn(typographyVariants({ variant: 'h3' }))}>{cardTitle}</CardTitle>
+                <CardTitle className={cn(typographyVariants({ variant: 'h4' }))}>{cardTitle}</CardTitle>
                 {headerNode}
             </CardHeader>
             {isChildrenEmpty ? null : (

@@ -1,6 +1,6 @@
-import React from 'react'
 import { Control, FieldValues, Path, useController } from 'react-hook-form'
 import { useUploadImage } from '@module/media/utils/useUploadImage';
+import { UploadConfigsType } from '@module/media/utils/mediaUpload';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
@@ -13,6 +13,7 @@ import { Button } from '@ui/button';
 interface ImageUploadGridProps<T extends FieldValues> {
     control: Control<T>;
     name: Path<T>;
+    imageType: UploadConfigsType
     label?: string;
 }
 
@@ -21,6 +22,7 @@ const ImageUploadGrid = <T extends FieldValues>({
     name,
     control,
     label,
+    imageType
 } : ImageUploadGridProps<T>) => {
 
     const { field } = useController({
@@ -47,7 +49,7 @@ const ImageUploadGrid = <T extends FieldValues>({
         uploadError, 
         isUploading, 
     } = useUploadImage({ 
-        imageType: 'tours',
+        imageType,
         onUploadComplete: (url) => {
             handleAppend(url);
         },

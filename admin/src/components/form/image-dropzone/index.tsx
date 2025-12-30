@@ -1,6 +1,7 @@
 "use client"
 import React from 'react'
 import { useUploadImage } from '@/module/media/utils/useUploadImage';
+import { UploadConfigsType } from '@module/media/utils/mediaUpload';
 import { cn } from '@/lib/utils';
 
 import Icon from '@/components/icons';
@@ -12,13 +13,14 @@ import { Typography } from '@ui/typography';
 interface ImageDropzoneProps {
     value: string | null;
     onChange: (value: string) => void;
+    imageType: UploadConfigsType
     label?: string;
     containerClass?: string;
     imageClassName?: string;
 }
 
 
-const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, value, onChange, imageClassName }) => {
+const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, value, onChange, imageClassName, imageType }) => {
     const { 
         getRootProps, 
         getInputProps, 
@@ -26,7 +28,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ containerClass, label, va
         uploadError, 
         isUploading, 
     } = useUploadImage({ 
-        imageType: 'tours',
+        imageType: imageType,
         onUploadComplete: (url) => {
             onChange(url);
         },

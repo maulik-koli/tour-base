@@ -1,6 +1,7 @@
 import z from "zod";
 import { packageZodSchema } from "../packages/packages.schema";
 import { ADMIN_SORT_VALUE, DURATION_VALUE, isHtmlContentEmpty, SORT_VALUE } from "./tour.utils";
+import { log } from "@/api/utils/log";
 
 
 const htmlContentSchema = (minLength: number, fieldName: string = 'Content') => {
@@ -33,7 +34,6 @@ const dayDetailsZodSchema = z.object({
     subtitle: z.string().nullable(),
     description: z.string().min(10, 'Description must be at least 10 characters').trim(),
 });
-
 
 
 export const tourZodSchema = z.object({
