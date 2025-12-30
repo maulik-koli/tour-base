@@ -1,44 +1,19 @@
 import React from 'react'
-import { Typography } from '@/components/ui/typography'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { TourPackage } from '@modules/tours/api/types'
 
-export const DUMMY_PACKAGE = [
-    {
-        name: 'Standard Package',
-        pricePerPerson: 12000,
-        days: 5,
-        nights: 4,
-        start : 'Kathmandu',
-        endCity: 'Kathmandu'
-    },
-    {
-        name: 'Premium Package',
-        pricePerPerson: 15000,
-        days: 7,
-        nights: 6,
-        start : 'Kathmandu',
-        endCity: 'Kathmandu'
-    },
-    {
-        name: 'Luxery Package',
-        pricePerPerson: 18000,
-        days: 7,
-        nights: 6,
-        start : 'Kathmandu',
-        endCity: 'Kathmandu'
-    },
-]
+import BookContactButtons from '@modules/booking/components/book-contact-btn'
+import { Typography } from '@/components/ui/typography'
 
 interface TourPackageSideProps {
     packages: TourPackage[];
     selectedPackageId: string | null;
     handleSelectPackage: (id: string) => void;
+    bookButtons: React.ReactNode;
 }
     
 
-const TourPackageSide: React.FC<TourPackageSideProps> = ({ handleSelectPackage, packages, selectedPackageId }) => {
+const TourPackageSide: React.FC<TourPackageSideProps> = ({ handleSelectPackage, packages, selectedPackageId, bookButtons }) => {
     return (
          <div className='w-full p-5 border border-border rounded-lg bg-card'>
             <Typography variant="h3" className='mb-5'>Choose Your Package</Typography>
@@ -75,10 +50,7 @@ const TourPackageSide: React.FC<TourPackageSideProps> = ({ handleSelectPackage, 
                         </div>
                     </div>
                 ))}
-                <div className='space-y-2.5'>
-                    <Button size="lg" className='w-full h-12 text-lg'>Book Now</Button>
-                    <Button variant="secondary" size="lg" className='w-full h-12 text-lg'>Contant Us</Button>
-                </div>
+                {bookButtons}
             </div>
         </div>
     )

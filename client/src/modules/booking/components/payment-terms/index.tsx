@@ -10,9 +10,10 @@ const AGE_PRICING_POLICY = [
 ]
 
 const CANCELATION_POLICY = [
-    "Cancellation within 7 days of travel: No refund",
-    "Cancellation within 15 days of travel: 50% refund",
-    "Cancellation within 30 days of travel: Full refund"
+    "Cancellation within 10 days of travel: No refund",
+    "Cancellation within 20 days of travel: 30% refund",
+    "Cancellation within 25 days of travel: 50% refund",
+    "Cancellation within 30 days of travel: Full refund",
 ]
 
 const IMPORTANT_NOTES = [
