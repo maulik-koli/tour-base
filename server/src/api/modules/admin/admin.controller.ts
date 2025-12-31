@@ -27,7 +27,8 @@ export const adminLoginController = asyncWrapper(async (req, res) => {
     res.cookie(ADMIN_AUTH.COOKIE_NAME, token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
+        sameSite: "none",
         maxAge: ADMIN_AUTH.COOKIE_AGE,
     });
 
@@ -61,7 +62,8 @@ export const adminLogoutController = asyncWrapper(async (req, res) => {
     res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
+        sameSite: "none",
     });
 
     successResponse(res, {
@@ -95,7 +97,8 @@ export const adminRegisterController = asyncWrapper(async (req, res) => {
     res.cookie(ADMIN_AUTH.COOKIE_NAME, token, {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
+        sameSite: "none",
         maxAge: ADMIN_AUTH.COOKIE_AGE,
     });
 
@@ -125,7 +128,8 @@ export const adminChangePasswordController = asyncWrapper(async (req, res) => {
     res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
         httpOnly: true,
         secure: true,
-        sameSite: "strict",
+        // sameSite: "strict",
+        sameSite: "none",
     });
 
     successResponse(res, {

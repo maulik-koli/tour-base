@@ -38,7 +38,8 @@ export const globalErrorHandler  = (err: any, req: Request, res: Response, next:
         res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            // sameSite: "strict",
+            sameSite: "none",
         })
     }
 
