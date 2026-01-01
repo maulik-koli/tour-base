@@ -20,6 +20,7 @@ import paymentRoutes from '@api/modules/payment/payment.routes';
 
 const app: Application = express();
 
+
 const allowedOrigins = [env.CLIENT_URL, env.ADMIN_URL];
 
 // Middleware
@@ -33,7 +34,7 @@ app.use(rawBodyMiddleware);
 app.use(
     express.json({
         verify: (req: any, res, buf) => {
-        req.rawBody = buf.toString();
+            req.rawBody = buf.toString();
         },
     })
 );

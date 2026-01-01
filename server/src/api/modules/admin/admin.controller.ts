@@ -4,6 +4,8 @@ import { AdminChangePasswordPayload, AdminLoginPayload, AdminRegisterPayload } f
 import { ADMIN_AUTH } from "./admin.utils";
 import { asyncWrapper } from "@/api/utils/apiHelper";
 import { CustomError, successResponse } from "@/api/utils/response";
+import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
+import { logger } from "@/api/utils/logger";
 
 
 export const adminLoginController = asyncWrapper(async (req, res) => {
@@ -21,16 +23,25 @@ export const adminLoginController = asyncWrapper(async (req, res) => {
         email: admin.email,
         phone: admin.phone
     });
-    admin.token = token;
+
+    if (admin.activeSessions.length >= 2) {
+        admin.activeSessions.shift();
+    }
+    
+    admin.activeSessions.push({
+        token: token,
+        createdAt: new Date(),
+        deviceInfo: req.headers['user-agent'] || 'Unknown'
+    });
+
     await admin.save();
 
     res.cookie(ADMIN_AUTH.COOKIE_NAME, token, {
-        httpOnly: true,
-        secure: true,
-        // sameSite: "strict",
-        sameSite: "none",
+        ...getCookiesConfig(),
         maxAge: ADMIN_AUTH.COOKIE_AGE,
     });
+
+    logger.info("check", res.getHeader("Set-Cookie"));
 
     successResponse(res, {
         status: 200,
@@ -54,16 +65,18 @@ export const adminProfileController = asyncWrapper(async (req, res) => {
 
 export const adminLogoutController = asyncWrapper(async (req, res) => {
     const auth = req.auth!;
+    const token = req.cookies[ADMIN_AUTH.COOKIE_NAME];
+
     const admin = await getAdminByEmail(auth.email);
 
-    admin.token = null;
+    admin.activeSessions = admin.activeSessions.filter(
+        session => session.token !== token
+    );
+
     await admin.save();
 
     res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
-        httpOnly: true,
-        secure: true,
-        // sameSite: "strict",
-        sameSite: "none",
+       ...getCookiesConfig()
     });
 
     successResponse(res, {
@@ -91,14 +104,21 @@ export const adminRegisterController = asyncWrapper(async (req, res) => {
         email: admin.email,
         phone: admin.phone
     });
-    admin.token = token;
+
+    if (admin.activeSessions.length >= 2) {
+        admin.activeSessions.shift();
+    }
+    
+    admin.activeSessions.push({
+        token: token,
+        createdAt: new Date(),
+        deviceInfo: req.headers['user-agent'] || 'Unknown'
+    });
+
     await admin.save();
 
     res.cookie(ADMIN_AUTH.COOKIE_NAME, token, {
-        httpOnly: true,
-        secure: true,
-        // sameSite: "strict",
-        sameSite: "none",
+       ...getCookiesConfig(),
         maxAge: ADMIN_AUTH.COOKIE_AGE,
     });
 
@@ -122,14 +142,16 @@ export const adminChangePasswordController = asyncWrapper(async (req, res) => {
     }
 
     admin.password = newPassword;
-    admin.token = null;
+    const token = req.cookies[ADMIN_AUTH.COOKIE_NAME];
+
+    admin.activeSessions = admin.activeSessions.filter(
+        session => session.token !== token
+    );
+
     await admin.save();
 
     res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
-        httpOnly: true,
-        secure: true,
-        // sameSite: "strict",
-        sameSite: "none",
+        ...getCookiesConfig(),
     });
 
     successResponse(res, {
