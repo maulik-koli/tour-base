@@ -16,7 +16,7 @@ export const useGetProfile = (
 ): UseQueryResult<ApiResponse<GetProfileResponse>, ApiError> => {
 
     return useQuery({
-        queryKey: [QUERY_REGISTRY.getCategoryOptions],
+        queryKey: [QUERY_REGISTRY.getProfile],
         queryFn: () => safeAxios(() => getProfile()),
         retry: false,
         ...options,

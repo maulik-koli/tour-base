@@ -23,9 +23,9 @@ const CategorySelect: React.FC = () => {
 
     const categoryMap = useMemo(() => {
         if(isLoading) return new Map<string, string>()
-        if (!data?.data || (data.data && data.data.length === 0)) return new Map<string, string>()
+        if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) return new Map<string, string>()
         return new Map(data.data.map(c => [c.value, c.name]))
-    }, [data])
+    }, [data, isLoading])
 
     const displayCategories = useMemo(() => {
         return values.map(value => categoryMap.get(value) ?? value)
@@ -80,8 +80,9 @@ const CategorySelect: React.FC = () => {
                     {(error || data?.data?.length === 0) && (
                         <Typography variant="muted" className='text-destructive'>Error loading categories</Typography>
                     )}
-                    {!isLoading && !error && data?.data && data.data.length > 0 && (
+                    {!isLoading && !error && data?.data && Array.isArray(data.data) && data.data.length > 0 && (
                         <SelectField
+                            key={displayCategories.length}
                             onChange={(value) => handleAdd(value)}
                             options={data.data.map((category) => ({
                                 label: category.name,
