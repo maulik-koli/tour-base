@@ -6,7 +6,11 @@ export interface IAdmin {
     email: string;
     password: string;
     phone: string;
-    token: string | null;
+    activeSessions: {
+        token: string;
+        createdAt: Date;
+        deviceInfo: string;
+    }[]
 
     comparePassword(candidatePassword: string): Promise<boolean>;
 }
@@ -28,7 +32,11 @@ const adminSchema = new Schema<AdminDocument>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     phone: { type: String, required: true },
-    token: { type: String, default: null },
+    activeSessions: [{
+        token: { type: String, required: true },
+        createdAt: { type: Date, required: true },
+        deviceInfo: { type: String, required: true },
+    }]
 }, {
     timestamps: true,
     versionKey: false,
@@ -51,7 +59,7 @@ adminSchema.methods.comparePassword = async function (candidatePassword: string)
 adminSchema.set('toJSON', {
     transform: function (doc, ret: any) {
         delete ret.password;
-        delete ret.token;
+        delete ret.activeSessions;
         return ret;
     },
 });
@@ -60,7 +68,7 @@ adminSchema.set('toJSON', {
 adminSchema.set('toObject', {
     transform: function (doc, ret: any) {
         delete ret.password;
-        delete ret.token;
+        delete ret.activeSessions;
         return ret;
     },
 });

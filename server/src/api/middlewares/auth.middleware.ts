@@ -19,8 +19,16 @@ export const authMiddleware = asyncWrapper(async (req, res, next) => {
 
     const admin = await getAdminByEmail(decode.email);
 
-    if (admin.token !== token) {
+    if (!admin) {
         throw new CustomError(401, "Unauthorized access");
+    }
+
+    const sessionExists = admin.activeSessions.some(
+        session => session.token === token
+    );
+
+    if (!sessionExists) {
+      throw new CustomError(401, "Session expired or logged in from another device");
     }
 
     const auth: AdminAuth = {

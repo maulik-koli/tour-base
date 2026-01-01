@@ -3,6 +3,7 @@ import { CustomError, errorResponse } from '../utils/response';
 import { log } from '../utils/log';
 import { logger } from '../utils/logger';
 import { ADMIN_AUTH } from '../modules/admin/admin.utils';
+import { getCookiesConfig } from '../utils/getCookiesConfig';
 
 
 export const globalErrorHandler  = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -36,10 +37,7 @@ export const globalErrorHandler  = (err: any, req: Request, res: Response, next:
 
     if(status === 401) {
         res.clearCookie(ADMIN_AUTH.COOKIE_NAME,  {
-            httpOnly: true,
-            secure: true,
-            // sameSite: "strict",
-            sameSite: "none",
+            ...getCookiesConfig(),
         })
     }
 
