@@ -12,8 +12,8 @@ export const getCookiesConfig = (): CookieOptions => {
     const configs: Record<string, CookieOptions> = {
         development: {
             httpOnly: true,
-            secure: false,
-            sameSite: 'lax' as SameSiteType,
+            secure: true,
+            sameSite: 'none' as SameSiteType,
         },
         staging: {
             httpOnly: true,
