@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from '@api/middlewares/error.middleware';
 import { rawBodyMiddleware } from './api/middlewares/rawBody.middleware';
 import { env } from '@api/config/env';
+import { log } from './api/utils/log';
 
 import adminRoutes from '@api/modules/admin/admin.routes';
 import tourRoutes from '@api/modules/tour/tour.routes';
@@ -21,11 +22,20 @@ import paymentRoutes from '@api/modules/payment/payment.routes';
 const app: Application = express();
 
 
-const allowedOrigins = [env.CLIENT_URL, env.ADMIN_URL];
+const allowedOrigins = env.ALLOWED_URL.split(',') || [];
 
 // Middleware
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            log.error('Blocked origin:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 
