@@ -15,6 +15,8 @@ export function proxy(req: NextRequest) {
 
     const token = req.cookies.get(COOKIE_NAME)?.value;
 
+    console.log("Proxy middleware:", { pathname, token });
+
     if (!token && pathname === "/") {
         return NextResponse.redirect(new URL("/login", req.url));
     }
