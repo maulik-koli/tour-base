@@ -12,7 +12,7 @@ const CASHFREE_API_SECRET = env.CASHFREE_API_SECRET;
 const CASHFREE_API_VERSION = env.CASHFREE_API_VERSION;
 const CURRENCY = "INR";
 
-const CLIENT_URL = env.CLIENT_URL;
+const CLIENT_URL = env.ALLOWED_URL.split(',')[0] || "http://localhost:3001";
 const PAYMENT_EXPIRY_TIME = 20 * 60 * 1000; // 20 minutes
 
 type CreateCashFreeArgs = {
