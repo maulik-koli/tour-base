@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils'
 const HEADER_DATA = [
     { title: 'Home', href: '/' },
     { title: 'Tours', href: '/tours' },
-    { title: 'Contact', href: '/contact-us' },
     { title: 'Ticket', href: '/ticket' },
+    { title: 'Contact', href: '/contact-us' },
 ]
 
 
