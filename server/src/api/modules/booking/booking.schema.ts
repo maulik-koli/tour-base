@@ -26,7 +26,7 @@ export const customerDetailsZodSchema = z.object({
         .min(3, 'Full name must be at least 3 characters')
         .trim(),
     phone1: phoneNumberSchema,
-    phone2: phoneNumberSchema.optional(),
+    phone2: phoneNumberSchema,
 
     dateOfTravel: z.coerce.date(),
     members: z.array(z.object({
@@ -41,7 +41,12 @@ export const bookingPaymentZodSchema = z.object({
     paymentOption: z.enum(paymentOptionsEnum)
 });
 
+export const bookingStatusZodSchema = z.object({
+    view: z.string().optional(),
+});
+
 
 export type CreateBookingPayload = z.infer<typeof createBookingZodSchema>;
 export type CustomerDetailsPayload = z.infer<typeof customerDetailsZodSchema>;
 export type BookingPaymentPayload = z.infer<typeof bookingPaymentZodSchema>;
+export type BookingStatusPayload = z.infer<typeof bookingStatusZodSchema>;

@@ -32,11 +32,13 @@ interface TourPackageDocument extends ITourPackage, Document {
     updatedAt: Date;
 }
 
-interface TourPackageLean extends ITourPackage {
+export interface TourPackageLean extends ITourPackage {
     _id: Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type TourPackageFields = keyof TourPackageLean;
 
 
 const hotelSchema = new Schema<HotelPlanDocument>({

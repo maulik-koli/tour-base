@@ -11,7 +11,7 @@ export const customerDetailsSchema = z.object({
         .min(3, 'Full name must be at least 3 characters')
         .trim(),
     phone1: phoneNumberSchema,
-    phone2: phoneNumberSchema.optional(),
+    phone2: phoneNumberSchema,
 
     dateOfTravel: z.date(),
     members: z.array(z.object({
@@ -28,7 +28,7 @@ export type CustomerDetailsFormType = z.infer<typeof customerDetailsSchema>;
 export const getDefaultCustomerDetails = (): CustomerDetailsFormType => ({
     fullName: '',
     phone1: '',
-    phone2: undefined,
+    phone2: '',
     dateOfTravel: new Date(),
     members: [],
 })

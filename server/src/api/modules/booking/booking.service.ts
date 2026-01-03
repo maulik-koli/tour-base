@@ -1,19 +1,19 @@
-import{ Types } from "mongoose";
+import { Types, PipelineStage } from "mongoose";
 import Booking, { BookingFields, BookingLean, BookingStatus } from "./booking.model";
 import Tour from "../tour/tour.model";
 import Package from "../packages/packages.model";
 
 import { BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 import { createCashFreeOrder } from "../payment/payment.service";
-import { CustomError } from "@/api/utils/response";
 import { CashfreePaymentWebhookPayload } from "../payment/payment.types";
+import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
+import { generateAccessToken } from "@/api/utils/token";
 
-const EXPIRED_AT_TIME = 30 * 60 * 1000; // 30 minutes
+export const BOOKING_EXPIRED_AT_TIME = 30 * 60 * 1000; // 30 minutes
 
 
 export const createBooking = async (payload: CreateBookingPayload) => {
-    
     const isTourExists = await Tour.exists({ 
         _id: payload.tourId
     });
@@ -31,16 +31,20 @@ export const createBooking = async (payload: CreateBookingPayload) => {
     }
 
     // create draft booking
+    const token = generateAccessToken();
+
     const booking = await Booking.create({
         tourId: payload.tourId,
         packageId: payload.packageId,
         bookingStatus: "DRAFT",
-        expiresAt: new Date(Date.now() + EXPIRED_AT_TIME),
+        expiresAt: new Date(Date.now() + BOOKING_EXPIRED_AT_TIME),
+        accessToken: token,
     });
 
     return {
         bookingId: booking._id,
         expiresAt: booking.expiresAt,
+        token
     };
 }
 
@@ -55,6 +59,107 @@ export const findBooking = async (query: Partial<BookingLean>, select?: BookingF
     }
     return booking;
 };
+
+
+export const getBookingTourPackage = async (match: PipelineStage.Match["$match"]) => {
+    const pipeline: PipelineStage[] = [
+        { $match: match },
+        {
+            $addFields: {
+                isExpired: {
+                    $lt: ["$expiresAt", "$$NOW"]
+                }
+            }
+        },
+        {
+            $lookup: {
+                from: "tours",
+                localField: "tourId",
+                foreignField: "_id",
+                as: "tourDetails"
+            },
+        },
+        { $unwind: "$tourDetails" },
+        {
+            $lookup: {
+                from: "packages",
+                localField: "packageId",
+                foreignField: "_id",
+                as: "packageDetails"
+            },
+        },
+        { $unwind: "$packageDetails" },
+        {
+            $project: {
+                bookingId: "$_id",
+                bookingStatus: 1,
+                isExpired: 1,
+                tour: {
+                    _id: "$tourDetails._id",
+                    tourName: "$tourDetails.name",
+                    thumbnailImage: "$tourDetails.thumbnailImage",
+                    includes: "$tourDetails.includes",
+                    excludes: "$tourDetails.excludes",
+                },
+                package: {
+                    _id: "$packageDetails._id",
+                    packageName: "$packageDetails.name",
+                    days: "$packageDetails.days",
+                    nights: "$packageDetails.nights",
+                    pricePerPerson: "$packageDetails.pricePerPerson",
+                    childrenPrice: "$packageDetails.childrenPrice",
+                    startCity: "$packageDetails.startCity",
+                    endCity: "$packageDetails.endCity",
+                }
+            }
+        }
+    ];
+
+    const result = await Booking.aggregate(pipeline);
+
+    if (!result.length) {
+        throw new CustomError(404, "Booking not found or already processed");
+    }
+
+    return result[0];
+}
+
+
+export const getBookingData = async (bookingId: string, isView: boolean) => {
+    const bookingData = await findBooking(
+        { _id: new Types.ObjectId(bookingId) },
+    );
+
+    log.info('bookingData', bookingData);
+
+    if (isView) {
+        return {
+            bookingId: bookingData._id,
+            bookingStatus: bookingData.bookingStatus,
+            isExpired: bookingData.expiresAt < new Date(),
+        }
+    }
+
+    // if there are not tourDetails or packageDetails
+    // that mean customer has not yet filled the details
+    if ((!bookingData.tourDetails || !bookingData.packageDetails) || bookingData.bookingStatus === "DRAFT") {
+        const result = await getBookingTourPackage(
+            { _id: new Types.ObjectId(bookingId) }
+        );
+    
+        return result;
+    }
+    
+    return {
+        bookingId: bookingData._id,
+        bookingStatus: bookingData.bookingStatus,
+        isExpired: bookingData.expiresAt < new Date(),
+        tour: bookingData.tourDetails,
+        package: bookingData.packageDetails,
+        customerBookingDetails: bookingData.customerDetails,
+        totalAmount: bookingData.totalAmount,
+    }
+}
 
 
 export const customerBooking = async (bookingId: string, payload: CustomerDetailsPayload) => {
@@ -96,6 +201,7 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
                     tourName: "$tourDetails.name",
                     includes: "$tourDetails.includes",
                     excludes: "$tourDetails.excludes",
+                    thumbnailImage: "$tourDetails.thumbnailImage",
                 },
                 packageDetails: {
                     packageName: "$packageDetails.name",

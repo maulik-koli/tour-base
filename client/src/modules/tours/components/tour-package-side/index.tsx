@@ -1,8 +1,6 @@
 import React from 'react'
 import { cn } from '@/lib/utils'
 import { TourPackage } from '@modules/tours/api/types'
-
-import BookContactButtons from '@modules/booking/components/book-contact-btn'
 import { Typography } from '@/components/ui/typography'
 
 interface TourPackageSideProps {

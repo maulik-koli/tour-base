@@ -1,12 +1,20 @@
 "use client"
 import React from 'react'
-import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { showToast } from '@/lib/showToat';
 
 const queryClient = new QueryClient({
     queryCache: new QueryCache({
         onError: (error: any) => {
             showToast.error(error?.message || 'Something went wrong');
+        },
+    }),
+
+    mutationCache: new MutationCache({
+        onError: (error: any, _variables, _context, mutation) => {
+            if (!mutation.options.onError) {
+                showToast.error(error?.message || 'Something went wrong');
+            }
         },
     }),
 

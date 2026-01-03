@@ -56,6 +56,14 @@ const TourDetailPage: React.FC = () => {
                             packages={packagesData}
                             handleSelectPackage={(id) => setSelectedPackage(id)}
                             selectedPackageId={selectedPackage}
+                            bookButtons={
+                                <BookContactButtons
+                                    tourId={tourData._id}
+                                    packageId={selectedPackage || ''}
+                                    isDisabled={!selectedPackage}
+                                    className='flex-row justify-center gap-4'
+                                />
+                            }
                         />
                     </div>
 
@@ -70,6 +78,7 @@ const TourDetailPage: React.FC = () => {
                                         <BookContactButtons
                                             tourId={tourData._id}
                                             packageId={selectedPackage || ''}
+                                            isDisabled={!selectedPackage}
                                         />
                                     }
                                 />
