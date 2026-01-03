@@ -44,6 +44,7 @@ const FallbackImage: React.FC<CldImageProps> = (props) => {
             {...props}
             loading="eager"
             src={imageError ? PLACEHOLDER_IMAGE : imageSrc || PLACEHOLDER_IMAGE}
+            // src={PLACEHOLDER_IMAGE}
             onError={handleError}
         />
     )

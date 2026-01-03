@@ -35,12 +35,13 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
             <Controller
                 control={control}
                 name='tour.youtubeVideoUrl'
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                     <InputField
                         label="YouTube Video URL"
                         placeholder="https://www.youtube.com/watch?v=..."
                         onChange={(value) => field.onChange(value !== '' ? value : null)}
                         value={field.value || ''}
+                        errMsg={fieldState.error?.message}
                     />
                 )}
             />

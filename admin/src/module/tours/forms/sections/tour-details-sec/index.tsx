@@ -14,11 +14,12 @@ const TourDetailsSection: React.FC = () => {
             <Controller
                 control={control}
                 name='tour.description'
-                render={({ field }) => (
+                render={({ field, fieldState }) => (
                     <RichTextEditor
                         label="Description"
                         onChange={field.onChange}
                         value={field.value || ""}
+                        errMsg={fieldState.error?.message}
                     />
                 )}
             />

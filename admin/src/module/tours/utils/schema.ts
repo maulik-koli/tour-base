@@ -48,7 +48,7 @@ export const tourZodSchema = z.object({
 
     images: z.array(z.string().min(1, 'Invalid image path').trim()),
     galleryImages: z.array(z.string().min(1, 'Invalid image path').trim()),
-    thumbnailImage: z.string().min(1, 'Invalid thumbnail image path').trim(),
+    thumbnailImage: z.string().min(1, 'Thumbnai image required').trim(),
     youtubeVideoUrl: z.url('Invalid YouTube video URL').nullable(),
 });
 

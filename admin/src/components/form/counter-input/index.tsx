@@ -1,17 +1,19 @@
 import React from 'react'
-import { FieldLabel } from '@/components/ui/field';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/icons';
 import { cn } from '@/lib/utils';
+
+import Icon from '@/components/icons';
+import { FieldDescription, FieldLabel } from '@/components/ui/field';
+import { Button } from '@/components/ui/button';
 
 interface CounterInputProps {   
     value: number;
-    label?: string;
     onChange: (value: number) => void;
+    errMsg?: string;
+    label?: string;
     containerClassName?: string
 }
 
-const CounterInput: React.FC<CounterInputProps> = ({ label, onChange, value, containerClassName }) => {
+const CounterInput: React.FC<CounterInputProps> = ({ label, onChange, value, containerClassName, errMsg }) => {
 
     const handleIncrement = () => {
         onChange(value + 1);
@@ -29,6 +31,7 @@ const CounterInput: React.FC<CounterInputProps> = ({ label, onChange, value, con
             <div 
                 className={cn(
                     'flex justify-between items-center border rounded-md min-w-30',
+                    errMsg ? "border-destructive ring-2 ring-destructive/60" : "border-border",
                     containerClassName
                 )}
             >
@@ -54,6 +57,7 @@ const CounterInput: React.FC<CounterInputProps> = ({ label, onChange, value, con
                     <Icon name='Plus' width={16} height={16} />
                 </Button>
             </div>
+            {errMsg && <FieldDescription>{errMsg}</FieldDescription>}
         </div>
     )
 }

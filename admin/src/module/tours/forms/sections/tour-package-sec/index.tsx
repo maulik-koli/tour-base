@@ -15,7 +15,7 @@ import { InputField, CounterInput, SelectField } from '@/components/form';
 import { HotelInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
-import { logger } from '@/lib/utils';
+import { cn, logger } from '@/lib/utils';
 
 interface TourFormPackageSectionProps {
     type?: 'create' | 'update';
@@ -23,7 +23,7 @@ interface TourFormPackageSectionProps {
 
 
 const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = "create" }) => {
-    const { control, getValues, setValue } = useFormContext<CreateTourFormType>();
+    const { control, getValues, setValue, formState: { errors } } = useFormContext<CreateTourFormType>();
     const showModel = useModelStore(s => s.showModel);
     
     
@@ -111,11 +111,15 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
             <CollapsibleComponent
                 className='gap-4'
                 contentClassName='px-4 border-t'
-                triggerClassName='px-4'
+                triggerClassName='px-0 p-0'
                 items={fields.map((_, index) => {
+                    const hasMembersError = !!errors.packages?.[index]
+
                     return {
                         label: (
-                            <div className='flex items-center justify-between'>
+                            <div className={cn('flex items-center justify-between px-4 p-2 rounded-md',
+                                hasMembersError && "bg-destructive/30"
+                            )}>
                                 <Typography variant='p' className='font-semibold'>
                                     Package No. {index + 1}
                                 </Typography>
@@ -166,22 +170,24 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         <Controller
                                             control={control}
                                             name={`packages.${index}.days`}
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <CounterInput
                                                     value={field.value}
                                                     onChange={field.onChange}
                                                     label='Days'
+                                                    errMsg={fieldState.error?.message}
                                                 />
                                             )}
                                         />
                                         <Controller
                                             control={control}
                                             name={`packages.${index}.nights`}
-                                            render={({ field }) => (
+                                            render={({ field, fieldState }) => (
                                                 <CounterInput
                                                     value={field.value}
                                                     onChange={field.onChange}
                                                     label='Nights'
+                                                    errMsg={fieldState.error?.message}
                                                 />
                                             )}
                                         />
