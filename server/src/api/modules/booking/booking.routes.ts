@@ -1,7 +1,17 @@
 import express from "express";
-import { bookingPaymentZodSchema, createBookingZodSchema, customerDetailsZodSchema } from "./booking.schema";
-import { bookingPaymentController, createBookingController, customerBookingController } from "./booking.controller";
-import { validateRequest } from "@/api/middlewares/validate.middlewate";
+import { 
+    bookingPaymentZodSchema, 
+    bookingStatusZodSchema, 
+    createBookingZodSchema, 
+    customerDetailsZodSchema 
+} from "./booking.schema";
+import { 
+    bookingPaymentController,
+    createBookingController, 
+    customerBookingController, 
+    getbookingController
+} from "./booking.controller";
+import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 
 const router = express.Router();
 
@@ -23,6 +33,12 @@ router.patch(
     "/:bookingId/payment",
     validateRequest(bookingPaymentZodSchema),
     bookingPaymentController
+)
+
+router.get(
+    "/:bookingId",
+    validateQuery(bookingStatusZodSchema),
+    getbookingController
 )
 
 

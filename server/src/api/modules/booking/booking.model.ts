@@ -20,7 +20,7 @@ interface CustomerMemberDetailsDocument extends CustomerMemberDetails, Document 
 type CustomerDetailsType = {
     fullName: string;
     phone1: string;
-    phone2?: string;
+    phone2: string;
     dateOfTravel: Date;
     members: CustomerMemberDetails[];
 }
@@ -62,6 +62,7 @@ interface IBooking {
     packageId: Types.ObjectId
     bookingStatus: BookingStatus
     expiresAt: Date
+    accessToken: string | null
 
     customerDetails?: CustomerDetailsType
     tourDetails?: TourDetailsType
@@ -99,7 +100,7 @@ const customerMemberDetailsSchema = new Schema<CustomerMemberDetailsDocument>({
 const customerDetailsSchema = new Schema<CustomerDetailsDocument>({
     fullName: { type: String, required: true },
     phone1: { type: String, required: true },
-    phone2: { type: String, required: false },
+    phone2: { type: String, required: true },
     dateOfTravel: { type: Date, required: true },
     members: { type: [customerMemberDetailsSchema], required: true },
 }, {
@@ -128,6 +129,7 @@ const bookingSchema = new Schema<BookingDocument>({
 
     bookingStatus: { type: String, required: true, enum: bookingStatusEnum },
     expiresAt: { type: Date, required: true },
+    accessToken: { type: String, required: true },
 
     customerDetails: { type: customerDetailsSchema, required: false },
 
@@ -135,6 +137,7 @@ const bookingSchema = new Schema<BookingDocument>({
         required: false,
         type: {
             tourName: { type: String, required: true },
+            thumbnailImage: { type: String, required: true },
             includes: { type: [String], default: [] },
             excludes: { type: [String], default: [] },
         },

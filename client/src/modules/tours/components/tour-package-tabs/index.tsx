@@ -10,10 +10,11 @@ interface TourPackageTabsProps {
     packages: TourPackage[];
     selectedPackageId: string | null;
     handleSelectPackage: (id: string) => void;
+    bookButtons: React.ReactNode
 }
 
 
-const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelectPackage, selectedPackageId }) => {
+const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelectPackage, selectedPackageId, bookButtons }) => {
     const selectedPackage = packages.find(pkg => pkg._id === selectedPackageId);
 
     return (
@@ -47,8 +48,7 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                     ))}
                 </div>
 
-                {selectedPackage &&
-                (
+                {selectedPackage && (
                     <>
                         <Separator />
                         <div className='bg-card p-4 rounded-md border border-border space-y-4'>
@@ -93,7 +93,7 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                                                 {hotel.nightNo} Night{hotel.nightNo > 1 ? 's' : ''} in {hotel.city}
                                             </Typography>
                                             <Typography variant="p" className='text-muted-foreground'>
-                                                {hotel.hotelName} / similar
+                                                {hotel.hotelName}
                                             </Typography>
                                         </div>
                                     ))}
@@ -102,6 +102,7 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                         </div>
                     </>
                 )}
+                {selectedPackage && bookButtons}
             </div>
         </div>
     )

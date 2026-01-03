@@ -1,8 +1,7 @@
 import React from 'react'
 import { cn } from '@/lib/utils';
+import Icon, { IconName } from '@/components/icons';
 import { FieldDescription, FieldLabel } from '@/components/ui/field';
-import type { IconName } from '@/components/icons';
-import Icon from '@/components/icons';
 
 interface InputFieldProps extends Omit<React.ComponentProps<"input">, "onChange" | "value"> {
     onChange: (value: string) => void;
@@ -17,7 +16,7 @@ interface InputFieldProps extends Omit<React.ComponentProps<"input">, "onChange"
 
 
 const InputField: React.FC<InputFieldProps> = ({ 
-    type, onChange, label, labelNode, errMsg, containerClass, leftIcon, rightIcon, className, ...props
+    type = "text", onChange, label, labelNode, errMsg, containerClass, leftIcon, rightIcon, className, ...props
 }) => {
     return (
         <div className={cn('flex flex-col gap-1.5', containerClass)}>
@@ -33,14 +32,16 @@ const InputField: React.FC<InputFieldProps> = ({
                     type={type}
                     onChange={(e) => onChange(e.target.value.toString())}
                     data-slot="input"
-                    className={cn(
-                        "file:text-foreground placeholder:text-muted-foreground/80 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-border h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:border-primary",
+                     className={cn(
+                        "file:text-foreground placeholder:text-muted-foreground/80 selection:bg-primary selection:text-primary-foreground dark:bg-input/30 h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus:border-primary ring-0",
+                        errMsg ? "border-destructive ring-2 ring-destructive/60" : "border-border",
                         leftIcon && "pl-10", 
                         rightIcon && "pr-10",
                         (leftIcon && rightIcon) && "px-10",
                         className
                     )}
                     {...props}
+                    value={props.value || ""}
                 />
                 {rightIcon && (
                     <div className='absolute right-3 text-muted-foreground'>

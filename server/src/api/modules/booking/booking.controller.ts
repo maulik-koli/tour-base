@@ -1,18 +1,38 @@
-import { bookingPayment, createBooking, customerBooking } from "./booking.service";
-import { BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
+import { BOOKING_EXPIRED_AT_TIME, bookingPayment, createBooking, customerBooking, getBookingData } from "./booking.service";
+import { BookingPaymentPayload, BookingStatusPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 
 import { asyncWrapper } from "@/api/utils/apiHelper";
 import { successResponse } from "@/api/utils/response";
+import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
 
 
 export const createBookingController = asyncWrapper(async (req, res) => {
     const payload = req.body as CreateBookingPayload;
 
-    const booking = await createBooking(payload);
+    const { bookingId, expiresAt, token } = await createBooking(payload);
+
+    res.cookie("booking_access_token", token, {
+        ...getCookiesConfig(),
+        maxAge: BOOKING_EXPIRED_AT_TIME,
+    });
 
     successResponse(res, {
         message: "Booking created successfully",
         status: 201,
+        data: { bookingId, expiresAt },
+    });
+});
+
+
+export const getbookingController = asyncWrapper(async (req, res) => {
+    const bookingId = req.params.bookingId;
+    const query = req.localsQuery as BookingStatusPayload;
+
+    const booking = await getBookingData(bookingId, query.view === "true");
+
+    successResponse(res, {
+        message: "Booking status fetched successfully",
+        status: 200,
         data: booking,
     });
 });
@@ -43,4 +63,4 @@ export const bookingPaymentController = asyncWrapper(async (req, res) => {
         status: 200,
         data: response,
     }); 
-});
+})

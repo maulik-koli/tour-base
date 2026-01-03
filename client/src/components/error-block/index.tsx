@@ -2,16 +2,21 @@ import React from 'react'
 import Icon from '../icons'
 import { Typography } from '../ui/typography'
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
+import { Button } from '@ui/button';
 
 interface ErrorBlockProps {
     type: 'error' | 'no-data';
+    redirectUrl?: string;
     message?: string;
     description?: string;
     className?: string;
 }
 
 
-const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type, className }) => {
+const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type, className, redirectUrl }) => {
+    const router = useRouter();
+
     return (
         <div className={cn('w-full p-4 min-h-80 flex items-center justify-center', className)}>
             <div className='flex flex-col items-center gap-2 text-center'>
@@ -22,6 +27,15 @@ const ErrorBlock: React.FC<ErrorBlockProps> = ({ message, description, type, cla
                 <Typography className='text-destructive'>
                     {description || 'Please try again later.'}
                 </Typography>
+                {redirectUrl && (
+                    <Button
+                        variant="outline"
+                        className='mt-4'
+                        onClick={() => router.push(redirectUrl)}
+                    >
+                        Go Back
+                    </Button>
+                )}
             </div>
         </div>
     )

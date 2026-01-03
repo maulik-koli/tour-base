@@ -1,5 +1,5 @@
 import mongoose, { Types } from "mongoose";
-import Package from "./packages.model";
+import Package, { TourPackageFields, TourPackageLean } from "./packages.model";
 import Tour from "../tour/tour.model";
 import { PackagePayload } from "./packages.schema";
 import { CustomError } from "@/api/utils/response";
@@ -103,4 +103,23 @@ export const deletePackagesByTourId = async (tourId: Types.ObjectId, session: mo
 export const deletePackageById = async (packageId: string) => {
     const id = new mongoose.Types.ObjectId(packageId);
     await Package.findByIdAndDelete(id);
+}
+
+
+export const findPackage = async ({
+    query, select, unSelect
+}: { query: Partial<TourPackageLean>, select?: TourPackageFields[], unSelect?: TourPackageFields[] }) => {
+    
+    const selectFields = select ? select.join(' ') : '';
+    const unSelectField = unSelect ? unSelect.map(f => `-${f}`).join(' ') : '';
+
+    const pck = await Package.findOne(query)
+        .select(selectFields + ' ' + unSelectField)
+        .lean();
+
+    if(!pck) {
+        throw new CustomError(404, 'Package not found');
+    }
+
+    return pck;
 }

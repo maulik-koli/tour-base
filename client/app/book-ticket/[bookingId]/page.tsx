@@ -1,41 +1,59 @@
 "use client"
 import React, { useState } from 'react'
 import { useParams } from 'next/navigation'
-import { cn } from '@/lib/utils'
+import { useBookingData } from '@modules/booking/api/queries'
 
-import Icon from '@/components/icons'
 import BookingSummery from '@modules/booking/components/booking-summery'
 import CustomerDetailsForm from '@modules/booking/components/customer-details-form'
+import ReceiptPayment from '@modules/booking/components/receipte'
+import ErrorBlock from '@/components/error-block'
 import { Typography } from '@ui/typography'
 import { Separator } from '@ui/separator'
-import { Button } from '@ui/button'
-import ReceiptPayment from '@modules/booking/components/receipte'
+import { SpinnerOverlay } from '@ui/spinner'
+import { logger } from '@/lib/utils'
 
-type BookingStateType = "summary-and-details" | "final-receipt"
+type BookingStateType = "details" | "receipt"
 
 
 const BookTicket: React.FC = () => {
-    const { bookingId } = useParams()
-    const [bookingState, setBookingState] = useState<BookingStateType>("summary-and-details")
+    const { bookingId } = useParams();
+    const [bookingState, setBookingState] = useState<BookingStateType>("details")
+
+    const { data, isError, isLoading } = useBookingData({ bookingId: bookingId as string });
+
+    if (isLoading) {
+        return <SpinnerOverlay />
+    }
+
+    if (isError || !data || (data.data && data?.data.isExpired)) {
+        return (
+            <ErrorBlock 
+                type='error'
+                message="Your session has expired or invalid. Please try to book again."
+            />
+        )
+    }
+
 
     const getContent = () => {
-        if (bookingState === "summary-and-details") {
+        if (!data.data) return null;
+
+        if (bookingState === "details") {
+            logger("Rendering Customer Details Form", { bookingId, customerDetails: data.data.customerBookingDetails });
             return (
                 <>
-                    <BookingSummery />
-
+                    <BookingSummery data={data.data} />
                     <Separator />
-
-                    <CustomerDetailsForm />
+                    <CustomerDetailsForm 
+                        key={isLoading ? 'loading' : 'loaded'}
+                        bookingId={data.data.bookingId}
+                        customerDetails={data.data.customerBookingDetails}
+                    />
                 </>
             )
         }
         else {
-            return (
-                <>
-                    <ReceiptPayment />
-                </>
-            )
+            return <ReceiptPayment />
         }
     }
 
@@ -51,24 +69,6 @@ const BookTicket: React.FC = () => {
             </div>
 
             {getContent()}
-
-            <div className={cn(
-                'w-full flex items-center gap-4',
-                bookingState === "summary-and-details" ? "justify-end" : "justify-between"
-            )}>
-                {bookingState === "final-receipt" && (
-                    <Button type='button' onClick={() => setBookingState("summary-and-details")}>
-                        <Icon name='ArrowLeft' width={10} height={16} />
-                        Back
-                    </Button>
-                )}
-                {bookingState === "summary-and-details" && (
-                    <Button type='button' onClick={() => setBookingState("final-receipt")}>
-                        Next
-                        <Icon name='ArrowRight' width={10} height={16} />
-                    </Button>
-                )}
-            </div>
         </div>
     )
 }

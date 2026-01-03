@@ -1,20 +1,21 @@
 "use client"
 import React from 'react'
-import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import { useCreateBooking } from '@modules/booking/api/mutations';
+import { cn } from '@/lib/utils';
 
 import { Button } from '@ui/button'
 import { SpinnerOverlay } from '@ui/spinner';
-import { useRouter } from 'next/navigation';
 
 interface BookContactBtnsProps {
     tourId: string;
     packageId: string;
+    isDisabled?: boolean;
     className?: string;
 }
 
 
-const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, packageId, tourId }) => {
+const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, packageId, tourId, isDisabled }) => {
     const router = useRouter();
     const { mutate, isPending } = useCreateBooking();
 
@@ -26,7 +27,9 @@ const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, package
         }, {
             onSuccess: (data) => {
                 if(data.data) {
-                    router.replace(`/book-ticket/${data.data.bookingId}`);
+                    if (data.data) {
+                        router.replace(`/book-ticket/${data.data.bookingId}`);
+                    }
                 }
             }
         });
@@ -38,12 +41,13 @@ const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, package
 
 
     return (
-        <div className={cn('space-y-2.5', className)}>
+        <div className={cn('w-full flex flex-col gap-2', className)}>
             <Button
                 size="lg"
                 type='button'
-                className='w-full h-12 text-lg'
+                className='h-12 text-lg'
                 onClick={handleBookNow}
+                disabled={isDisabled}
             >
                 Book Now
             </Button>
@@ -51,7 +55,7 @@ const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, package
                 variant="secondary"
                 size="lg"
                 type='button'
-                className='w-full h-12 text-lg'
+                className='h-12 text-lg'
                 onClick={() => router.replace("/contact-us")}
             >
                 Contant Us
