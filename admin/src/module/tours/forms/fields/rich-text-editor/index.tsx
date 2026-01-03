@@ -12,10 +12,11 @@ interface RichTextEditorProps {
     value: string;
     onChange: (value: string) => void;
     label?: string;
+    errMsg?: string;
 }
 
 
-const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label }) => {
+const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label, errMsg }) => {
     const editor = useEditor({
         extensions: getExtensions(),
         content: value,
@@ -101,7 +102,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
         <div className='flex flex-col gap-1.5'>
             {label && <FieldLabel>{label}</FieldLabel>}
             <div className="w-full border border-border rounded-md bg-card">
-                <div className="flex gap-2 bg-secondary/50 rounded-t-md p-3 border-b border-border">
+                <div className={cn(
+                    "flex gap-2 bg-secondary/50 rounded-t-md p-3 border-b",
+                    errMsg ? "border-destructive ring-2 ring-destructive/60" : "border-border"
+                )}>
                     <Button
                         type="button"
                         size="icon"
@@ -164,7 +168,10 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange, label 
 
                 <EditorContent
                     editor={editor}
-                    className="tiptap-editor max-w-none overflow-y-auto min-h-40 max-h-100 p-3"
+                    className={cn(
+                        "tiptap-editor max-w-none overflow-y-auto min-h-40 max-h-100 p-3",
+                        errMsg ? "border-destructive ring-2 ring-destructive/60 rounded-b-md" : "border-border rouned-b-md"
+                    )}
                     onClick={handleContainerClick}
                 />
             </div>

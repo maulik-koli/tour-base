@@ -1,5 +1,5 @@
-import { Control, FieldValues, Path, useController } from 'react-hook-form'
-import { cn } from '@/lib/utils';
+import { Control, FieldValues, Path, useController, useFormState } from 'react-hook-form'
+import { cn, logger } from '@/lib/utils';
 
 import Icon from '@/components/icons';
 import InputField from '@/components/form/input-field';
@@ -23,7 +23,7 @@ const ArrayListInput = <T extends FieldValues>({
     containerClass
 }:  ArrayListInputProps<T>) => {
 
-    const { field } = useController({
+    const { field, fieldState: { error } } = useController({
         control,
         name,
     });
@@ -49,7 +49,7 @@ const ArrayListInput = <T extends FieldValues>({
     return (
         <div className={cn('flex flex-col gap-1.5', containerClass)}>
             {label && <FieldLabel>{label}</FieldLabel>}
-            <div className='flex flex-col gap-1.5'>
+            <div className={cn('flex flex-col gap-1.5', error && "border-destructive ring-2 ring-destructive/60 rounded-md")}>
                 <div className='flex items-center gap-2'>
                     <InputField
                         value={values[0] || ""}
@@ -74,6 +74,7 @@ const ArrayListInput = <T extends FieldValues>({
                             onChange={(newValue) => handleChange(index + 1, newValue)}
                             placeholder={placeholder}
                             containerClass='flex-1'
+
                         />
                         <Button
                             type="button"

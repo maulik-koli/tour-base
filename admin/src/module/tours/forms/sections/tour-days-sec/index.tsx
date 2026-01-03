@@ -9,10 +9,11 @@ import { RichTextEditor } from '@module/tours/forms/fields';
 import { InputField } from '@/components/form';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
+import { cn } from '@/lib/utils';
 
 
 const ToursFormDaysSections: React.FC = () => {
-    const { control } = useFormContext<CreateTourFormType>();
+    const { control, formState: { errors } } = useFormContext<CreateTourFormType>();
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -39,12 +40,16 @@ const ToursFormDaysSections: React.FC = () => {
         >
             <CollapsibleComponent
                 contentClassName='px-4'
-                triggerClassName='px-4'
+                triggerClassName='px-0 p-0'
                 className='gap-4'
                 items={fields.map((_, index) => {
+                    const hasMembersError = !!errors.tour?.dayPlans?.[index]
+
                     return {
                         label: (
-                            <div className='flex items-center justify-between'>
+                            <div className={cn('flex items-center justify-between px-4 p-2 rounded-md',
+                                hasMembersError && "bg-destructive/30"
+                            )}>
                                 <Typography variant='p' className='font-semibold'>Day {index + 1}</Typography>
                                 <Button
                                     size="icon"
@@ -90,11 +95,12 @@ const ToursFormDaysSections: React.FC = () => {
                                 <Controller
                                     control={control}
                                     name={`tour.dayPlans.${index}.description`}
-                                    render={({ field }) => (
+                                    render={({ field, fieldState }) => (
                                         <RichTextEditor
                                             label="Description"
                                             onChange={field.onChange}
                                             value={field.value || ""}
+                                            errMsg={fieldState.error?.message}
                                         />
                                     )}
                                 />
