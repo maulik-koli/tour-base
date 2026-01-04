@@ -14,4 +14,5 @@ export const QUERY_REGISTRY = {
 export const MUTATION_REGISTRY = {
     createBooking: 'create-booking',
     customerBooking: 'customer-booking',
+    bookingPayment: 'booking-payment',
 } as const;

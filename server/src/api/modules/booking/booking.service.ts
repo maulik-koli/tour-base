@@ -211,19 +211,15 @@ export const bookingPayment = async (bookingId: string, payload: BookingPaymentP
     // get booking details and validate it
     const booking = await findBooking(
         { _id: new Types.ObjectId(bookingId) }, 
-        ['bookingStatus', 'packageDetails', 'expiresAt', 'customerDetails', "totalAmount"]
+        ['bookingStatus', 'customerDetails', "totalAmount"]
     );
 
-    if (booking.bookingStatus.includes("PAID")) {
+    if (booking.bookingStatus.includes("PAID") || booking.bookingStatus === "FAILED") {
         throw new CustomError(400, "Booking is already paid");
     }
 
-    if (booking.bookingStatus !== "DETAILS_FILLED") {
+    if (booking.bookingStatus === "DRAFT") {
         throw new CustomError(400, "Booking details are not filled yet");
-    }
-
-    if (new Date(booking.expiresAt) < new Date()) {
-        throw new CustomError(410, "Booking session expired");
     }
 
     if (booking.totalAmount === undefined) {
