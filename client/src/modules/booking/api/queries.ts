@@ -20,6 +20,10 @@ export const useBookingData = (
         queryKey: [QUERY_REGISTRY.getBookingData, params],
         queryFn: () => safeAxios(() => getBookingData(params)),
         retry: false,
+        staleTime: 0,
+        gcTime: 0,
+        refetchOnMount: true,
+        refetchOnWindowFocus: true,
         ...options,
     });
 };

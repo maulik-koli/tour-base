@@ -6,14 +6,13 @@ import Package from "../packages/packages.model";
 import { BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 import { createCashFreeOrder } from "../payment/payment.service";
 import { CashfreePaymentWebhookPayload } from "../payment/payment.types";
+import { hashToken } from "@/api/utils/token";
+import { BOOKING_AUTH, BookingTourPackage } from "./booking.utils";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
-import { generateAccessToken } from "@/api/utils/token";
-
-export const BOOKING_EXPIRED_AT_TIME = 30 * 60 * 1000; // 30 minutes
 
 
-export const createBooking = async (payload: CreateBookingPayload) => {
+export const createBooking = async (payload: CreateBookingPayload, token: string) => {
     const isTourExists = await Tour.exists({ 
         _id: payload.tourId
     });
@@ -31,20 +30,17 @@ export const createBooking = async (payload: CreateBookingPayload) => {
     }
 
     // create draft booking
-    const token = generateAccessToken();
-
     const booking = await Booking.create({
         tourId: payload.tourId,
         packageId: payload.packageId,
         bookingStatus: "DRAFT",
-        expiresAt: new Date(Date.now() + BOOKING_EXPIRED_AT_TIME),
-        accessToken: token,
+        expiresAt: new Date(Date.now() + BOOKING_AUTH.EXPIRE_TIME),
+        accessToken: hashToken(token),
     });
 
     return {
         bookingId: booking._id,
         expiresAt: booking.expiresAt,
-        token
     };
 }
 
@@ -61,7 +57,7 @@ export const findBooking = async (query: Partial<BookingLean>, select?: BookingF
 };
 
 
-export const getBookingTourPackage = async (match: PipelineStage.Match["$match"]) => {
+export const getBookingTourPackage = async (match: PipelineStage.Match["$match"]): Promise<BookingTourPackage> => {
     const pipeline: PipelineStage[] = [
         { $match: match },
         {
@@ -94,6 +90,7 @@ export const getBookingTourPackage = async (match: PipelineStage.Match["$match"]
                 bookingId: "$_id",
                 bookingStatus: 1,
                 isExpired: 1,
+                createdAt: 1,
                 tour: {
                     _id: "$tourDetails._id",
                     tourName: "$tourDetails.name",
@@ -158,76 +155,17 @@ export const getBookingData = async (bookingId: string, isView: boolean) => {
         package: bookingData.packageDetails,
         customerBookingDetails: bookingData.customerDetails,
         totalAmount: bookingData.totalAmount,
+        createdAt: bookingData.createdAt,
     }
 }
 
 
 export const customerBooking = async (bookingId: string, payload: CustomerDetailsPayload) => {
-    // get booking details with tourId and packageId
-    const booking = await Booking.aggregate([
-        { 
-            $match: { 
-                _id: new Types.ObjectId(bookingId),
-                bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] },
-                // expiresAt: { $gt: "$$NOW" }
-            }
-        },
-        {
-            $lookup: {
-                from: "tours",
-                localField: "tourId",
-                foreignField: "_id",
-                as: "tourDetails"
-            },
-        },
-        { $unwind: "$tourDetails" },
-        {
-            $lookup: {
-                from: "packages",
-                localField: "packageId",
-                foreignField: "_id",
-                as: "packageDetails"
-            },
-        },
-        { $unwind: "$packageDetails" },
-        {
-            $project: {
-                _id: 1,
-                bookingStatus: 1,
-                expiresAt: 1,
-                tourId: 1,
-                packageId: 1,
-                tourDetails: {
-                    tourName: "$tourDetails.name",
-                    includes: "$tourDetails.includes",
-                    excludes: "$tourDetails.excludes",
-                    thumbnailImage: "$tourDetails.thumbnailImage",
-                },
-                packageDetails: {
-                    packageName: "$packageDetails.name",
-                    days: "$packageDetails.days",
-                    nights: "$packageDetails.nights",
-
-                    pricePerPerson: "$packageDetails.pricePerPerson",
-                    childrenPrice: "$packageDetails.childrenPrice",
-                    startCity: "$packageDetails.startCity",
-                    endCity: "$packageDetails.endCity",
-                }
-            }
-        }
-    ])
-
-    if (!booking.length) {
-        throw new CustomError(404, "Booking not found or already processed");
-    }
-
-    const bookingDoc = booking[0];
-
-    log.info('bookingDoc', bookingDoc);
-
-    if (new Date(bookingDoc.expiresAt) < new Date()) {
-        throw new CustomError(410, "Booking session expired");
-    }
+    // get booking, tour and packge data with bookingId
+    const booking = await getBookingTourPackage({
+        _id: new Types.ObjectId(bookingId),
+        bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] },
+    });
 
     // commute total amount with customer details and package details of booking
     const commuteTotalAmount = payload.members.reduce((totalAmount, member) => {
@@ -235,12 +173,13 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
             return totalAmount;
         }
         if (6 <= member.age && member.age < 12) {
-            return totalAmount + bookingDoc.packageDetails?.childrenPrice || 0;
+            return totalAmount + booking.package?.childrenPrice || 0;
         }
         
-        return totalAmount + bookingDoc.packageDetails?.pricePerPerson || 0;
+        return totalAmount + booking.package?.pricePerPerson || 0;
 
     }, 0) || 0;
+
 
     // update booking with customer details and total amount
     const result = await Booking.findOneAndUpdate(
@@ -248,8 +187,8 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
         {
             $set: {
                 customerDetails: payload,
-                tourDetails: bookingDoc.tourDetails,
-                packageDetails: bookingDoc.packageDetails,
+                tourDetails: booking.tour,
+                packageDetails: booking.package,
                 bookingStatus: "DETAILS_FILLED",
                 totalAmount: commuteTotalAmount,
             }
@@ -260,8 +199,6 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
     if (!result) {
         throw new CustomError(409, "Booking details update conflict. Please try again.");
     }
-
-    log.info('Updated booking:', result);
 
     return {
         bookingId: result._id,

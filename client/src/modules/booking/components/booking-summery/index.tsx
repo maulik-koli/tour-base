@@ -6,18 +6,19 @@ import Icon from '@/components/icons';
 import { Typography } from '@ui/typography';
 
 interface BookingSummeryProps {
-    data: GetBookingDataResponse
+    tour: GetBookingDataResponse["tour"]
+    packageData: GetBookingDataResponse["package"]
 }
 
 
-const BookingSummery: React.FC<BookingSummeryProps> = ({ data }) => {
+const BookingSummery: React.FC<BookingSummeryProps> = ({ tour, packageData }) => {
     return (
         <div className='w-full grid grid-cols-2 gap-6'>
             <div className='w-full h-fit bg-card rounded-md border border-border flex flex-col'>
                 <div className='relative w-full aspect-7/3 rounded-t-md'>
                     <FallbackImage
-                        src={data.tour.thumbnailImage}
-                        alt={data.tour.tourName}
+                        src={tour.thumbnailImage}
+                        alt={tour.tourName}
                         crop="fill"
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
@@ -28,7 +29,7 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ data }) => {
 
                     <div className='absolute bottom-4 left-4'>
                         <Typography variant="h3" className='text-primary-foreground'>
-                            {data.tour.tourName}    
+                            {tour.tourName}    
                         </Typography>
                     </div>
                 </div>
@@ -41,40 +42,40 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ data }) => {
                         <div className='flex items-center justify-between'>
                             <Typography variant="p">Price per person</Typography>
                             <Typography variant="h4" className='font-semibold text-primary'>
-                                ₹ {data.package.pricePerPerson}
+                                ₹ {packageData.pricePerPerson}
                             </Typography>
                         </div>
                         <div className='flex items-center justify-between'>
                             <Typography variant="p">Price for 6-11 years old</Typography>
                             <Typography variant="h4" className='font-semibold text-primary'>
-                                ₹ {data.package.childrenPrice}
+                                ₹ {packageData.childrenPrice}
                             </Typography>
                         </div>
                         <div className='flex items-center justify-between'>
                             <Typography variant="p">Duration</Typography>
                             <Typography variant="p" className='font-semibold'>
-                                {data.package.days} Days / {data.package.nights} Nights
+                                {packageData.days} Days / {packageData.nights} Nights
                             </Typography>
                         </div>
                         <div className='flex items-center justify-between'>
                             <Typography variant="p">Route</Typography>
                             <Typography variant="p" className='font-semibold'>
-                                {data.package.startCity} - {data.package.endCity}
+                                {packageData.startCity} - {packageData.endCity}
                             </Typography>
                         </div>
                     </div>
                 </div>
             </div>
             <div className='w-full h-fit p-4 bg-card rounded-md border border-border'>
-                {data.tour.includes.length > 0 && data.tour.excludes.length > 0 && (
+                {tour.includes.length > 0 && tour.excludes.length > 0 && (
                     <div>
                         <Typography variant="h4" className='mb-4'>What's Included & Excluded</Typography>
                         <div className='space-y-6'>
-                            {data.tour.includes.length > 0 && (
+                            {tour.includes.length > 0 && (
                                 <div className='space-y-3'>
                                     <Typography variant="h4" className='text-green-500 underline'>Inclusions</Typography>
                                     <div className='space-y-2'>
-                                        {data.tour.includes.map((include, index) => (
+                                        {tour.includes.map((include, index) => (
                                             <div key={index} className='flex items-center gap-2'>
                                                 <Icon name='CircleCheck' width={20} height={20} className='text-green-500 shrink-0' />
                                                 <Typography variant="p" className='text-muted-foreground'>
@@ -85,11 +86,11 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ data }) => {
                                     </div>
                                 </div>
                             )}
-                            {data.tour.excludes.length > 0 && (
+                            {tour.excludes.length > 0 && (
                                 <div className='space-y-3'>
                                     <Typography variant="h4" className='text-red-500 underline'>Exclusions</Typography>
                                     <div className='space-y-2'>
-                                        {data.tour.excludes.map((exclude, index) => (
+                                        {tour.excludes.map((exclude, index) => (
                                             <div key={index} className='flex items-center gap-2'>
                                                 <Icon name='CircleX' width={20} height={20} className='text-red-500 shrink-0' />
                                                 <Typography variant="p" className='text-muted-foreground'>

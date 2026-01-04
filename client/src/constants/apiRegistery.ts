@@ -2,9 +2,11 @@
 export const QUERY_REGISTRY = {
     getTours: 'get-tours',
     getTour: 'get-tour',
-    getCategoryOptions: 'get-category-options',
     getFeaturedTours: 'get-featured-tours',
+
+    getCategoryOptions: 'get-category-options',
     getCategories: 'get-categories',
+    
     getBookingData: "get-booking-data",
 } as const;
 
