@@ -9,15 +9,15 @@ export const createBooking = async (payload: CreateBookingPayload): Promise<ApiR
 }
 
 
-export const customerBooking = async (payload: CustomerBookingPayload): Promise<ApiResponse<CustomerBookingResponse>> => {
-    const response = await api.patch(`/booking/${payload.bookingId}/details`, payload.customer);
-    return response.data;
-}
-
-
 export const getBookingData = async (params: GetBookingDataParams): Promise<ApiResponse<GetBookingDataResponse>> => {
     const response = await api.get(`/booking/${params.bookingId}`, { 
         params: params.view
     });
+    return response.data;
+}
+
+
+export const customerBooking = async (payload: CustomerBookingPayload): Promise<ApiResponse<CustomerBookingResponse>> => {
+    const response = await api.patch(`/booking/${payload.bookingId}/customer`, payload.customer);
     return response.data;
 }

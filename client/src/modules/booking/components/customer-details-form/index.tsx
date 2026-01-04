@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CustomerDetailsFormType, customerDetailsSchema, defaultMember, getDefaultCustomerDetails } from '@modules/booking/utils/schema'
@@ -12,14 +12,16 @@ import { Separator } from '@ui/separator'
 import { SpinnerOverlay } from '@ui/spinner'
 import { useCustomerBooking } from '@modules/booking/api/mutations'
 import { logger } from '@/lib/utils'
+import { flatZodError } from '@/lib/flatZodError'
+import { useToast } from '@/hooks/useToast'
 
 interface CustomerDetailsFormProps {
     bookingId: string;
+    handleOnSubmit: () => void;
     customerDetails?: CustomerDetailsFormType;
 }
 
-const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, customerDetails }) => {
-    logger("Customer Details Form Rendered", { bookingId, customerDetails });
+const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, customerDetails, handleOnSubmit }) => {
     const form = useForm<CustomerDetailsFormType>({
         resolver: zodResolver(customerDetailsSchema),
         defaultValues: customerDetails || getDefaultCustomerDetails(),
@@ -33,13 +35,34 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
     })
 
     const { isPending, mutate } = useCustomerBooking();
+    const toast = useToast();
+
 
     const onSubmit = (data: CustomerDetailsFormType) => {
+        logger("Submitting Customer Details", { bookingId, data });
         mutate({
             bookingId: bookingId,
             customer: data
         });
+        handleOnSubmit();
     }
+
+    useEffect(() => {
+        if(Object.keys(form.formState.errors).length > 0) {
+            logger("Form data", form.getValues())
+            const error = flatZodError(customerDetailsSchema, form.getValues())
+            if(error) toast.error(error)
+        }
+    }, [form.formState.errors]);
+
+    useEffect(() => {
+        if (isPending) return;
+        
+        if (customerDetails) {
+            form.reset(customerDetails);
+        }
+    }, [customerDetails])
+
 
     if (isPending) {
         return <SpinnerOverlay />
@@ -47,7 +70,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
 
     return (
         <>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='w-full px-6 py-4 bg-card rounded-md border border-border flex flex-col gap-6'>
+            <form className='w-full px-6 py-4 bg-card rounded-md border border-border flex flex-col gap-6'>
                 <Typography variant="h4">Customer Details</Typography>
                 <div className='grid grid-cols-4 gap-6'>
                     <Controller
@@ -107,7 +130,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                             label='Travel Date *'
                             containerClass='max-w-80'
                             value={new Date(field.value).toISOString()}
-                            onChange={(value) => field.onChange(new Date(value))}
+                            onChange={field.onChange}
                         />
                     )}
                 />

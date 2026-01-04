@@ -1,19 +1,23 @@
-import { BOOKING_EXPIRED_AT_TIME, bookingPayment, createBooking, customerBooking, getBookingData } from "./booking.service";
+import { bookingPayment, createBooking, customerBooking, getBookingData } from "./booking.service";
 import { BookingPaymentPayload, BookingStatusPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 
+import { generateAccessToken } from "@/api/utils/token";
+import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
+import { BOOKING_AUTH } from "./booking.utils";
 import { asyncWrapper } from "@/api/utils/apiHelper";
 import { successResponse } from "@/api/utils/response";
-import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
 
 
 export const createBookingController = asyncWrapper(async (req, res) => {
     const payload = req.body as CreateBookingPayload;
 
-    const { bookingId, expiresAt, token } = await createBooking(payload);
+    const token = generateAccessToken();
 
-    res.cookie("booking_access_token", token, {
+    const { bookingId, expiresAt } = await createBooking(payload, token);
+
+    res.cookie(BOOKING_AUTH.COOKIE_NAME, token, {
         ...getCookiesConfig(),
-        maxAge: BOOKING_EXPIRED_AT_TIME,
+        maxAge: BOOKING_AUTH.EXPIRE_TIME,
     });
 
     successResponse(res, {

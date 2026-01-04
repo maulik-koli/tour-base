@@ -11,6 +11,7 @@ import {
     customerBookingController, 
     getbookingController
 } from "./booking.controller";
+import { bookingMiddleware } from "@/api/middlewares/booking.middleware";
 import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 
 const router = express.Router();
@@ -24,7 +25,8 @@ router.post(
 )
 
 router.patch(
-    "/:bookingId/details",
+    "/:bookingId/customer",
+    bookingMiddleware,
     validateRequest(customerDetailsZodSchema),
     customerBookingController
 )

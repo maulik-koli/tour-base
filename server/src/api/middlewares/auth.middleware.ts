@@ -9,7 +9,7 @@ export const authMiddleware = asyncWrapper(async (req, res, next) => {
     const token = req.cookies[ADMIN_AUTH.COOKIE_NAME];
 
     if (!token) {
-        throw new CustomError(401, "Admin token is required");
+        throw new CustomError(401, "Session token missing");
     }
 
     const decode = verifyAdminToken(token);

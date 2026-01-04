@@ -1,11 +1,11 @@
 import { ApiError } from "@/types/api";
 import axios, { AxiosInstance } from "axios";
-import { logger } from "../utils";
 
 const SERVER_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 
 const api: AxiosInstance = axios.create({
     baseURL: SERVER_BASE_URL,
+    withCredentials: true,
 });
 
 export default api;

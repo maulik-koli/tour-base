@@ -1,14 +1,18 @@
 import React from 'react'
+import { GetBookingDataResponse } from '@modules/booking/api/types'
+
 import Icon from '@/components/icons'
-import PaymentSubmit from '../payment-submit'
-import PaymentTerms from '../payment-terms'
 import { Typography } from '@ui/typography'
 import { Separator } from '@ui/separator'
 
+interface ReceiptPaymentProps {
+    data: GetBookingDataResponse;
+}
 
-const ReceiptPayment: React.FC = () => {
+
+const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data }) => {
     return (
-        <div className='w-full bg-card py-4 px-8 border border-border rounded-md flex flex-col gap-6'>
+        <>
             <Typography variant="h3">
                 Booking Receipt & Travel Members   
             </Typography>
@@ -23,7 +27,7 @@ const ReceiptPayment: React.FC = () => {
                         </Typography>
                         <div className='flex items-center gap-4'>
                             <Typography variant="p">
-                                Date: 29/12/2025
+                                Date: {new Date(data.createdAt).toLocaleDateString()}
                             </Typography>
                             <Typography variant="small" className='bg-accent/20 text-accent-foreground py-1 px-2 rounded-lg font-semibold'>
                                 Confirm
@@ -43,19 +47,27 @@ const ReceiptPayment: React.FC = () => {
                         <div className='flex flex-col gap-2'>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Tour:</Typography>
-                                <Typography variant="p" className='font-medium'>Some Tour Name</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.tour.tourName}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Package Name:</Typography>
-                                <Typography variant="p" className='font-medium'>Some Package Name</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.package.packageName}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Routes:</Typography>
-                                <Typography variant="p" className='font-medium'>City X {`→`} City Y</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.package.startCity} {`→`} {data.package.endCity}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Date:</Typography>
-                                <Typography variant="p" className='font-medium'>31/12/2025</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {new Date(data.customerBookingDetails?.dateOfTravel || '').toLocaleDateString()}
+                                </Typography>
                             </div>
                         </div>
                     </div>
@@ -67,19 +79,27 @@ const ReceiptPayment: React.FC = () => {
                         <div className='flex flex-col gap-2'>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Name:</Typography>
-                                <Typography variant="p" className='font-medium'>Some Name</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.customerBookingDetails?.fullName}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Phone 1:</Typography>
-                                <Typography variant="p" className='font-medium'>9988776655</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.customerBookingDetails?.phone1}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Phone 2:</Typography>
-                                <Typography variant="p" className='font-medium'>9988776655</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.customerBookingDetails?.phone2}
+                                </Typography>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <Typography variant="p">Total Person:</Typography>
-                                <Typography variant="p" className='font-medium'>4 person(s)</Typography>
+                                <Typography variant="p" className='font-medium'>
+                                    {data.customerBookingDetails?.members.length} person(s)
+                                </Typography>
                             </div>
                         </div>
                     </div>
@@ -91,48 +111,61 @@ const ReceiptPayment: React.FC = () => {
                         <Typography variant="large" className='font-medium'>Price Breakdown</Typography>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <div className='flex items-center justify-between p-1'>
-                            <div className='flex items-center gap-4'>
-                                <div className='h-8 w-8 flex items-center justify-center rounded-full bg-primary/20 text-primary'>
-                                    <Icon name='User' width={14} height={14} />
-                                </div>
-                                <Typography variant="p">Some Name <span className='ml-1 text-muted-foreground'>(21 years old)</span></Typography>
+                        {data.customerBookingDetails?.members.map((member, index) => (
+                            <div 
+                                key={`${index}-${member.age}`} 
+                                className='flex items-center justify-between p-1'
+                            >
+                                <div className='flex items-center gap-4'>
+                                    <div className='h-8 w-8 flex items-center justify-center rounded-full bg-primary/20 text-primary'>
+                                        <Icon name='User' width={14} height={14} />
+                                    </div>
+                                    <Typography variant="p">
+                                        {member.fullName} <span className='ml-1 text-muted-foreground'>({member.age} years old)</span>
+                                    </Typography>
 
-                            </div>
-                            <Typography variant="p" className='font-medium'>₹ 4000</Typography>
-                        </div>
-                        <div className='flex items-center justify-between p-1'>
-                            <div className='flex items-center gap-4'>
-                                <div className='h-8 w-8 flex items-center justify-center rounded-full bg-primary/20 text-primary'>
-                                    <Icon name='User' width={14} height={14} />
                                 </div>
-                                <Typography variant="p">Some Name <span className='ml-1 text-muted-foreground'>(20 years old)</span></Typography>
-
+                                <Typography variant="p" className='font-medium'>
+                                    ₹ {getTravelMemberPrice(member.age, data.package.pricePerPerson, data.package.childrenPrice)}
+                                </Typography>
                             </div>
-                            <Typography variant="p" className='font-medium'>₹ 4000</Typography>
-                        </div>
+                        ))}
                     </div>
                     <Separator />
                     <div className='flex flex-col gap-2'>
                         <div className='w-full flex items-center justify-between p-1'>
                             <Typography variant="h4">Total Amount</Typography>
-                            <Typography variant="h4" className='font-semibold'>₹ 8000</Typography>
+                            <Typography variant="h4" className='font-semibold'>₹ {data.totalAmount}</Typography>
                         </div>
                         <div className='w-full flex items-center justify-between p-1'>
                             <Typography variant="p" className='text-primary font-semibold'>Payment amount (50%)</Typography>
-                            <Typography variant="p" className='text-primary font-semibold'>₹ 4000</Typography>
+                            <Typography variant="p" className='text-primary font-semibold'>
+                                ₹ {data.totalAmount && data.totalAmount / 2}
+                            </Typography>
                         </div>
                         <div className='w-full flex items-center justify-between p-1'>
                             <Typography variant="p" className='text-accent font-semibold'>Due Amount (Remaining 50%)</Typography>
-                            <Typography variant="p" className='text-accent font-semibold'>₹ 4000</Typography>
+                            <Typography variant="p" className='text-accent font-semibold'>
+                                ₹ {data.totalAmount && data.totalAmount / 2}
+                            </Typography>
                         </div>
                     </div>
                 </div>
             </div>
-            <PaymentSubmit />
-            <PaymentTerms />
-        </div>
+        </>
     )
 }
 
 export default ReceiptPayment
+
+
+
+const getTravelMemberPrice = function(age: number, pricePerPerson: number, childrenPrice: number) {
+    if (age < 12 && age >= 6) {
+        return childrenPrice;
+    }
+    else if (age < 6) {
+        return 0;
+    }
+    return pricePerPerson;
+}

@@ -53,6 +53,7 @@ export interface GetBookingDataResponse extends GetBookingDataViewResponse {
         startCity: string;
         endCity: string;
     },
+    createdAt: string;
     customerBookingDetails?: CustomerDetailsFormType;
     totalAmount?: number;
 }
