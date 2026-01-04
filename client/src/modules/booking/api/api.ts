@@ -1,6 +1,6 @@
 import api from "@/lib/api/axios";
 import { ApiResponse } from "@/types/api";
-import { CreateBookingPayload, CreateBookingResponse, CustomerBookingPayload, CustomerBookingResponse, GetBookingDataParams, GetBookingDataResponse } from "./types";
+import { BookingPaymentPayload, BookingPaymentResponse, CreateBookingPayload, CreateBookingResponse, CustomerBookingPayload, CustomerBookingResponse, GetBookingDataParams, GetBookingDataResponse } from "./types";
 
 
 export const createBooking = async (payload: CreateBookingPayload): Promise<ApiResponse<CreateBookingResponse>> => {
@@ -19,5 +19,13 @@ export const getBookingData = async (params: GetBookingDataParams): Promise<ApiR
 
 export const customerBooking = async (payload: CustomerBookingPayload): Promise<ApiResponse<CustomerBookingResponse>> => {
     const response = await api.patch(`/booking/${payload.bookingId}/customer`, payload.customer);
+    return response.data;
+}
+
+
+export const bookingPayment = async (payload: BookingPaymentPayload): Promise<ApiResponse<BookingPaymentResponse>> => {
+    const response = await api.patch(`/booking/${payload.bookingId}/payment`, { 
+        paymentOption: payload.paymentOption
+    });
     return response.data;
 }

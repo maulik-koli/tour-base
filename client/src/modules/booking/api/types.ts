@@ -1,6 +1,7 @@
 import { CustomerDetailsFormType } from "../utils/schema";
 
 type BookingStaus = "DRAFT" | "DETAILS_FILLED" | "PAID_PARTIAL" | "PAID_FULL" | "FAILED"
+export type PaymentOption = "FULL" | "PARTIAL";
 
 export interface CreateBookingPayload {
     tourId: string;
@@ -56,4 +57,15 @@ export interface GetBookingDataResponse extends GetBookingDataViewResponse {
     createdAt: string;
     customerBookingDetails?: CustomerDetailsFormType;
     totalAmount?: number;
+}
+
+
+export interface BookingPaymentPayload {
+    bookingId: string;
+    paymentOption: PaymentOption;
+}
+
+export interface BookingPaymentResponse {
+    bookingId: string;
+    paymentSessionId: string;
 }

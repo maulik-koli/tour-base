@@ -1,5 +1,5 @@
 import React from 'react'
-import { GetBookingDataResponse } from '@modules/booking/api/types'
+import { GetBookingDataResponse, PaymentOption } from '@modules/booking/api/types'
 
 import Icon from '@/components/icons'
 import { Typography } from '@ui/typography'
@@ -7,10 +7,13 @@ import { Separator } from '@ui/separator'
 
 interface ReceiptPaymentProps {
     data: GetBookingDataResponse;
+    options: PaymentOption
 }
 
 
-const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data }) => {
+const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
+    const isFull = options === "FULL"
+
     return (
         <>
             <Typography variant="h3">
@@ -138,17 +141,21 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data }) => {
                             <Typography variant="h4" className='font-semibold'>₹ {data.totalAmount}</Typography>
                         </div>
                         <div className='w-full flex items-center justify-between p-1'>
-                            <Typography variant="p" className='text-primary font-semibold'>Payment amount (50%)</Typography>
                             <Typography variant="p" className='text-primary font-semibold'>
-                                ₹ {data.totalAmount && data.totalAmount / 2}
+                                Payment amount ({isFull ? "100%" : "50%" })
+                            </Typography>
+                            <Typography variant="p" className='text-primary font-semibold'>
+                                ₹ {data.totalAmount && (isFull ? data.totalAmount : data.totalAmount / 2)}
                             </Typography>
                         </div>
-                        <div className='w-full flex items-center justify-between p-1'>
-                            <Typography variant="p" className='text-accent font-semibold'>Due Amount (Remaining 50%)</Typography>
-                            <Typography variant="p" className='text-accent font-semibold'>
-                                ₹ {data.totalAmount && data.totalAmount / 2}
-                            </Typography>
-                        </div>
+                        {!isFull && (
+                            <div className='w-full flex items-center justify-between p-1'>
+                                <Typography variant="p" className='text-accent font-semibold'>Due Amount (Remaining 50%)</Typography>
+                                <Typography variant="p" className='text-accent font-semibold'>
+                                    ₹ {data.totalAmount && data.totalAmount / 2}
+                                </Typography>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

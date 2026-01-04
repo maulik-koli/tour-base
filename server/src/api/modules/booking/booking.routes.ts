@@ -33,6 +33,7 @@ router.patch(
 
 router.patch(
     "/:bookingId/payment",
+    bookingMiddleware,
     validateRequest(bookingPaymentZodSchema),
     bookingPaymentController
 )

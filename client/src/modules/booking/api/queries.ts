@@ -22,8 +22,8 @@ export const useBookingData = (
         retry: false,
         staleTime: 0,
         gcTime: 0,
-        refetchOnMount: true,
-        refetchOnWindowFocus: true,
+        // refetchOnMount: true,
+        // refetchOnWindowFocus: true,
         ...options,
     });
 };

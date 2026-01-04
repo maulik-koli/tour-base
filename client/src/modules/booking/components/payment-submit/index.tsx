@@ -1,16 +1,46 @@
 import React from 'react'
+import { PaymentOption } from '@modules/booking/api/types';
+import { useBookingPayment } from '@modules/booking/api/mutations';
+import { useCashfree } from '@/hooks/useCashfree';
+import { cn } from '@/lib/utils';
+
 import Icon from '@/components/icons'
 import { Typography } from '@ui/typography'
-import { cn } from '@/lib/utils';
 import { Button } from '@ui/button';
+import { SpinnerOverlay } from '@ui/spinner';
 
-// this will shift into api/types later
-export const paymentOptionsEnum = ["PARTIAL", "FULL"] as const;
-type PaymentOption = typeof paymentOptionsEnum[number];
+interface PaymentSubmitProps {
+    bookingId: string,
+    totalAmount: number
+    options: PaymentOption
+    onOptionChange: (op: PaymentOption) => void
+}
 
 
-const PaymentSubmit: React.FC = () => {
-    const [selectedPaymentOption, setSelectedPaymentOption] = React.useState<PaymentOption>("FULL");
+const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, totalAmount, bookingId }) => {
+    const { mutate, isPending } = useBookingPayment()
+    const { cashfree, isLoaded } = useCashfree()
+
+    const onProceedPayment = () => {
+        if (!cashfree) return;
+
+        mutate({
+            bookingId,
+            paymentOption: options
+        }, {
+            onSuccess: async (data) => {
+                if(data.data) {
+                    await cashfree.checkout({
+                        paymentSessionId: data.data.paymentSessionId
+                    })
+                }
+            }
+        })
+    }
+
+    if(isPending || !isLoaded) {
+        return <SpinnerOverlay />
+    }
 
     return (
         <div className='w-full p-6 bg-card flex flex-col gap-6 border border-border rounded-lg'>
@@ -20,29 +50,30 @@ const PaymentSubmit: React.FC = () => {
             </div>
             <div className='w-full grid grid-cols-2 gap-6'>
                 <SelectCard 
-                    selectedValue={selectedPaymentOption}
-                    onChange={setSelectedPaymentOption}
-                    valueId={0}
+                    selectedValue={options}
+                    onChange={onOptionChange}
+                    cardValue="FULL"
                     dispalyValue={{
                         title: "Full Payment (100%)",
                         description: "Pay the complete amount now",
-                        amount: 1200
+                        amount: totalAmount
                     }}
                 />
                 <SelectCard 
-                    selectedValue={selectedPaymentOption}
-                    onChange={setSelectedPaymentOption}
-                    valueId={1}
+                    selectedValue={options}
+                    onChange={onOptionChange}
+                    cardValue='PARTIAL'
                     dispalyValue={{
                         title: "Partial Payment (50%)",
                         description: "Pay 50% now, rest later",
-                        amount: 600
+                        amount: totalAmount / 2
                     }}
                 />
             </div>
             <Button 
                 size='lg' 
                 type='button'
+                onClick={onProceedPayment}
                 className='w-full h-12 mt-4 bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-lg font-semibold text-lg cursor-pointer whitespace-nowrap flex items-center justify-center'
             >
                 Proceed to Payment
@@ -58,7 +89,7 @@ export default PaymentSubmit
 interface SelectCardProps {
     selectedValue: PaymentOption;
     onChange: (value: PaymentOption) => void;
-    valueId: number;
+    cardValue: PaymentOption;
     dispalyValue: {
         title: string;
         description: string;
@@ -67,22 +98,22 @@ interface SelectCardProps {
 }
 
 
-const SelectCard: React.FC<SelectCardProps> = function({ selectedValue, onChange, valueId, dispalyValue }) {
+const SelectCard: React.FC<SelectCardProps> = function({ selectedValue, onChange, cardValue, dispalyValue }) {
     return (
         <div 
             className={cn(
                 'w-full flex gap-4 items-center p-4 hover:bg-accent/10 hover:border-accent cursor-pointer rounded-md border',
-                selectedValue === paymentOptionsEnum[valueId] ? 'bg-primary/10 border-primary' : "bg-card border-border"
+                selectedValue === cardValue ? 'bg-primary/10 border-primary' : "bg-card border-border"
             )}
-            onClick={() => onChange(paymentOptionsEnum[valueId])}
+            onClick={() => onChange(cardValue)}
         >
             <input 
                 type="radio"
-                id={paymentOptionsEnum[valueId]}
+                id={cardValue}
                 name="paymentMethod"
-                value={paymentOptionsEnum[valueId]}
-                checked={selectedValue === paymentOptionsEnum[valueId]}
-                onChange={() => onChange(paymentOptionsEnum[valueId])}
+                value={cardValue}
+                checked={selectedValue === cardValue}
+                onChange={() => onChange(cardValue)}
             />
             <div className='w-full flex flex-col gap-2'>
                 <div className='w-full flex items-center justify-between'>
