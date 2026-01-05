@@ -30,6 +30,16 @@ export const cashfreeWebhookController = asyncWrapper(async (req, res) => {
 
     const payload = JSON.parse(rawBody) as CashfreePaymentWebhookPayload;
 
+    // case when testing webhook
+    if (!payload.data.order) {
+        successResponse(res, {
+            message: "Webhook test successfully",
+            status: 200,
+            data: null,
+        });
+        return;
+    }
+
     await updateBookingPaymentStatus({
         order: payload.data.order,
         payment: payload.data.payment,
