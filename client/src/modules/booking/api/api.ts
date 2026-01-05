@@ -11,7 +11,7 @@ export const createBooking = async (payload: CreateBookingPayload): Promise<ApiR
 
 export const getBookingData = async (params: GetBookingDataParams): Promise<ApiResponse<GetBookingDataResponse>> => {
     const response = await api.get(`/booking/${params.bookingId}`, { 
-        params: params.view
+        params: { view: params.view }
     });
     return response.data;
 }
