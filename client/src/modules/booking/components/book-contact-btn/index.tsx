@@ -28,7 +28,7 @@ const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, package
             onSuccess: (data) => {
                 if(data.data) {
                     if (data.data) {
-                        router.replace(`/book-ticket/${data.data.bookingId}`);
+                        router.replace(`/book-package/${data.data.bookingId}`);
                     }
                 }
             }

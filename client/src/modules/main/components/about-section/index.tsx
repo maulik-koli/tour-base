@@ -1,12 +1,16 @@
 "use client"
 import React from 'react'
-import { Typography } from '@/components/ui/typography'
-import { CldImage } from 'next-cloudinary'
-import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+
 import Icon from '@/components/icons'
+import FallbackImage from '@/components/fallback-image'
+import { Typography } from '@/components/ui/typography'
+import { Button } from '@/components/ui/button'
 
 
 const AboutSection: React.FC = () => {
+    const router = useRouter();
+
     return (
         <div className='p-20 flex flex-col gap-8 bg-card'>
             <div className='grid grid-cols-2 gap-16'>
@@ -16,10 +20,10 @@ const AboutSection: React.FC = () => {
                     </Typography>
 
                     <Typography>
-                        WanderLust Tours has been creating unforgettable travel experiences for over a decade. We specialize in authentic, immersive journeys that connect you with local cultures, stunning landscapes, and hidden gems across incredible destinations.
+                        Eklavya Tourism is a customer-focused travel agency dedicated to creating comfortable and well-organized trips across India and international destinations. We specialize in planning journeys for families, couples, students, and corporate groups, ensuring every trip is safe, enjoyable, and affordable. Our team believes that travel should be a smooth and enriching experience, so we handle all the small details and logistics to make your journey completely stress-free.
                     </Typography>
                     <Typography>
-                        Our expert team of travel enthusiasts carefully curates each tour to ensure you experience the very best of every destination, from luxury accommodations to authentic local experiences.
+                        We take pride in offering personalized itineraries, transparent pricing, and reliable support throughout your trip. Whether you are looking for a spiritual journey, a romantic honeymoon, or a corporate group tour, we provide trusted accommodations and smooth transportation for every traveler. At Eklavya Tourism, our goal is to turn every trip into a meaningful experience and ensure you return home with wonderful stories to share.
                     </Typography>
 
                     <div className='grid grid-cols-3'>
@@ -37,13 +41,19 @@ const AboutSection: React.FC = () => {
                         </div>
                     </div>
 
-                    <Button variant="default" size="lg" className='max-w-min mt-2'>
+                    <Button 
+                        variant="default"
+                        size="lg"
+                        type='button'
+                        onClick={() => router.replace('/tours')}
+                        className='max-w-min mt-2'
+                    >
                         Explore All Tours
                         <Icon name='ArrowRight' width={16} height={16} />
                     </Button>
                 </div>
                 <div className="w-full relative h-full">
-                    <CldImage
+                    <FallbackImage
                         src="https://res.cloudinary.com/dmcfkem87/image/upload/v1765735247/tour-image_zvcgie.avif"
                         crop="fill"
                         alt="about name"

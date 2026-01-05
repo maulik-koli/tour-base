@@ -19,6 +19,7 @@ export const DURATION_OPTIONS = [
     { label: "4-7 Days", value: "4-7" },
     { label: "8-14 Days", value: "8-14" },
     { label: "15+ Days", value: "15+" },
+    { label: "All", value: "none" },
 ]
 
 export const DURATION_OPTIONS_VALUES = [

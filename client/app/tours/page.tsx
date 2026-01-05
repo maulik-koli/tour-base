@@ -1,15 +1,18 @@
 "use client"
-import React, { Suspense } from 'react'
+import React, { Suspense, useState } from 'react'
 import TourFilterHeader from '@modules/tours/components/tour-filter-header'
 import TourListGrid from '@modules/tours/components/tour-list-grid'
+import TourPagination from '@modules/tours/components/tour-pagination'
 import { Typography } from '@ui/typography'
 import { CustomSpinner } from '@ui/spinner'
+import { PaginationType } from '@/types/api'
 
 export type ViewMode = 'grid' | 'list';
 
 
 const ToursPage: React.FC = () => {
-    const [viewMode, setViewMode] = React.useState<ViewMode>('list')
+    const [viewMode, setViewMode] = useState<ViewMode>('list')
+    const [pagination, setPagination] = useState<PaginationType | null>(null)
     
     const toggleViewMode = (mode: ViewMode) => {
         setViewMode(mode)
@@ -31,8 +34,10 @@ const ToursPage: React.FC = () => {
             </Suspense>
 
             <Suspense fallback={<div><CustomSpinner /></div>}>
-                <TourListGrid viewMode={viewMode} />
+                <TourListGrid viewMode={viewMode} onPaginationChange={setPagination} />
             </Suspense>
+
+            {pagination && <TourPagination pagination={pagination} />}
         </div>
     )
 }

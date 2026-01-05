@@ -16,6 +16,8 @@ export const useTourFilters = () => {
             sort: searchParams.get('sort') || undefined,
             category: searchParams.get('category') || undefined,
             search: searchParams.get('search') || undefined,
+            page: searchParams.get('page') ? Number(searchParams.get('page')) : 1,
+            limit: 15,
         }
     }, [searchParams]);
 
@@ -53,6 +55,7 @@ export const useTourFilters = () => {
         if(newFilter.sort) params.set('sort', newFilter.sort);
         if(newFilter.category) params.set('category', newFilter.category);
         if(newFilter.search) params.set('search', newFilter.search);
+        if(newFilter.page && newFilter.page > 1) params.set('page', String(newFilter.page));
 
         router.push(`/tours?${params.toString()}`, {
             scroll: false

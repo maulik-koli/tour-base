@@ -4,6 +4,7 @@ import { ViewMode } from '@app/tours/page'
 import { useTourFilters } from '@/hooks/useTourFilters';
 import { useGetTours } from '@modules/tours/api/queries';
 import { cn } from '@/lib/utils';
+import { PaginationType } from '@/types/api';
 
 import TourCard  from '../tour-card';
 import ErrorBlock from '@/components/error-block';
@@ -12,10 +13,11 @@ import { CustomSpinner } from '@ui/spinner';
 
 interface TourListGridProps {
     viewMode: ViewMode;
+    onPaginationChange?: (pagination: PaginationType | null) => void;
 }
 
 
-const TourListGrid: React.FC<TourListGridProps> = ({ viewMode }) => {
+const TourListGrid: React.FC<TourListGridProps> = ({ viewMode, onPaginationChange }) => {
     const { filter } = useTourFilters()
 
     const { data, isLoading, error } = useGetTours({ 
@@ -24,7 +26,17 @@ const TourListGrid: React.FC<TourListGridProps> = ({ viewMode }) => {
         sort: filter.sort,
         search: filter.search,
         maxPrice: filter.maxPrice,
+        page: filter.page,
+        limit: filter.limit,
     });
+
+    React.useEffect(() => {
+        if (data?.data?.pagination) {
+            onPaginationChange?.(data.data.pagination)
+        } else {
+            onPaginationChange?.(null)
+        }
+    }, [data, onPaginationChange])
 
 
     const getContent = () => {
