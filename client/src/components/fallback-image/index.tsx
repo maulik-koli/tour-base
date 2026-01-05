@@ -1,26 +1,58 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import Image from 'next/image';
 import { CldImage, CldImageProps } from 'next-cloudinary';
 
-const PLACEHOLDER_IMAGE = "https://res.cloudinary.com/dmcfkem87/image/upload/v1766168487/74e6e7e382d0ff5d7773ca9a87e6f6f8817a68a6_r9pl7b.jpg"
+const PLACEHOLDER_IMAGE = "/placeholder.jpg"
+
+const isCloudinaryUrl = (src: string): boolean => {
+    if (!src || typeof src !== 'string') return false;
+    return src.includes('res.cloudinary.com') || src.includes('cloudinary.com');
+}
+
+interface FallbackImageProps extends Omit<CldImageProps, 'src' | 'alt'> {
+    src: string;
+    alt: string;
+    customSizes?: string;
+}
 
 
-const FallbackImage: React.FC<CldImageProps> = (props) => {
-    const [imageError, setImageError] = React.useState(false);
-    const [imageSrc, setImageSrc] = React.useState(props.src);
+const FallbackImage: React.FC<FallbackImageProps> = ({
+    src, 
+    alt,
+    className,
+    customSizes,
+    ...restProps 
+}) => {
+    const [imageError, setImageError] = useState(false);
+    const [useCloudinary, setUseCloudinary] = useState(false);
 
     const originalConsoleError = useRef(console.error);
 
     useEffect(() => {
         setImageError(false);
-        setImageSrc(props.src);
-    }, [props.src]);
+        
+        if (!src) {
+            setImageError(true);
+            setUseCloudinary(false);
+            return;
+        }
 
-    // supress next-cloudinary image load error logs
+        // Check if it's a Cloudinary URL
+        if (isCloudinaryUrl(src)) {
+            setUseCloudinary(true);
+        } else {
+            setUseCloudinary(false);
+        }
+    }, [src]);
+
+
+    // suppress next-cloudinary error logs
     useEffect(() => {
         console.error = (...args: any[]) => {
             if (
                 typeof args[0] === 'string' && 
-                args[0].includes('[CldImage] Failed to load image')
+                (args[0].includes('[CldImage] Failed to load image') ||
+                 args[0].includes('CldImage'))
             ) {
                 return;
             }
@@ -33,20 +65,58 @@ const FallbackImage: React.FC<CldImageProps> = (props) => {
     }, []);
 
 
-    const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-        e.preventDefault();
-        e.stopPropagation();
+    const handleError = () => {
+        console.warn(`Failed to load image: ${src}`);
         setImageError(true);
     }
 
+    const defaultSizes = customSizes || "(max-width: 768px) 100vw, 50vw";
+
+    // if error occurred or no valid src -> placeholder with Image
+    if (imageError || !src) {
+        return (
+            <Image
+                src={PLACEHOLDER_IMAGE}
+                alt={alt || "Placeholder"}
+                fill
+                sizes={defaultSizes}
+                className={className}
+                style={{ objectFit: 'cover' }}
+                onError={() => console.error('Placeholder image failed to load')}
+            />
+        );
+    }
+
+    // CldImage for Cloudinary URLs
+    if (useCloudinary) {
+        return (
+            <CldImage
+                {...restProps}
+                src={src}
+                alt={alt}
+                fill
+                crop="fill"
+                sizes={defaultSizes}
+                className={className}
+                loading="lazy"
+                onError={handleError}
+            />
+        );
+    }
+
+    // Image for external URLs and local paths
     return (
-        <CldImage
-            {...props}
-            loading="eager"
-            src={imageError ? PLACEHOLDER_IMAGE : imageSrc || PLACEHOLDER_IMAGE}
+        <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={defaultSizes}
+            className={className}
+            style={{ objectFit: 'cover' }}
+            loading="lazy"
             onError={handleError}
         />
-    )
+    );
 }
 
 export default FallbackImage

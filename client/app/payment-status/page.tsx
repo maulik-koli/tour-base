@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useBookingData } from '@modules/booking/api/queries';
 import { GetBookingDataViewResponse } from '@modules/booking/api/types';
@@ -12,6 +12,18 @@ import { Button } from '@ui/button';
 
 
 const PaymentStatusPage: React.FC = () => {
+    return (
+        <Suspense fallback={<CustomSpinner />}>
+            <PaymentStatusComponent />
+        </Suspense>
+    )
+}
+
+export default PaymentStatusPage
+
+
+
+const PaymentStatusComponent = function() {
     const searchParams = useSearchParams();
     const router = useRouter();
 
@@ -23,17 +35,15 @@ const PaymentStatusPage: React.FC = () => {
     }, {
         refetchInterval: (query) => {
             const status = (query.state.data?.data as GetBookingDataViewResponse | undefined)?.bookingStatus;
-            // Poll every 3 seconds if status is DRAFT or DETAILS_FILLED
             if (status === "DRAFT" || status === "DETAILS_FILLED") {
                 return 3000;
             }
-            return false; // Stop polling
+            return false;
         },
     })
 
     const paymentData = data?.data as GetBookingDataViewResponse | undefined;
 
-    // Redirect to home after 5 seconds when payment is complete or failed
     useEffect(() => {
         if (paymentData?.bookingStatus === "PAID_FULL" || 
             paymentData?.bookingStatus === "PAID_PARTIAL" || 
@@ -121,12 +131,11 @@ const PaymentStatusPage: React.FC = () => {
                             </Typography>
                         </div>
 
-                        {/* Action Buttons */}
                         <div className='flex flex-col sm:flex-row gap-3 pt-4'>
                             <Button 
                                 className='flex-1'
                                 onClick={() => router.push('/tours')}
-                                >
+                            >
                                 Browse More Tours
                             </Button>
                             <Button 
@@ -209,7 +218,7 @@ const PaymentStatusPage: React.FC = () => {
                         <div className='flex flex-col sm:flex-row gap-3 pt-4'>
                             <Button 
                                 className='flex-1'
-                                onClick={() => router.push(`/book-ticket/${paymentData.bookingId}`)}
+                                onClick={() => router.push(`/book-package/${paymentData.bookingId}`)}
                             >
                                 <Icon name='ArrowLeft' className='mr-2 h-4 w-4' />
                                 Retry Payment
@@ -240,5 +249,3 @@ const PaymentStatusPage: React.FC = () => {
         </div>
     )
 }
-
-export default PaymentStatusPage

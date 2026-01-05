@@ -18,7 +18,7 @@ interface TourFilterHeaderProps {
 
 
 const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleViewMode }) => {
-    const { filter, applyFilters } = useTourFilters()
+    const { filter, applyFilters, resetFilters } = useTourFilters()
     const [filterPannel, setFilterPannel] = useState<boolean>(false);
 
     return (
@@ -34,6 +34,7 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
                 />
                 <div className='flex items-center gap-4'>
                     <SelectField
+                        clearable
                         onChange={(value) => applyFilters({ ...filter, sort: value })}
                         options={SORT_OPTIONS}
                         value={filter.sort || SORT_OPTIONS[0].value}
@@ -76,29 +77,40 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
             {filterPannel && (
                 <>
                     <Separator className='my-4' />
-                    <div className='grid grid-cols-3 gap-8 items-center'>
-                        <SliderComponent 
-                            label='Price Range'
-                            defaultValue={[50000]}
-                            max={50000}
-                            min={0}
-                            value={[filter.maxPrice || 50000]}
-                            onChange={(value) => applyFilters({ ...filter, maxPrice: value[0] })}
-                            className='w-full'
-                            containerClass='w-full'
-                        />
-                        <SelectField
-                            label='Duration'
-                            onChange={(value) => applyFilters({ ...filter, duration: value })}
-                            options={DURATION_OPTIONS}
-                            value={filter.duration || DURATION_OPTIONS[0].value}
-                            containerClass='w-full'
-                        />
-                        <CategorySelect
-                            label='Category'
-                            handleChange={(value) => applyFilters({ ...filter, category: value })}
-                            className='w-full'
-                        />
+                    <div className='w-full flex gap-4 items-center'>
+                        <div className='w-full grid grid-cols-3 gap-8 items-center'>
+                            <SliderComponent 
+                                label='Price Range'
+                                defaultValue={[50000]}
+                                max={50000}
+                                min={0}
+                                value={[filter.maxPrice || 50000]}
+                                onChange={(value) => applyFilters({ ...filter, maxPrice: value[0] })}
+                                className='w-full'
+                                containerClass='w-full'
+                            />
+                            <SelectField
+                                clearable
+                                label='Duration'
+                                onChange={(value) => applyFilters({ ...filter, duration: value })}
+                                options={DURATION_OPTIONS}
+                                value={filter.duration}
+                                placeholder='Select duration of tour'
+                                containerClass='w-full'
+                            />
+                            <CategorySelect
+                                label='Category'
+                                handleChange={(value) => applyFilters({ ...filter, category: value })}
+                                className='w-full'
+                            />
+                        </div>
+                        <Button
+                            variant="link"
+                            className='text-destructive'
+                            onClick={resetFilters}
+                        >
+                            Clear All Filters
+                        </Button>
                     </div>
                 </>
             )}

@@ -9,7 +9,7 @@ import { Typography } from '@ui/typography'
 import { SpinnerOverlay } from '@ui/spinner'
 
 
-const BookTicket: React.FC = () => {
+const BookPackagePage: React.FC = () => {
     const { bookingId } = useParams();
 
     const { data, isError, isLoading, isFetching } = useBookingData({ bookingId: bookingId as string });
@@ -46,4 +46,4 @@ const BookTicket: React.FC = () => {
     )
 }
 
-export default BookTicket
+export default BookPackagePage

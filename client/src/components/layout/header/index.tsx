@@ -2,18 +2,20 @@
 import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Typography } from '@/components/ui/typography'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import FallbackImage from '@/components/fallback-image'
 
 const HEADER_DATA = [
     { title: 'Home', href: '/' },
     { title: 'Tours', href: '/tours' },
-    { title: 'Ticket', href: '/ticket' },
+    { title: 'Your Booking', href: '/your-booking' },
     { title: 'Contact', href: '/contact-us' },
 ]
 
 
 const Header: React.FC = () => {
+    const router = useRouter();
     const path = usePathname();
     const isHome = path === '/';
 
@@ -40,9 +42,20 @@ const Header: React.FC = () => {
             )}
         >
             <div className='w-full flex justify-between items-center'>
-                <div className='flex items-center gap-3'>
-                    <div className='w-10 h-10 flex items-center justify-center bg-primary rounded-xl'>Logo</div>
-                    <Typography variant='h4'>Tour Base</Typography>
+                <div
+                    className='flex items-center justify-center cursor-pointer'
+                    onClick={() => router.replace('/')}
+                >
+                    <div className={cn(
+                        'relative w-30 h-15 flex items-center justify-center rounded-sm',
+                        isSolid ? "opacity-80" : "opacity-100"
+                    )}>
+                        <FallbackImage
+                            src="/logo.png"
+                            alt="Tour Base Logo"
+                            className='object-cover overflow-hidden rounded-sm'
+                        />
+                    </div>
                 </div>
                 <nav>
                     <ul className='flex gap-10 list-none items-center'>
@@ -55,9 +68,6 @@ const Header: React.FC = () => {
                                         href={item.href}
                                         className={cn(
                                             "transition-colors text-foreground hover:text-primary",
-                                            // isSolid
-                                            //     ? "text-foreground hover:text-primary"
-                                            //     : "text-primary-foreground hover:text-primary-foreground/80",
                                             isActive && "text-primary"
                                         )}
                                     >

@@ -29,8 +29,9 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ handleChange, label, cl
 
         return (
             <SelectField
+                clearable
                 label={label}
-                onChange={(value) => handleChange(value)}
+                onChange={(value) => handleChange(value as string)}
                 options={data.data.map((category) => ({
                     label: category.name,
                     value: category.value,
