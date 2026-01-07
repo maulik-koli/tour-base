@@ -20,13 +20,13 @@ const CardSliderWrapper: React.FC<CardSliderWrapperProps> = ({ tours, children }
     return (
          <div className="w-full flex overflow-x-auto scrollbar-hidden scroll-smooth">
             <Swiper
-                slidesPerView={3}
+                slidesPerView={tours.length < 3 ? tours.length : 3}
                 spaceBetween={70}
                 slidesPerGroup={1}
                 freeMode={false}
                 navigation
                 grabCursor
-                loop
+                loop={tours.length > 3}
                 modules={[Navigation,FreeMode, Scrollbar]}
             >
                 {tours.map((tour) => (

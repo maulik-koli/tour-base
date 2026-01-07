@@ -1,11 +1,11 @@
-"use client";
+import { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
-import "@/styles/globals.css";
 
-import Header from "@/components/layout/header";
-import AppProvider from "@/provider";
-import { Toaster } from "@ui/sonner";
+import { DOMAIN } from "@/lib/api/axios";
+import "@/styles/globals.css";
+import AppMain from "@/components/layout/app-main";
+
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -16,6 +16,44 @@ const geistMono = Geist_Mono({
     variable: "--font-geist-mono",
     subsets: ["latin"],
 });
+
+
+export const metadata: Metadata = {
+    metadataBase: new URL(DOMAIN),
+    title: {
+        default: "Explore Tours & Travel Packages | Eklavyatourism",
+        template: "%s | Eklavyatourism",
+    },
+    description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations. Plan your perfect trip with expert guidance.",
+
+    openGraph: {
+        title: "Explore Tours & Travel Packages | Eklavyatourism",
+        description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations.",
+        url: "/",
+        siteName: "Eklavyatourism",
+        images: [
+            {
+                url: "/og-image.jpg",
+                width: 1200,
+                height: 630,
+                alt: "Eklavyatourism - Explore Tours and Travel",
+            },
+        ],
+        type: "website",
+    },
+
+    twitter: {
+        card: "summary_large_image",
+        title: "Explore Tours & Travel Packages | YourBrand",
+        description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations.",
+        images: ["/og-image.jpg"],
+    },
+
+    robots: {
+        index: true,
+        follow: true,
+    },
+}
 
 
 export default function RootLayout({
@@ -29,17 +67,7 @@ export default function RootLayout({
                 `${geistSans.variable} ${geistMono.variable} antialiased`,
                 "flex flex-col bg-background"
             )}>
-                {/* <Script
-                    src="https://sdk.cashfree.com/js/v3/cashfree.js"
-                    strategy="beforeInteractive"
-                    onLoad={() => console.log('Cashfree SDK loaded')}
-                    onError={(e) => console.error('Cashfree SDK failed to load', e)}
-                /> */}
-                <AppProvider>
-                    <Header />
-                    <main>{children}</main>
-                    <Toaster position="top-right" />
-                </AppProvider>
+                <AppMain>{children}</AppMain>
             </body>
         </html>
     );

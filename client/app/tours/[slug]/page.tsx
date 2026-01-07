@@ -15,11 +15,11 @@ import { SpinnerOverlay } from '@ui/spinner';
 
 
 const TourDetailPage: React.FC = () => {
-    const { tourSlug } = useParams();
+    const { slug } = useParams();
     const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
     const { data, isLoading, error } = useGetTourDetail({
-        slug: tourSlug as string
+        slug: slug as string
     })
 
     if (isLoading) {

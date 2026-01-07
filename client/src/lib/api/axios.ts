@@ -2,6 +2,7 @@ import { ApiError } from "@/types/api";
 import axios, { AxiosInstance } from "axios";
 
 const SERVER_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
+export const DOMAIN = "https://eklavyatourism.com"
 
 const api: AxiosInstance = axios.create({
     baseURL: SERVER_BASE_URL,
