@@ -262,7 +262,7 @@ const RefundPolicy: React.FC = () => {
                 </section>
 
                 {/* Footer Note */}
-                <div className='pt-8 border-t border-border text-center'>
+                <div className='pt-8 flex flex-col border-t border-border text-center'>
                     <Typography variant="small">
                         Last updated: January 2026
                     </Typography>

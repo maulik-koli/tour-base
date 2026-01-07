@@ -2,6 +2,7 @@ import React from 'react'
 import { GetBookingDataResponse, PaymentOption } from '@modules/booking/api/types'
 
 import Icon from '@/components/icons'
+import FallbackImage from '@/components/fallback-image'
 import { Typography } from '@ui/typography'
 import { Separator } from '@ui/separator'
 
@@ -19,21 +20,29 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
             <Typography variant="h3">
                 Booking Receipt & Travel Members   
             </Typography>
-            <div className='w-full px-12 py-8 flex flex-col gap-8 rounded-lg border border-dashed border-primary bg-primary/15'>
+            <div className='w-full px-4 md:px-8 lg:px-12 py-4 md:py-6 lg:py-8 flex flex-col gap-4 md:gap-6 lg:gap-8 rounded-lg border border-dashed border-primary bg-primary/15'>
                 <div className='w-full flex items-center justify-center'>
-                    <div className='flex flex-col gap-4 items-center'>
-                        <div className='h-20 w-20 rounded-full bg-primary text-primary-foreground flex items-center justify-center'>
-                            <Icon name='TicketCheck' width={50} height={50}  />
+                    <div className='flex flex-col gap-3 md:gap-4 items-center'>
+                        <div className='relative w-24 h-12 md:w-32 md:h-16 rounded-md'>
+                            <FallbackImage
+                                src='/logo-bg.avif'
+                                alt='Eklavya Tourism Logo'
+                                fill
+                                sizes="(max-width: 768px) 96px, 128px"
+                                className='object-contain rounded-md'
+                            />
                         </div>
-                        <Typography variant="h4" className='text-center'>
+                        <Typography variant="h4" className='text-center font-semibold'>
                             Eklavya Tourism
                         </Typography>
-                        <div className='flex items-center gap-4'>
-                            <Typography variant="p">
-                                Date: {new Date(data.createdAt).toLocaleDateString()}
-                            </Typography>
-                            <Typography variant="small" className='bg-accent/20 text-accent-foreground py-1 px-2 rounded-lg font-semibold'>
-                                Confirm
+                        <div className='flex items-center gap-2 bg-background/50 backdrop-blur-sm px-4 py-2 rounded-full border border-border/50'>
+                            <Icon name='Calendar' className='w-4 h-4 text-primary' />
+                            <Typography variant="p" className='font-medium'>
+                                {new Date(data.createdAt).toLocaleDateString('en-US', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric' 
+                                })}
                             </Typography>
                         </div>
                     </div>
@@ -41,10 +50,10 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
 
                 <Separator className='bg-foreground/50' />
 
-                <div className='w-full grid grid-cols-2 gap-12'>
-                    <div className='w-full bg-card p-4 rounded-md border border-border flex flex-col gap-3'>
+                <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12'>
+                    <div className='w-full bg-card p-3 md:p-3 rounded-md border border-border flex flex-col gap-3'>
                         <div className='flex items-center gap-2'>
-                            <Icon name='MapPinned' width={18} height={18} className='text-primary'/>
+                            <Icon name='MapPinned' className='w-4 h-4 md:w-5 md:h-5 text-primary'/>
                             <Typography variant="large" className='font-medium'>Traveler Details</Typography>
                         </div>
                         <div className='flex flex-col gap-2'>
@@ -74,9 +83,9 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
                             </div>
                         </div>
                     </div>
-                    <div className='w-full bg-card p-4 rounded-md border border-border flex flex-col gap-3'>
+                    <div className='w-full bg-card p-3 md:p-4 rounded-md border border-border flex flex-col gap-3'>
                         <div className='flex items-center gap-2'>
-                            <Icon name='User' width={18} height={18} className='text-primary'/>
+                            <Icon name='User' className='w-4 h-4 md:w-5 md:h-5 text-primary'/>
                             <Typography variant="large" className='font-medium'>Customer Details</Typography>
                         </div>
                         <div className='flex flex-col gap-2'>
@@ -108,20 +117,20 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
                     </div>
                 </div>
 
-                <div className='w-full bg-card p-4 rounded-md border border-border flex flex-col gap-4'>
+                <div className='w-full bg-card p-3 md:p-4 rounded-md border border-border flex flex-col gap-3 md:gap-4'>
                     <div className='flex items-center gap-2'>
-                        <Icon name='Calculator' width={18} height={18} className='text-primary'/>
+                        <Icon name='Calculator' className='w-4 h-4 md:w-5 md:h-5 text-primary'/>
                         <Typography variant="large" className='font-medium'>Price Breakdown</Typography>
                     </div>
                     <div className='flex flex-col gap-2'>
                         {data.customerBookingDetails?.members.map((member, index) => (
                             <div 
                                 key={`${index}-${member.age}`} 
-                                className='flex items-center justify-between p-1'
+                                className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-1'
                             >
-                                <div className='flex items-center gap-4'>
-                                    <div className='h-8 w-8 flex items-center justify-center rounded-full bg-primary/20 text-primary'>
-                                        <Icon name='User' width={14} height={14} />
+                                <div className='flex items-center gap-3 md:gap-4'>
+                                    <div className='h-7 w-7 md:h-8 md:w-8 flex items-center justify-center rounded-full bg-primary/20 text-primary shrink-0'>
+                                        <Icon name='User' className='w-3 h-3 md:w-4 md:h-4' />
                                     </div>
                                     <Typography variant="p">
                                         {member.fullName} <span className='ml-1 text-muted-foreground'>({member.age} years old)</span>

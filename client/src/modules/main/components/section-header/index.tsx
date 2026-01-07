@@ -9,12 +9,12 @@ interface SectionHeaderProps {
 
 const SectionHeader: React.FC<SectionHeaderProps> = ({ title, subtitle }) => {
     return (
-        <div className="mb-10 text-center max-w-xl mx-auto">
-            <Typography variant="h2">
+        <div className="w-full mb-6 md:mb-10 text-center md:max-w-xl lg:max-w-2xl mx-auto px-4 md:px-0">
+            <Typography variant="h2" className='text-2xl md:text-3xl lg:text-4xl leading-tight'>
                 {title}
             </Typography>
 
-            <Typography variant="lead" className="mt-4 font-normal text-muted-foreground max-w-xl mx-auto">
+            <Typography variant="lead" className="text-base md:text-lg lg:text-xl mt-3 md:mt-4 font-normal text-muted-foreground">
                 {subtitle}
             </Typography>
         </div>

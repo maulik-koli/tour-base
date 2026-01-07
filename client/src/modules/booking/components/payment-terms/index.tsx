@@ -27,13 +27,13 @@ const IMPORTANT_NOTES = [
 const PaymentTerms: React.FC = () => {
     return (
         <>
-            <div className='w-full p-6 bg-card flex flex-col gap-6 border border-border rounded-lg'>
+            <div className='w-full p-4 md:p-6 bg-card flex flex-col gap-4 md:gap-6 border border-border rounded-lg'>
                 <div className='flex items-center gap-2'>
-                    <Icon name='FileText' width={24} height={24} className='text-blue-600'/>
+                    <Icon name='FileText' className='w-5 h-5 md:w-6 md:h-6 text-blue-600'/>
                     <Typography variant="h4" className='font-medium'>Terms & Conditions</Typography>
                 </div>
 
-                <div className='w-full grid grid-cols-2 gap-8 px-2'>
+                <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 px-0 md:px-2'>
                     <div className='flex flex-col gap-3'>
                         <div className='flex items-center gap-2'>
                             <Typography variant="large" className='font-medium text-foreground'>
@@ -69,8 +69,8 @@ const PaymentTerms: React.FC = () => {
                     </div>
                 </div>
 
-                <div className='w-full p-4 bg-primary/10 border border-primary rounded-lg flex items-start gap-3'>
-                    <Icon name='whatspp' width={20} height={20} fill='#64B161' className='mt-1 shrink-0'/>
+                <div className='w-full p-3 md:p-4 bg-primary/10 border border-primary rounded-lg flex items-start gap-2 md:gap-3'>
+                    <Icon name='whatspp' className='w-5 h-5 md:w-6 md:h-6 mt-0.5 md:mt-1 shrink-0' fill='#64B161'/>
                     <div className='flex flex-col gap-1'>
                         <Typography variant="p" className='font-semibold'>
                             WhatsApp Notifications:
@@ -89,14 +89,14 @@ const PaymentTerms: React.FC = () => {
                 </div>
             </div>
 
-            <div className='w-full rounded-md bg-accent/10 border border-accent p-4 text-center text-sm text-muted-foreground'>
-                <div className='flex items-center gap-2'>
-                    <Icon name="Info" width={18} height={18} className='text-accent mt-1' />
+            <div className='w-full rounded-md bg-accent/10 border border-accent p-3 md:p-4 text-center text-sm text-muted-foreground'>
+                <div className='flex items-start sm:items-center gap-2'>
+                    <Icon name="Info" className='w-4 h-4 md:w-5 md:h-5 text-accent mt-0.5 sm:mt-1 shrink-0' />
                     <Typography variant="p" className='text-accent font-medium'>
                         Important Notes:
                     </Typography>
                 </div>
-                <ul className='flex flex-col gap-2 list-disc mt-2 ml-10 text-left text-accent-foreground'>
+                <ul className='flex flex-col gap-2 list-disc mt-2 ml-6 md:ml-10 text-left text-accent-foreground text-xs md:text-sm'>
                     {IMPORTANT_NOTES.map((note) => (
                         <li key={note}>{note}</li>
                     ))}

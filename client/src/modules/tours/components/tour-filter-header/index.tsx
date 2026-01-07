@@ -22,33 +22,37 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
     const [filterPannel, setFilterPannel] = useState<boolean>(false);
 
     return (
-        <div className='w-full p-4 bg-card rounded-xl border border-border'>
-            <div className='flex items-center justify-between gap-4'>
+        <div className='w-full p-3 md:p-4 bg-card rounded-xl border border-border'>
+            <div className='flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 md:gap-4'>
                 <InputField
                     value={filter.search || ''}
                     onChange={(value) => applyFilters({ ...filter, search: value })}
                     leftIcon='Search'
                     placeholder='Search tours...'
                     className='w-full'
-                    containerClass='w-full'
+                    containerClass='w-full md:flex-1'
                 />
-                <div className='flex items-center gap-4'>
+                <div className='flex items-center gap-2 md:gap-4'>
                     <SelectField
                         clearable
                         onChange={(value) => applyFilters({ ...filter, sort: value })}
                         options={SORT_OPTIONS}
                         value={filter.sort || SORT_OPTIONS[0].value}
-                        containerClass='min-w-50'
+                        containerClass='flex-1 md:flex-initial md:min-w-50'
                     />
                     <Button 
                         variant="outline" 
                         onClick={() => setFilterPannel(fp => !fp)}
-                        className={cn(filterPannel && "bg-primary/80 text-primary-foreground")}
+                        className={cn(
+                            filterPannel && "bg-primary/80 text-primary-foreground",
+                            "shrink-0"
+                        )}
+                        size="default"
                     >
                         <Icon name='Funnel' width={16} height={16} />
-                        Filters
+                        <span className='hidden sm:inline'>Filters</span>
                     </Button>
-                    <div className='flex items-center'>
+                    <div className='hidden md:flex items-center'>
                         <Button 
                             variant="outline" 
                             size='icon' 
@@ -76,9 +80,9 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
             </div>
             {filterPannel && (
                 <>
-                    <Separator className='my-4' />
-                    <div className='w-full flex gap-4 items-center'>
-                        <div className='w-full grid grid-cols-3 gap-8 items-center'>
+                    <Separator className='my-3 md:my-4' />
+                    <div className='w-full flex flex-col md:flex-row gap-4 items-stretch md:items-end'>
+                        <div className='w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 lg:gap-8'>
                             <SliderComponent 
                                 label='Price Range'
                                 defaultValue={[50000]}
@@ -106,7 +110,7 @@ const TourFilterHeader: React.FC<TourFilterHeaderProps> = ({ viewMode, onToggleV
                         </div>
                         <Button
                             variant="link"
-                            className='text-destructive'
+                            className='text-destructive self-start md:self-auto whitespace-nowrap'
                             onClick={resetFilters}
                         >
                             Clear All Filters

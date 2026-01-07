@@ -13,7 +13,7 @@ interface BookingSummeryProps {
 
 const BookingSummery: React.FC<BookingSummeryProps> = ({ tour, packageData }) => {
     return (
-        <div className='w-full grid grid-cols-2 gap-6'>
+        <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6'>
             <div className='w-full h-fit bg-card rounded-md border border-border flex flex-col'>
                 <div className='relative w-full aspect-7/3 rounded-t-md'>
                     <FallbackImage
@@ -33,9 +33,9 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ tour, packageData }) =>
                         </Typography>
                     </div>
                 </div>
-                <div className='w-full flex flex-col gap-4 p-4'>
+                <div className='w-full flex flex-col gap-3 md:gap-4 p-3 md:p-4'>
                     <div className='w-full flex items-center gap-2'>
-                        <Icon name='MapPinned' width={24} height={24} className='text-secondary-foreground'/>
+                        <Icon name='MapPinned' className='w-5 h-5 md:w-6 md:h-6 text-secondary-foreground'/>
                         <Typography variant="h4" className='font-medium'>Package Deatails</Typography>
                     </div>
                     <div className='space-y-2'>
@@ -66,7 +66,7 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ tour, packageData }) =>
                     </div>
                 </div>
             </div>
-            <div className='w-full h-fit p-4 bg-card rounded-md border border-border'>
+            <div className='w-full h-fit p-3 md:p-4 bg-card rounded-md border border-border'>
                 {tour.includes.length > 0 && tour.excludes.length > 0 && (
                     <div>
                         <Typography variant="h4" className='mb-4'>What's Included & Excluded</Typography>
