@@ -30,7 +30,7 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
                         <div key={index} className='relative w-full  aspect-square rounded-xl'>
                             <FallbackImage
                                 src={image}
-                                alt={`${tour.name}-image-${index + 1}`}
+                                alt={`${tour.name} Image ${index + 1}`}
                                 crop="fill"
                                 fill
                                 sizes="(max-width: 768px) 100vw, 50vw"

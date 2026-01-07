@@ -15,7 +15,7 @@ const BookPackagePage: React.FC = () => {
     const { data, isError, isLoading, isFetching } = useBookingData({ bookingId: bookingId as string });
 
     if (isLoading) {
-        return <SpinnerOverlay />
+        return <div className='h-screen'><SpinnerOverlay /></div>
     }
 
     if (isError || !data || !data.data ||  (data.data && data?.data.isExpired)) {
@@ -30,7 +30,7 @@ const BookPackagePage: React.FC = () => {
     return (
         <div className='py-4 px-40 flex flex-col gap-6 bg-background'>
             <div className='flex flex-col gap-2 my-2'>
-                <Typography variant="h2" className='font-semibold'>
+                <Typography variant="h1" className='font-semibold text-4xl'>
                     Complete Your Booking
                 </Typography>
                 <Typography variant="large" className='text-muted-foreground font-normal'>

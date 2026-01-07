@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Icon, { IconName } from '@/components/icons'
 import { Typography } from '@/components/ui/typography'
 import FallbackImage from '@/components/fallback-image'
-import { SOCIAL_LINKS } from '@/constants/static-links'
+import { SOCIAL_LINKS } from '@/constants/static-data'
 
 const SOCIAL_PLATFORMS: {
     name: string

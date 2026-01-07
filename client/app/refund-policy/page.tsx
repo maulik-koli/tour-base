@@ -1,5 +1,14 @@
-import { Typography } from '@ui/typography'
 import React from 'react'
+import { Typography } from '@ui/typography'
+
+export const metadata = {
+    title: "Refund Policy",
+    description: "Understand the refund and cancellation policy for tour bookings.",
+    alternates: {
+        canonical: "/refund-policy",
+    },
+};
+
 
 const RefundPolicy: React.FC = () => {
     return (

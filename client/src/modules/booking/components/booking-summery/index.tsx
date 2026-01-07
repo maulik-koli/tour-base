@@ -18,7 +18,7 @@ const BookingSummery: React.FC<BookingSummeryProps> = ({ tour, packageData }) =>
                 <div className='relative w-full aspect-7/3 rounded-t-md'>
                     <FallbackImage
                         src={tour.thumbnailImage}
-                        alt={tour.tourName}
+                        alt={`${tour.tourName} Thumbnail Image`}
                         crop="fill"
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"

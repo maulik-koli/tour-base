@@ -24,8 +24,8 @@ const BookingComponent: React.FC<BookingComponentProps> = ({ data, isFetching })
     const [bookingState, setBookingState] = useState<BookingStateType>("details")
     const [selectedPaymentOption, setSelectedPaymentOption] = useState<PaymentOption>("FULL");
 
-     if (isFetching) {
-        return <SpinnerOverlay />
+    if (isFetching) {
+        return <div className='h-screen'><SpinnerOverlay /></div>
     }
 
     if (bookingState === "details") {

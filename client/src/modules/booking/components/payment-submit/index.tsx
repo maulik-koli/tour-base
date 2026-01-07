@@ -39,7 +39,7 @@ const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, 
     }
 
     if(isPending || !isLoaded) {
-        return <SpinnerOverlay />
+        return <div className='h-screen'><SpinnerOverlay /></div>
     }
 
     return (

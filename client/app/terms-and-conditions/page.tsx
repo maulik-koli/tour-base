@@ -1,11 +1,19 @@
 import React from 'react'
 import { Typography } from '@ui/typography';
 
+export const metadata = {
+    title: "Terms and Conditions",
+    description: "Read the terms and conditions for booking tours with Eklavya Tourism.",
+    alternates: {
+        canonical: "/terms-and-conditions",
+    },
+};
+
+
 const TermsAndConditionsPage: React.FC = () => {
     return (
         <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-20'>
             <div className='max-w-5xl mx-auto'>
-                {/* Header Section */}
                 <div className='mb-12 pb-8 border-b border-border'>
                     <Typography variant="h1" className='mb-4'>
                         Terms & Conditions
@@ -16,7 +24,6 @@ const TermsAndConditionsPage: React.FC = () => {
                     </Typography>
                 </div>
 
-                {/* General Terms Section */}
                 <section className='mb-10'>
                     <Typography variant="h2" className='mb-6 text-primary'>
                         General Terms

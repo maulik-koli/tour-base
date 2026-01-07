@@ -36,7 +36,7 @@ const BookContactButtons: React.FC<BookContactBtnsProps> = ({ className, package
     }
 
     if (isPending) {
-        return <SpinnerOverlay />
+        return <div className='h-screen'><SpinnerOverlay /></div>
     }
 
 

@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { ViewMode } from '@app/tours/page'
+import { ViewMode } from '../tours-page-components'
 import { useTourFilters } from '@/hooks/useTourFilters';
 import { useGetTours } from '@modules/tours/api/queries';
 import { cn } from '@/lib/utils';

@@ -4,7 +4,7 @@ import Icon, { IconName } from '@/components/icons'
 import FallbackImage from '@/components/fallback-image'
 import { Typography } from '@ui/typography'
 import { Separator } from '@ui/separator'
-import { SOCIAL_LINKS } from '@/constants/static-links'
+import { SOCIAL_LINKS } from '@/constants/static-data'
 
 const SOCIAL_LINKS_ICONS: { name: string, url: string, icon: IconName }[]= [
     { name: 'Facebook', url: SOCIAL_LINKS.facebook, icon: 'facebook' },
@@ -39,7 +39,7 @@ const Footer: React.FC = () => {
                             <div className='relative w-30 h-15 rounded-lg flex items-center justify-center'>
                                 <FallbackImage
                                     src="/logo.png"
-                                    alt="Tour Base Logo"
+                                    alt="Eklavya Tourism Logo"
                                     className='object-cover overflow-hidden rounded-sm'
                                 />
                             </div>
@@ -98,8 +98,8 @@ const Footer: React.FC = () => {
                         <ul className='space-y-3'>
                             <li className='flex items-center gap-3'>
                                 <Icon name='Phone' className='w-4 h-4 text-primary' />
-                                <a href="tel:+919876543210" className='text-foreground hover:text-primary transition-colors'>
-                                    +91 98765 43210
+                                <a href="tel:+918000057070" className='text-foreground hover:text-primary transition-colors'>
+                                    +91 8000057070
                                 </a>
                             </li>
                             <li className='flex items-center gap-3'>

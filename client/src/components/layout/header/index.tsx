@@ -52,7 +52,7 @@ const Header: React.FC = () => {
                     )}>
                         <FallbackImage
                             src="/logo.png"
-                            alt="Tour Base Logo"
+                            alt="Eklavya Tourism Logo"
                             className='object-cover overflow-hidden rounded-sm'
                         />
                     </div>

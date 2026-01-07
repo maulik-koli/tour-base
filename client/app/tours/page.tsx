@@ -1,45 +1,31 @@
-"use client"
-import React, { Suspense, useState } from 'react'
-import TourFilterHeader from '@modules/tours/components/tour-filter-header'
-import TourListGrid from '@modules/tours/components/tour-list-grid'
-import TourPagination from '@modules/tours/components/tour-pagination'
-import { Typography } from '@ui/typography'
-import { CustomSpinner } from '@ui/spinner'
-import { PaginationType } from '@/types/api'
+import React from 'react'
+import dynamic from 'next/dynamic';
+import PageLoader from '@/components/page-loader';
 
-export type ViewMode = 'grid' | 'list';
+export const metadata = {
+    title: "All Tour Packages",
+    description: "Browse all available tour packages with prices, duration, and destinations.",
+    keywords: [
+        "tour packages",
+        "holiday packages",
+        "travel tours",
+        "india tour packages",
+    ],
+    alternates: {
+        canonical: "/tours",
+    },
+};
+
+const TourPageComponent = dynamic(
+    () => import("@modules/tours/components/tours-page-components"),
+    {
+        loading: () => <PageLoader />,
+    }
+);
 
 
 const ToursPage: React.FC = () => {
-    const [viewMode, setViewMode] = useState<ViewMode>('list')
-    const [pagination, setPagination] = useState<PaginationType | null>(null)
-    
-    const toggleViewMode = (mode: ViewMode) => {
-        setViewMode(mode)
-    }
-
-    return (
-        <div className='pt-4 pb-16 px-20 flex flex-col gap-4 bg-backgroud'>
-            <div className='flex flex-col gap-2'>
-                <Typography variant="h1" className='font-semibold'>
-                    Explore Our Tours
-                </Typography>
-                <Typography variant="h4" className='text-muted-foreground font-normal'>
-                    Discover amazing destinations and create unforgettable memories
-                </Typography>
-            </div>
-
-            <Suspense fallback={<div><CustomSpinner /></div>}>
-                <TourFilterHeader viewMode={viewMode} onToggleViewMode={toggleViewMode} />
-            </Suspense>
-
-            <Suspense fallback={<div><CustomSpinner /></div>}>
-                <TourListGrid viewMode={viewMode} onPaginationChange={setPagination} />
-            </Suspense>
-
-            {pagination && <TourPagination pagination={pagination} />}
-        </div>
-    )
+    return <TourPageComponent />
 }
 
 export default ToursPage

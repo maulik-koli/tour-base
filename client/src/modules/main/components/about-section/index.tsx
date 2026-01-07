@@ -56,7 +56,7 @@ const AboutSection: React.FC = () => {
                     <FallbackImage
                         src="https://res.cloudinary.com/dmcfkem87/image/upload/v1765735247/tour-image_zvcgie.avif"
                         crop="fill"
-                        alt="about name"
+                        alt="Eklavya Tourism About Us"
                         fill
                         sizes="100vw 100vh"
                         className='rounded-xl'
