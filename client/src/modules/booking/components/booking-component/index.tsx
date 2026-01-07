@@ -47,7 +47,7 @@ const BookingComponent: React.FC<BookingComponentProps> = ({ data, isFetching })
 
     return (
         <>
-            <div className='w-full bg-card py-4 px-8 border border-border rounded-md flex flex-col gap-6'>
+            <div className='w-full bg-card py-3 md:py-4 px-4 md:px-8 border border-border rounded-md flex flex-col gap-4 md:gap-6'>
                 <ReceiptPayment 
                     data={data}
                     options={selectedPaymentOption}

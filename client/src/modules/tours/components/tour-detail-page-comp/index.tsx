@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react'
-import { useParams } from 'next/navigation';
 import { useGetTourDetail } from '@modules/tours/api/queries';
 
 import TourDetail from '@modules/tours/components/tour-details';
@@ -15,7 +14,6 @@ import { SpinnerOverlay } from '@ui/spinner';
 
 
 const TourDetailPageComponent: React.FC<{ slug: string}> = ({ slug }) => {
-    // const { slug } = useParams();
     const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
     const { data, isLoading, error } = useGetTourDetail({
@@ -45,9 +43,9 @@ const TourDetailPageComponent: React.FC<{ slug: string}> = ({ slug }) => {
                 packages={packagesData}
                 images={tourData.images}
             />
-            <div className='w-full py-12 px-20'>
-                <div className="grid grid-cols-3 gap-12">
-                    <div className="col-span-2 flex flex-col space-y-8">
+            <div className='w-full py-6 md:py-8 lg:py-12 px-4 md:px-12 lg:px-20'>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-12">
+                    <div className="lg:col-span-2 flex flex-col space-y-6 md:space-y-8">
                         <TourDetail
                             tour={tourData}
                             selectedPackage={selectedPackageData}
@@ -67,9 +65,9 @@ const TourDetailPageComponent: React.FC<{ slug: string}> = ({ slug }) => {
                         />
                     </div>
 
-                    <div className="col-span-1">
+                    <div className="hidden lg:block lg:col-span-1">
                         <div className='sticky top-22 self-start'>
-                            <div className='flex flex-col space-y-6 max-h-[calc(100vh-3rem)] overflow-y-auto scroll-container'>
+                            <div className='flex flex-col space-y-4 md:space-y-6 lg:max-h-[calc(100vh-3rem)] lg:overflow-y-auto scroll-container'>
                                 <TourPackageSide
                                     packages={packagesData}
                                     handleSelectPackage={(id) => setSelectedPackage(id)}

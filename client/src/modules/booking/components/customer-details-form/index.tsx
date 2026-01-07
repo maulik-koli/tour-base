@@ -70,9 +70,9 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
 
     return (
         <>
-            <form className='w-full px-6 py-4 bg-card rounded-md border border-border flex flex-col gap-6'>
+            <form className='w-full px-4 md:px-6 py-3 md:py-4 bg-card rounded-md border border-border flex flex-col gap-4 md:gap-6'>
                 <Typography variant="h4">Customer Details</Typography>
-                <div className='grid grid-cols-4 gap-6'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6'>
                     <Controller
                         control={control}
                         name='fullName'
@@ -82,7 +82,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                                 onChange={field.onChange}
                                 label='Full Name *'
                                 placeholder='name of the things'
-                                containerClass='col-span-2'
+                                containerClass='col-span-1 md:col-span-2'
                                 errMsg={fieldState.error?.message}
                             />
                         )}
@@ -128,7 +128,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                     render={({ field }) => (
                         <DatePicker 
                             label='Travel Date *'
-                            containerClass='max-w-80'
+                            containerClass='w-full md:max-w-80'
                             value={new Date(field.value).toISOString()}
                             onChange={field.onChange}
                         />
@@ -155,9 +155,9 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                                 <Typography variant="muted">No members added. Please add at least one member.</Typography>
                             </div>
                         ) : fields.map((members, index) => (
-                            <div key={members.id} className='w-full flex items-center gap-4'>
+                            <div key={members.id} className='w-full flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4'>
                                 <div className='w-full px-3 py-2 bg-background rounded-md border border-border flex flex-col gap-3'>
-                                    <div className='grid grid-cols-4 gap-6'>
+                                    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6'>
                                         <Controller
                                             control={control}
                                             name={`members.${index}.fullName`}
@@ -167,7 +167,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                                                     onChange={field.onChange}
                                                     label='Full Name'
                                                     placeholder='Enter full name'
-                                                    containerClass='col-span-2'
+                                                    containerClass='col-span-1 md:col-span-2'
                                                     className='bg-card'
                                                     errMsg={fieldState.error?.message}
                                                 />
@@ -219,14 +219,14 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
                     </div>
                 </div>
                 <Separator />
-                <div className='w-full rounded-md bg-accent/10 border border-accent/10 p-4 text-center text-sm text-muted-foreground'>
-                    <div className='flex items-center gap-2'>
-                        <Icon name="Info" width={18} height={18} className='text-accent mt-1' />
+                <div className='w-full rounded-md bg-accent/10 border border-accent/10 p-3 md:p-4 text-center text-sm text-muted-foreground'>
+                    <div className='flex items-start sm:items-center gap-2'>
+                        <Icon name="Info" className='w-4 h-4 md:w-5 md:h-5 text-accent mt-0.5 sm:mt-1 shrink-0' />
                         <Typography variant="p" className='text-accent font-medium'>
                             Important Notes:
                         </Typography>
                     </div>
-                    <ul className='flex flex-col gap-2 list-disc mt-2 ml-10 text-left text-accent-foreground'>
+                    <ul className='flex flex-col gap-2 list-disc mt-2 ml-6 md:ml-10 text-left text-accent-foreground text-xs md:text-sm'>
                         <li>Please add your WhatsApp number to receive booking details and updates</li>
                         <li>Customer details are for booking purposes - actual travelers should be added as members in the next step</li>
                         <li>If you're traveling, please add yourself as a member as well</li>

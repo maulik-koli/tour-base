@@ -25,7 +25,7 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
 
             <div>
                 <Typography variant="h2" className='mb-4'>Galary</Typography>
-                <div className='grid grid-cols-3 gap-9'>
+                <div className='grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-9'>
                     {tour.images.map((image, index) => (
                         <div key={index} className='relative w-full  aspect-square rounded-xl'>
                             <FallbackImage

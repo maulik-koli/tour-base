@@ -34,7 +34,7 @@ const FeatureTourSlider: React.FC = () => {
     }
 
     return (
-        <div className='p-20 bg-background'>
+        <div className='p-4 md:p-12 lg:p-20 bg-background'>
             <SectionHeader
                 title={<>Start Your Next <span className="text-primary">Adventure</span></>}
                 subtitle="Discover destinations, cultures, and experiences that make every journey meaningful and memorable."

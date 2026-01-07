@@ -28,9 +28,9 @@ const BookPackagePage: React.FC = () => {
     }
 
     return (
-        <div className='py-4 px-40 flex flex-col gap-6 bg-background'>
+        <div className='py-4 md:py-6 lg:py-8 px-4 md:px-12 lg:px-40 flex flex-col gap-4 md:gap-6 bg-background'>
             <div className='flex flex-col gap-2 my-2'>
-                <Typography variant="h1" className='font-semibold text-4xl'>
+                <Typography variant="h1" className='font-semibold'>
                     Complete Your Booking
                 </Typography>
                 <Typography variant="large" className='text-muted-foreground font-normal'>

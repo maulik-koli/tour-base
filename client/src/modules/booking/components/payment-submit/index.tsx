@@ -43,12 +43,12 @@ const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, 
     }
 
     return (
-        <div className='w-full p-6 bg-card flex flex-col gap-6 border border-border rounded-lg'>
+        <div className='w-full p-4 md:p-6 bg-card flex flex-col gap-4 md:gap-6 border border-border rounded-lg'>
             <div className='flex items-center gap-2'>
-                <Icon name='CreditCard' width={24} height={24} className='text-primary'/>
+                <Icon name='CreditCard' className='w-5 h-5 md:w-6 md:h-6 text-primary'/>
                 <Typography variant="h4" className='font-medium'>Payment Options</Typography>
             </div>
-            <div className='w-full grid grid-cols-2 gap-6'>
+            <div className='w-full grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6'>
                 <SelectCard 
                     selectedValue={options}
                     onChange={onOptionChange}
@@ -74,7 +74,7 @@ const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, 
                 size='lg' 
                 type='button'
                 onClick={onProceedPayment}
-                className='w-full h-12 mt-4 bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-lg font-semibold text-lg cursor-pointer whitespace-nowrap flex items-center justify-center'
+                className='w-full h-11 md:h-12 mt-2 md:mt-4 bg-green-600 hover:bg-green-700 text-white py-3 md:py-4 px-4 md:px-6 rounded-lg font-semibold text-base md:text-lg cursor-pointer whitespace-nowrap flex items-center justify-center'
             >
                 Proceed to Payment
             </Button>

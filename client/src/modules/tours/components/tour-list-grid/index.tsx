@@ -73,9 +73,10 @@ const TourListGrid: React.FC<TourListGridProps> = ({ viewMode, onPaginationChang
                     Showing {start}-{end} of {totalItems} tours
                 </Typography>
                 <div className={cn(
-                    viewMode === 'list' ?
-                        'flex flex-col gap-6'
-                        : 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8',
+                    'grid grid-cols-1 gap-4 md:gap-6',
+                    viewMode === 'list' 
+                        ? 'md:grid-cols-1'
+                        : 'md:grid-cols-2 lg:grid-cols-3'
                 )}>
                     {data.data.tours.map((tour) => (
                         <TourCard tour={tour} view={viewMode} key={tour._id} />

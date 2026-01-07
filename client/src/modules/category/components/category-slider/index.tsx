@@ -46,13 +46,19 @@ const CategorySlider: React.FC = () => {
         return (
             <Swiper
                 modules={[Autoplay]}
-                slidesPerView={3}
+                slidesPerView={1.5}
                 centeredSlides
                 loop
-                spaceBetween={40}
+                spaceBetween={16}
                 autoplay={{
                     delay: 3000,
                     disableOnInteraction: false,
+                }}
+                breakpoints={{
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 40,
+                    },
                 }}
                 className="overflow-visible!"
             >
@@ -61,7 +67,7 @@ const CategorySlider: React.FC = () => {
                         {({ isActive }) => (
                             <div
                                 className={cn(
-                                    "relative h-100 rounded-3xl overflow-hidden transition-all duration-500",
+                                    "relative h-64 md:h-100 rounded-3xl overflow-hidden transition-all duration-500",
                                     isActive ? "scale-105 shadow-2xl" : "scale-95 opacity-80"
                                 )}
                             >
@@ -76,11 +82,11 @@ const CategorySlider: React.FC = () => {
 
                                 <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
 
-                                <div className="absolute bottom-6 left-6 right-6 text-white">
-                                    <Typography variant="h4" className="text-primary-foreground font-semibold">
+                                <div className="absolute bottom-4 md:bottom-6 left-4 md:left-6 right-4 md:right-6 text-white">
+                                    <Typography variant="h4" className="text-primary-foreground font-semibold text-lg md:text-2xl">
                                         {item.name}
                                     </Typography>
-                                    <Typography variant="p" className=" text-primary-foreground/80">
+                                    <Typography variant="p" className="text-primary-foreground/80 text-sm md:text-base">
                                         {item.subtitle}
                                     </Typography>
                                 </div>

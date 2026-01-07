@@ -20,26 +20,26 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
     return (
         <div>
             <Typography variant="h2" className='mb-4'>Packages</Typography>
-            <div className='bg-card flex flex-col gap-6 rounded-xl p-6 border border-border'>
-                <div className='grid grid-cols-3 gap-4'>
+            <div className='bg-card flex flex-col gap-4 md:gap-6 rounded-xl p-4 md:p-6 border border-border'>
+                <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4'>
                     {packages.map((pkg, index) => (
                         <div 
                             key={`package-${index}`} 
                             className={cn(
-                                'w-full p-3 rounded-md border-2 flex flex-col gap-3 cursor-pointer hover:shadow',
+                                'w-full p-3 md:p-4 rounded-md border-2 flex flex-col gap-2 md:gap-3 cursor-pointer hover:shadow transition-shadow',
                                 pkg._id === selectedPackageId ? 'border-primary bg-primary/20' : 'border-border bg-card'
                             )}
                             onClick={() => handleSelectPackage(pkg._id)}
                         >
                             <Typography variant="lead" className='font-semibold text-foreground'>{pkg.name}</Typography>
-                            <div className='flex items-center justify-between'>
-                                <Typography variant="p">Price per person</Typography>
+                            <div className='flex items-center justify-between gap-2'>
+                                <Typography variant="p" className='text-sm md:text-base'>Price per person</Typography>
                                 <Typography variant="large" className='font-semibold text-primary'>
                                     ₹ {pkg.pricePerPerson}
                                 </Typography>
                             </div>
-                            <div className='flex items-center justify-between'>
-                                <Typography variant="p">Duration</Typography>
+                            <div className='flex items-center justify-between gap-2'>
+                                <Typography variant="p" className='text-sm md:text-base'>Duration</Typography>
                                 <Typography variant="p" className='font-semibold'>
                                     {pkg.days} days / {pkg.nights} nights
                                 </Typography>
@@ -51,7 +51,7 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                 {selectedPackage && (
                     <>
                         <Separator />
-                        <div className='bg-card p-4 rounded-md border border-border space-y-4'>
+                        <div className='bg-card p-3 md:p-4 rounded-md border border-border space-y-3 md:space-y-4'>
                             <Typography variant="h4" className='mb-2'>{selectedPackage.name}</Typography>
                             <div className='space-y-2'>
                                 <div className='flex items-center justify-between'>
