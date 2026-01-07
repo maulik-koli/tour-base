@@ -15,7 +15,7 @@ const AboutSection: React.FC = () => {
         <div className='p-20 flex flex-col gap-8 bg-card'>
             <div className='grid grid-cols-2 gap-16'>
                 <div className='flex flex-col gap-6'>
-                    <Typography variant="h2" className='text-start max-w-sm'>
+                    <Typography variant="h2" className='text-start max-w-md'>
                         Your Trusted Travel Partner Since 2010
                     </Typography>
 

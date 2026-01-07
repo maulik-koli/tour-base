@@ -55,8 +55,12 @@ import {
     SquareArrowOutUpRight,
     TriangleAlert,
     Bell,
+    Mail,
+    MapPin,
+    Users,
+    ExternalLink
 } from "lucide-react"
-import { WhatsAppIcon } from "./custom"
+import { FaceBookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, YouTubeIcon } from "./custom"
 
 
 export const LUCIDE_ICON_MAP = {
@@ -115,10 +119,18 @@ export const LUCIDE_ICON_MAP = {
     MessageCircle,
     SquareArrowOutUpRight,
     TriangleAlert,
-    Bell
+    Bell,
+    Mail,
+    MapPin,
+    Users,
+    ExternalLink
 }
 
 
 export const CUSTOM_ICON_MAP = {
     whatspp: WhatsAppIcon,
+    facebook: FaceBookIcon,
+    twitter: TwitterIcon,
+    instagram: InstagramIcon,
+    youtube: YouTubeIcon
 }

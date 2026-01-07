@@ -4,6 +4,7 @@ import CategorySlider from "@modules/category/components/category-slider";
 import WhyChooseUsSections from "@modules/main/components/why-choose-sec";
 import FeatureTourSlider from "@modules/tours/components/feature-tour-slider";
 import AboutSection from "@modules/main/components/about-section";
+import SocialMediaSection from "@modules/main/components/social-media-section";
 
 const Home: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const Home: React.FC = () => {
       <WhyChooseUsSections />
       <FeatureTourSlider />
       <AboutSection />
+      <SocialMediaSection />
     </div>
   );
 }

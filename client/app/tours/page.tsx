@@ -19,7 +19,7 @@ const ToursPage: React.FC = () => {
     }
 
     return (
-        <div className='py-4 px-20 flex flex-col gap-4 bg-backgroud'>
+        <div className='pt-4 pb-16 px-20 flex flex-col gap-4 bg-backgroud'>
             <div className='flex flex-col gap-2'>
                 <Typography variant="h1" className='font-semibold'>
                     Explore Our Tours

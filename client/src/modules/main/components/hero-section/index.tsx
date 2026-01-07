@@ -1,8 +1,8 @@
 "use client"
 import React from 'react'
 import SearchButtonBar from '@/modules/tours/components/search-button-bar'
-import { Typography } from '@/components/ui/typography'
 import FallbackImage from '@/components/fallback-image'
+import { Typography } from '@/components/ui/typography'
 
 
 const HeroSection: React.FC = () => {
@@ -19,10 +19,11 @@ const HeroSection: React.FC = () => {
             <div className="absolute inset-0 bg-linear-to-b from-slate-900/80 via-slate-900/60 to-slate-900/90" />
 
             <div className="relative z-10 flex flex-col  items-center justify-center h-full text-center px-4">
-                <div className='relative w-40 h-20 flex items-center justify-center mb-2 rounded-sm'>
+                <div className='relative w-40 h-20 mb-2 rounded-sm'>
                     <FallbackImage
                         src="/logo-bg.avif"
                         alt="Tour Base Logo"
+                        height={80}
                         fill
                         className="object-contain rounded-sm"
                     />

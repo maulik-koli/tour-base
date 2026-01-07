@@ -98,7 +98,7 @@ const FallbackImage: React.FC<FallbackImageProps> = ({
                 crop="fill"
                 sizes={defaultSizes}
                 className={className}
-                loading="lazy"
+                loading="eager"
                 onError={handleError}
             />
         );
