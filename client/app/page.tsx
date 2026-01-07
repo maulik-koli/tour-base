@@ -6,6 +6,14 @@ import FeatureTourSlider from "@modules/tours/components/feature-tour-slider";
 import AboutSection from "@modules/main/components/about-section";
 import SocialMediaSection from "@modules/main/components/social-media-section";
 
+export const metadata = {
+  title: "Explore Tours & Travel Packages",
+  description: "Discover affordable tour packages and curated travel experiences across top destinations.",
+  alternates: {
+    canonical: "/",
+  },
+};
+
 const Home: React.FC = () => {
   return (
     <div className="flex flex-col">

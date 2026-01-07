@@ -1,6 +1,6 @@
 import React from 'react'
 import { TourListType } from '@modules/tours/api/types'
-import { ViewMode } from '@app/tours/page'
+import { ViewMode } from '../tours-page-components'
 import { cn } from '@/lib/utils'
 
 import Icon from '@/components/icons'
@@ -22,8 +22,8 @@ const TourCard: React.FC<TourListCardProps> = ({ tour, view }) => {
                 <div className={cn('relative h-full aspect-video', isList ? "w-110 shrink-0" : "w-full")}>
                     <FallbackImage
                         src={tour.thumbnailImage}
+                        alt={`${tour.name} Thumbnail Image`}
                         crop="fill"
-                        alt={tour.name}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className={cn(isList ? 'rounded-l-xl' : 'rounded-t-xl')}

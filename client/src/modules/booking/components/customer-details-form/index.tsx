@@ -65,7 +65,7 @@ const CustomerDetailsForm: React.FC<CustomerDetailsFormProps> = ({ bookingId, cu
 
 
     if (isPending) {
-        return <SpinnerOverlay />
+        return <div className='h-screen'><SpinnerOverlay /></div>
     }
 
     return (

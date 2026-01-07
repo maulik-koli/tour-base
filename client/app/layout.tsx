@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,14 @@ export const metadata: Metadata = {
     },
     description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations. Plan your perfect trip with expert guidance.",
 
+    keywords: [
+        "tour packages",
+        "travel agency",
+        "holiday tours",
+        "india tourism",
+        "eklavya tourism",
+    ],
+
     openGraph: {
         title: "Explore Tours & Travel Packages | Eklavyatourism",
         description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations.",
@@ -44,7 +53,7 @@ export const metadata: Metadata = {
 
     twitter: {
         card: "summary_large_image",
-        title: "Explore Tours & Travel Packages | YourBrand",
+        title: "Explore Tours & Travel Packages | Eklavyatourism",
         description: "Discover affordable tour packages, curated travel experiences, and hassle-free bookings across top destinations.",
         images: ["/og-image.jpg"],
     },
@@ -63,6 +72,32 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-4645VQZ1HY"
+                    strategy="afterInteractive"
+                />
+                <Script id="ga4-script" strategy="afterInteractive">
+                    {`
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', 'G-4645VQZ1HY');
+                    `}
+                </Script>
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "Organization",
+                            name: "Eklavyatourism",
+                            url: "https://eklavyatourism.com",
+                            logo: "https://eklavyatourism.com/logo.png",
+                        }),
+                    }}
+                />
+            </head>
             <body className={cn(
                 `${geistSans.variable} ${geistMono.variable} antialiased`,
                 "flex flex-col bg-background"

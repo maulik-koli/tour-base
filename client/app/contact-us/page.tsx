@@ -1,4 +1,3 @@
-"use client"
 import React from "react";
 import Icon, { IconName } from "@/components/icons";
 import { Typography } from "@ui/typography";
@@ -21,9 +20,15 @@ const CONTACT_US_PAGE_DATA: { icon: IconName, title: string, subtitle: string }[
     },
 ] 
 
+export const metadata = {
+    title: "Contact Us",
+    description: "Get in touch with Eklavya Tourism for bookings, inquiries, and travel assistance.",
+    alternates: {
+        canonical: "/contact-us",
+    },
+};
 
 const ContactUsPage: React.FC = () => {
-    
     return (
         <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-20'>
             <div className='max-w-7xl mx-auto'>
@@ -220,7 +225,7 @@ const ContactUsPage: React.FC = () => {
                 </section>
             </div>
         </div>
-    );
+    )
 }
 
 export default ContactUsPage;

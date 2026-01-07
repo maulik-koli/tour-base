@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { useTourFilters } from '@/hooks/useTourFilters'
 import { DURATION_OPTIONS, SORT_OPTIONS } from '@/constants/select-options'
-import { ViewMode } from '@app/tours/page'
+import { ViewMode } from '../tours-page-components'
 import { cn } from '@/lib/utils'
 
 import Icon from '@/components/icons'

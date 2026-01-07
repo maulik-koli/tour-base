@@ -10,9 +10,9 @@ const HeroSection: React.FC = () => {
         <section className="bg-card relative w-full px-20 min-h-[calc(100svh-4rem)] h-[calc(100svh-4rem)]">
             <FallbackImage
                 src="/hero-for-now.avif"
+                alt="Eklavya Tourism Hero Image"
                 fill
                 className="object-cover"
-                alt="Hero"
             />
 
             {/* <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60" /> */}
@@ -22,7 +22,7 @@ const HeroSection: React.FC = () => {
                 <div className='relative w-40 h-20 mb-2 rounded-sm'>
                     <FallbackImage
                         src="/logo-bg.avif"
-                        alt="Tour Base Logo"
+                        alt="Eklavya Tourism Logo"
                         height={80}
                         fill
                         className="object-contain rounded-sm"

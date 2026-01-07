@@ -1,95 +1,48 @@
-'use client'
-import React, { useState } from 'react'
-import { useParams } from 'next/navigation'
-import { useGetTourDetail } from '@modules/tours/api/queries';
+import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
+import { reverseSlugify } from '@/lib/reverseSlugify';
+import TourDetailLoading from './loading';
 
-import TourDetailComponent from '@/modules/tours/components/tour-detail-component';
-import TourThumbnail from '@/modules/tours/components/tour-thumbnail';
-import TourPackageSide from '@/modules/tours/components/tour-package-side';
-import TourPackageTabs from '@/modules/tours/components/tour-package-tabs';
-import BookContactButtons from '@modules/booking/components/book-contact-btn';
+type PageProps = {
+    params: Promise<{
+        slug: string;
+    }>;
+};
 
-import HelpBlock from '@/components/help-black';
-import ErrorBlock from '@/components/error-block';
-import { SpinnerOverlay } from '@ui/spinner';
+// for now have done this with statis data generation from param
+// but for better have to fetch from api with slug and then generate metadata
+export async function generateMetadata(
+  { params }: PageProps
+): Promise<Metadata> {
+    const { slug } = await params;
 
+    const tourTitle = reverseSlugify(slug);
 
-const TourDetailPage: React.FC = () => {
-    const { slug } = useParams();
-    const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
-
-    const { data, isLoading, error } = useGetTourDetail({
-        slug: slug as string
-    })
-
-    if (isLoading) {
-        return <SpinnerOverlay />
-    }
-    else if (error) {
-        return <ErrorBlock type='error' message={error.message} />
-    }
-    else if (!data?.data?.tour || !data?.data?.packages || !data?.data.tour) {
-        return <ErrorBlock type='no-data' message="Tour not found!" />
-    }
-
-    const tourData = data.data.tour;
-    const packagesData = data.data.packages;
-    const selectedPackageData = packagesData.find(pkg => pkg._id === selectedPackage);
-    
-    
-    return (
-        <div className='flex flex-col'>
-            <TourThumbnail
-                name={tourData.name}
-                thumbnailImage={tourData.thumbnailImage}
-                packages={packagesData}
-                images={tourData.images}
-            />
-            <div className='w-full py-12 px-20'>
-                <div className="grid grid-cols-3 gap-12">
-                    <div className="col-span-2 flex flex-col space-y-8">
-                        <TourDetailComponent 
-                            tour={tourData}
-                            selectedPackage={selectedPackageData}
-                        />
-                        <TourPackageTabs 
-                            packages={packagesData}
-                            handleSelectPackage={(id) => setSelectedPackage(id)}
-                            selectedPackageId={selectedPackage}
-                            bookButtons={
-                                <BookContactButtons
-                                    tourId={tourData._id}
-                                    packageId={selectedPackage || ''}
-                                    isDisabled={!selectedPackage}
-                                    className='flex-row justify-center gap-4'
-                                />
-                            }
-                        />
-                    </div>
-
-                    <div className="col-span-1">
-                        <div className='sticky top-22 self-start'>
-                            <div className='flex flex-col space-y-6 max-h-[calc(100vh-3rem)] overflow-y-auto scroll-container'>
-                                <TourPackageSide
-                                    packages={packagesData}
-                                    handleSelectPackage={(id) => setSelectedPackage(id)}
-                                    selectedPackageId={selectedPackage}
-                                    bookButtons={
-                                        <BookContactButtons
-                                            tourId={tourData._id}
-                                            packageId={selectedPackage || ''}
-                                            isDisabled={!selectedPackage}
-                                        />
-                                    }
-                                />
-                                <HelpBlock />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+    return {
+        title: `${tourTitle} Tour Package`,
+        description: `Book the ${tourTitle} tour package with curated itineraries, best prices, and hassle-free travel planning.    Explore destinations with Eklavyatourism.`,
+        keywords: [
+            `${tourTitle} tour`,
+            `${tourTitle} tour package`,
+            "holiday tour package",
+            "travel tour",
+            "eklavya tourism",
+        ],
+        alternates: {
+            canonical: `/tours/${slug}`,
+        },
+    };
 }
 
-export default TourDetailPage
+const TourDetailPageComponent = dynamic(
+    () => import("@modules/tours/components/tour-detail-page-comp"),
+    {
+        loading: () => <TourDetailLoading />,
+    }
+);
+
+
+export default async function TourDetailPage({ params }: PageProps) {
+    const { slug } = await params;
+    return <TourDetailPageComponent slug={slug} />;
+}
