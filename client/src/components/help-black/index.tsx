@@ -11,14 +11,14 @@ const HelpBlock: React.FC = () => {
                     <Icon name='Phone' width={24} height={24} className='text-primary' />
                     <div>
                         <Typography variant="p" className='font-semibold'>Call Us</Typography>
-                        <Typography variant="p" className='text-muted-foreground'>+1 234 567 890</Typography>
+                        <Typography variant="p" className='text-muted-foreground'>+91 8000057070</Typography>
                     </div>
                 </div>
                 <div className='flex items-center gap-3'>
                     <Icon name='Clock' width={24} height={24} className='text-primary' />
                     <div>
-                        <Typography variant="p" className='font-semibold'>Working Hours</Typography>
-                        <Typography variant="p" className='text-muted-foreground'>Mon - Fri: 9 AM - 6 PM</Typography>
+                        <Typography variant="p" className='font-semibold'>Working Hours (for calling)</Typography>
+                        <Typography variant="p" className='text-muted-foreground'>24/7 Support Available</Typography>
                     </div>  
                 </div>
             </div>
