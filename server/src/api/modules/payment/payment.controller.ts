@@ -40,7 +40,7 @@ export const cashfreeWebhookController = asyncWrapper(async (req, res) => {
         return;
     }
 
-    await updateBookingPaymentStatus({
+    const updatedResult = await updateBookingPaymentStatus({
         order: payload.data.order,
         payment: payload.data.payment,
     });

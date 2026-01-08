@@ -303,4 +303,6 @@ export const updateBookingPaymentStatus = async (
     if (!result) {
         throw new CustomError(500, "Failed to update booking payment status");
     }
+
+    return result.toObject();
 }

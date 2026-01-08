@@ -18,6 +18,8 @@ import mediaRoutes from '@api/modules/media/media.routes';
 import categoryRoutes from '@api/modules/category/category.routes';
 import bookingRoutes from '@api/modules/booking/booking.routes';
 import paymentRoutes from '@api/modules/payment/payment.routes';
+import whatsappRoutes from '@api/modules/whatsapp/whatsapp.routes';
+
 
 const app: Application = express();
 
@@ -82,6 +84,7 @@ app.use('/api/media', mediaRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 
 
 // test route
