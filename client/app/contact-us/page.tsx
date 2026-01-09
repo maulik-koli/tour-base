@@ -56,11 +56,16 @@ const ContactUsPage: React.FC = () => {
                                     <Typography variant="h4" className='mb-2'>
                                         Call Us
                                     </Typography>
-                                    <a href="tel:+918000057070" className='block hover:text-primary transition-colors'>
+                                    <div className="flex items-center gap-2">
                                         <Typography variant="p" className='font-semibold'>
-                                            +91 8000057070
+                                            Hitesh Waghela:
                                         </Typography>
-                                    </a>
+                                        <a href="tel:+918000057070" className='block hover:text-primary transition-colors'>
+                                            <Typography variant="p" className='font-semibold'>
+                                                +91 8000057070
+                                            </Typography>
+                                        </a>
+                                    </div>
                                     <Typography variant="small" className='text-muted-foreground mt-1'>
                                         24/7 Support Available
                                     </Typography>
