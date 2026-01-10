@@ -3,13 +3,14 @@ import Booking, { BookingFields, BookingLean, BookingStatus } from "./booking.mo
 import Tour from "../tour/tour.model";
 import Package from "../packages/packages.model";
 
-import { BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
+import { AdminBookingListQueries, BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 import { createCashFreeOrder } from "../payment/payment.service";
 import { CashfreePaymentWebhookPayload } from "../payment/payment.types";
 import { hashToken } from "@/api/utils/token";
 import { BOOKING_AUTH, BookingTourPackage } from "./booking.utils";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
+import { PaginationType } from "@/api/types/common";
 
 
 export const createBooking = async (payload: CreateBookingPayload, token: string) => {
@@ -305,4 +306,79 @@ export const updateBookingPaymentStatus = async (
     }
 
     return result.toObject();
+}
+
+
+export const adminGetBookingsList = async (query: AdminBookingListQueries) => {
+    const { limit, page, search, status } = query;
+
+    const filter: any = {};
+
+    if (status && status !== "NONE") {
+        filter.bookingStatus = status;
+    }
+
+    if (search) {
+        filter.$or = [
+            { "customerDetails.fullName": { $regex: search, $options: 'i' } },
+        ];
+    }
+
+    const skip = (page - 1) * limit;
+
+    const bookings = await Booking.aggregate([
+        { $match: filter },
+        { 
+            $lookup: {
+                from: "tours",
+                localField: "tourId",
+                foreignField: "_id",
+                as: "tourDetails"
+            }
+        },
+        { $unwind: { path: "$tourDetails", preserveNullAndEmptyArrays: true } },
+        { $addFields: { tourName: "$tourDetails.name" } },
+        { $unset: "tourDetails" },
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit },
+        { 
+            $project: {
+                bookingStatus: 1,
+                createdAt: 1,
+                customerName: "$customerDetails.fullName",
+                customerNumber: "$customerDetails.phone1",
+                tourName: "$tourName",
+                orderStatus: "$paymentDetails.order_status",
+            }
+        }
+    ])
+
+    const total = await Booking.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination: PaginationType = {
+        page,
+        limit,
+        totalItems: total,
+        totalPages,
+        isNextPage: page < totalPages,
+        isPrevPage: page > 1,
+    }
+
+    return {
+        bookings,
+        pagination
+    }
+}
+
+
+export const deleteBooking = async (bookingId: string) => {
+    const result = await Booking.findByIdAndDelete(new Types.ObjectId(bookingId));
+
+    if (!result) {
+        throw new CustomError(404, "Booking not found");
+    }
+
+    return result
 }

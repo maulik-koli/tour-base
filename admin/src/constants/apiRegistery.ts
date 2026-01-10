@@ -10,6 +10,9 @@ export const QUERY_REGISTRY = {
     getCategoryOptions: "get-category-options",
     getCategories: "get-categories",
     getFeaturedTours: "get-featured-tours",
+
+    getBookingList: "get-booking-list",
+    getBookingDetails: "get-booking-details",
 }
 
 
@@ -32,4 +35,6 @@ export const MUTATION_REGISTRY = {
     createCategory: "create-category",
     updateCategory: "update-category",
     deleteCategory: "delete-category",
+
+    deleteBooking: "delete-booking",
 };

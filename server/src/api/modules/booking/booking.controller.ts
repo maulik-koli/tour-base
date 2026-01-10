@@ -1,5 +1,6 @@
-import { bookingPayment, createBooking, customerBooking, getBookingData } from "./booking.service";
-import { BookingPaymentPayload, BookingStatusPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
+import { Types } from "mongoose";
+import { adminGetBookingsList, bookingPayment, createBooking, customerBooking, deleteBooking, findBooking, getBookingData } from "./booking.service";
+import { AdminBookingListQueries, BookingPaymentPayload, BookingStatusPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
 
 import { generateAccessToken } from "@/api/utils/token";
 import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
@@ -67,4 +68,43 @@ export const bookingPaymentController = asyncWrapper(async (req, res) => {
         status: 200,
         data: response,
     }); 
+})
+
+
+export const adminGetBookingController = asyncWrapper(async (req, res) => {
+    const bookingId = req.params.bookingId;
+
+    const booking = await findBooking({ _id: new Types.ObjectId(bookingId) });
+
+    successResponse(res, {
+        message: "Booking fetched successfully",
+        status: 200,
+        data: booking,
+    });
+})
+
+
+export const adminGetBookingsListController = asyncWrapper(async (req, res) => {
+    const query = req.localsQuery as AdminBookingListQueries;
+
+    const { bookings, pagination } = await adminGetBookingsList(query);
+
+    successResponse(res, {
+        message: "Admin bookings list fetched successfully",
+        status: 200,
+        data: { bookings, pagination },
+    });
+});
+
+
+export const adminDeleteBookingController = asyncWrapper(async (req, res) => {
+    const bookingId = req.params.bookingId;
+
+    await deleteBooking(bookingId);
+
+    successResponse(res, {  
+        message: "Booking deleted successfully",
+        status: 200,
+        data: null,
+    });
 })

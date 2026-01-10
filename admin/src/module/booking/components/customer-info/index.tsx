@@ -1,7 +1,7 @@
 import React from 'react'
-import { BookingType } from '@module/booking/api/types';
+import { GetBookingDetailsResponse } from '@module/booking/api/types';
 import { getBookingStatusStyles } from '@module/booking/utils/getStatusStyle';
-import { cn } from '@/lib/utils';
+import { cn, formatDate } from '@/lib/utils';
 
 import { InfoRow } from '../common'
 import { Typography } from '@ui/typography'
@@ -10,17 +10,6 @@ import { Card, CardContent, CardHeader } from '@ui/card'
 
 const isExpired = (expiresAt: string) => {
     return new Date(expiresAt) < new Date();
-}
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    }).format(date);
 }
 
 const formatDateOnly = (dateString: string) => {
@@ -33,7 +22,7 @@ const formatDateOnly = (dateString: string) => {
 }
 
 interface BookingCustomerInfoProps {
-    booking: BookingType;
+    booking: GetBookingDetailsResponse;
 }
     
 
@@ -72,7 +61,7 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
                 </div>
                 
                 <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
-                    <InfoRow label="Expires At" value={formatDate(booking.expiresAt)} />
+                    <InfoRow label="Expires At" value={formatDate(booking.expiresAt, true)} />
                     <InfoRow label="Created At" value={formatDate(booking.createdAt)} />
                     <InfoRow label="Updated At" value={formatDate(booking.updatedAt)} />
                 </div>

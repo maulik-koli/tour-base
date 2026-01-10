@@ -25,7 +25,7 @@ const SidebarNavLink: React.FC<NavLinkProps> = ({item, className }) => {
             "hover:bg-primary/5 p-5"
         )}>
             <Icon name={item.icon} className="w-4 h-4"  />
-            <Typography variant="small" className="font-normal">{item.title}</Typography>
+            <Typography variant="small" className="font-normal leading-snug">{item.title}</Typography>
         </Link>
     )
 }

@@ -16,6 +16,21 @@ export const getBookingStatusStyles = (status: string) => {
     }
 }
 
+export const getPaymentStatusStyles = (status: string) => {
+    switch (status) {
+        case "PAID":
+            return "bg-green-100 text-green-700"
+        case "ACTIVE":
+            return "bg-yellow-100 text-yellow-700"
+        case "EXPIRED":
+            return "bg-blue-100 text-blue-700"
+        case "CANCELLED":
+            return "bg-muted text-muted-foreground"
+        default:
+            return "bg-muted text-muted-foreground"
+    }
+}
+
 
 export const getOrderStatusStyles = (status: string) => {
     switch (status) {

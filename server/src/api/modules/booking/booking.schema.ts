@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { Types } from "mongoose";
-import { paymentOptionsEnum } from "./booking.model";
+import { bookingStatusEnum, paymentOptionsEnum } from "./booking.model";
 
 const mongoIdSchema = (field: string) => z
     .string()
@@ -45,8 +45,17 @@ export const bookingStatusZodSchema = z.object({
     view: z.string().optional(),
 });
 
+export const adminBookingListZodSchema = z.object({
+    search: z.string().trim().optional().transform(s => s === '' ? undefined : s),
+    status: z.enum([...bookingStatusEnum, "NONE"]).default("NONE"),
+
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
 
 export type CreateBookingPayload = z.infer<typeof createBookingZodSchema>;
 export type CustomerDetailsPayload = z.infer<typeof customerDetailsZodSchema>;
 export type BookingPaymentPayload = z.infer<typeof bookingPaymentZodSchema>;
 export type BookingStatusPayload = z.infer<typeof bookingStatusZodSchema>;
+export type AdminBookingListQueries = z.infer<typeof adminBookingListZodSchema>;
