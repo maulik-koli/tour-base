@@ -6,9 +6,13 @@ export const SortingOptions = [
     { label: 'Oldest Added', value: 'createdAt_asc' },
 ];
 
-export const BookingSortingOptions = [
-    { label: 'Newest First', value: 'createdAt_desc' },
-    { label: 'Oldest First', value: 'createdAt_asc' },
+export const BookingStatusOptions: { label: string, value: string }[]= [
+    { label: 'Draft', value: 'DRAFT' },
+    { label: 'Details Filled', value: 'DETAILS_FILLED' },
+    { label: 'Paid', value: 'PAID_FULL' },
+    { label: 'Partially Paid', value: 'PAID_PARTIAL' },
+    { label: 'Failed', value: 'FAILED' },
+    { label: 'None', value: 'NONE' },
 ];
 
 export const TourStarHirarchyOptions = [

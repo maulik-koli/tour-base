@@ -1,13 +1,13 @@
 import { model, Schema } from "mongoose";
 import { Types } from "mongoose";
 
-const bookingStatusEnum = ["DRAFT", "DETAILS_FILLED", "PAID_PARTIAL", "PAID_FULL", "FAILED"] as const;
-const orderStatusEnum = ["ACTIVE", "PAID", "EXPIRED", "CANCELLED"] as const;
+export const bookingStatusEnum = ["DRAFT", "DETAILS_FILLED", "PAID_PARTIAL", "PAID_FULL", "FAILED"] as const;
+export const orderStatusEnum = ["ACTIVE", "PAID", "EXPIRED", "CANCELLED"] as const;
 export const paymentOptionsEnum = ["PARTIAL", "FULL"] as const;
 
 export type BookingStatus = typeof bookingStatusEnum[number];
 export type OrderStatus = typeof orderStatusEnum[number];
-type PaymentOption = typeof paymentOptionsEnum[number];
+export type PaymentOption = typeof paymentOptionsEnum[number];
 
 type CustomerMemberDetails = {
     fullName: string;

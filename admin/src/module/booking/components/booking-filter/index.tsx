@@ -1,5 +1,5 @@
 import React from 'react'
-import { BookingSortingOptions } from '@/constants/selectOptions'
+import {  BookingStatusOptions } from '@/constants/selectOptions'
 
 import InputField from '@/components/form/input-field'
 import SelectField from '@/components/form/select-field'
@@ -19,17 +19,17 @@ const BookingFilter: React.FC<BookingFilterProps> = ({ filter, onChange }) => {
                 onChange={(value) => onChange("search", value)}
                 value={filter.search || ''}
                 leftIcon='Search'
-                placeholder='Search bookings by customer, booking ID, or tour name'
+                placeholder='Search bookings by customer name'
                 containerClass='w-full'
             />
             <div className='flex items-center gap-2 min-w-fit'>
                 <Typography variant="muted" className='min-w-fit'>Sort By:</Typography>
                 <SelectField
                     containerClass='max-w-40 min-w-40'
-                    value={filter.sort}
-                    onChange={(value) => onChange("sort", value)}
-                    placeholder='Sort by date'
-                    options={BookingSortingOptions}
+                    value={filter.status || 'NONE'}
+                    onChange={(value) => onChange("status", value)}
+                    placeholder='Select Status'
+                    options={BookingStatusOptions}
                 />
             </div>
         </div>

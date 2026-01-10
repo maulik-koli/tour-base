@@ -1,17 +1,10 @@
 import React from "react";
 import { PackageBookingInfo, TourBookingInfo } from "@module/booking/api/types";
+import { formatCurrency } from "@/lib/utils";
 
 import { InfoRow } from "../common";
 import { Typography } from "@ui/typography";
 import { Card, CardContent, CardHeader } from "@ui/card";
-
-const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        minimumFractionDigits: 0,
-    }).format(amount);
-}
 
 
 export const BookingPackgeInfo: React.FC<{ packageDetails: PackageBookingInfo }> = ({ packageDetails }) => {
@@ -84,10 +77,9 @@ export const BookingTourInfo: React.FC<{  tourDetails: TourBookingInfo }> = ({ t
                             Includes
                         </Typography>
                         {tourDetails.includes.length > 0 ? (
-                            <ul className='flex flex-col gap-2 list-none'>
+                            <ul className='list-disc ml-6 space-y-2'>
                                 {tourDetails.includes.map((item, index) => (
-                                    <li key={index} className='flex items-start gap-2'>
-                                        <span className='text-green-600 mt-1'>•</span>
+                                    <li key={index}>
                                         <Typography variant="small" className='text-foreground'>
                                             {item}
                                         </Typography>
@@ -104,10 +96,9 @@ export const BookingTourInfo: React.FC<{  tourDetails: TourBookingInfo }> = ({ t
                             Excludes
                         </Typography>
                         {tourDetails.excludes.length > 0 ? (
-                            <ul className='flex flex-col gap-2 list-none'>
+                            <ul className='list-disc ml-6 space-y-2'>
                                 {tourDetails.excludes.map((item, index) => (
-                                    <li key={index} className='flex items-start gap-2'>
-                                        <span className='text-red-600 mt-1'>•</span>
+                                    <li key={index}>
                                         <Typography variant="small" className='text-foreground'>
                                             {item}
                                         </Typography>

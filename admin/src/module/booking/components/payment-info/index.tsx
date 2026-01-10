@@ -5,25 +5,7 @@ import { getOrderStatusStyles } from '@module/booking/utils/getStatusStyle'
 import { Card, CardContent, CardHeader } from '@ui/card'
 import { Typography } from '@ui/typography'
 import { InfoRow } from '../common'
-
-const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        minimumFractionDigits: 0,
-    }).format(amount);
-}
-
-const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat('en-IN', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-    }).format(date);
-}
+import { formatCurrency, formatDate } from '@/lib/utils'
 
 interface BookingPaymentInfoProps {
     paymentDetails: PaymentBookingInfo
@@ -72,7 +54,7 @@ const BookingPaymentInfo: React.FC<BookingPaymentInfoProps> = ({ paymentDetails,
                 <div className='grid grid-cols-2 md:grid-cols-4 gap-6 mt-6'>
                     <InfoRow 
                         label="Order Created At" 
-                        value={formatDate(paymentDetails.order_created_at)} 
+                        value={formatDate(paymentDetails.order_created_at, true)} 
                     />
                     <InfoRow 
                         label="Session ID" 

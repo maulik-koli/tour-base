@@ -3,6 +3,7 @@ import { env } from "@/api/config/env"
 import { log } from "@/api/utils/log"
 import { BookingLean } from "../booking/booking.model"
 
+// this is just test service
 export const sendBookingConfirmationMessage = async (booking: BookingLean) => {
     const URL = `https://graph.facebook.com/v22.0/968375416352885/messages`;
     const headers = {
@@ -40,18 +41,18 @@ export const sendBookingConfirmationMessage = async (booking: BookingLean) => {
             to: "919428088432",
             type: "template",
             template: {
-                name: "booking_receipt",
+                name: "hello_world",
                 language: {
                     code: "en_US"
                 },
-                components: [
-                    {
-                        type: "body",
-                        parameters
-                    }
-                ]
+                // components: [
+                //     {
+                //         type: "body",
+                //         parameters
+                //     }
+                // ]
             }
-        }, { headers});
+        }, { headers });
 
         log.info("WhatsApp API response:", response.data)
         return response.data;

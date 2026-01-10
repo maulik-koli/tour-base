@@ -1,8 +1,8 @@
 "use client"
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { BookingList } from '@app/(admin)/bookings/page'
-import { cn } from '@/lib/utils'
+import { BookingListType } from '@module/booking/api/types'
+import { cn, formatDate } from '@/lib/utils'
 
 import Icon from '@/components/icons'
 import { Button } from '@ui/button'
@@ -15,26 +15,10 @@ import {
     TableHeader, 
     TableRow 
 } from "@/components/ui/table"
-import { getBookingStatusStyles } from '@module/booking/utils/getStatusStyle'
-
-
-const getPaymentStatusStyles = (status: string) => {
-    switch (status) {
-        case "paid":
-            return "bg-green-100 text-green-700"
-        case "pending":
-            return "bg-yellow-100 text-yellow-700"
-        case "partial":
-            return "bg-blue-100 text-blue-700"
-        case "refunded":
-            return "bg-muted text-muted-foreground"
-        default:
-            return "bg-muted text-muted-foreground"
-    }
-}
+import { getBookingStatusStyles, getPaymentStatusStyles } from '@module/booking/utils/getStatusStyle'
 
 interface BookingsTableProps {
-    bookingsList: BookingList[]
+    bookingsList: BookingListType[]
 }
 
 
@@ -42,15 +26,6 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
     const router = useRouter()
     const handleEdit = (bookingId: string) => {
         router.push(`/bookings/${bookingId}`)
-    }
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return new Intl.DateTimeFormat('en-IN', {
-            day: '2-digit',
-            month: 'short',
-            year: 'numeric',
-        }).format(date);
     }
 
     return (
@@ -72,15 +47,15 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
                     </TableHeader>
                     <TableBody>
                         {bookingsList.map((booking, index) => (
-                            <TableRow key={booking.id}>
+                            <TableRow key={booking._id}>
                                 <TableCell className='pl-6 font-medium'>
                                     {index + 1}
                                 </TableCell>
                                 <TableCell className='font-medium'>
-                                    {booking.bookingId}
+                                    {booking._id}
                                 </TableCell>
-                                <TableCell>{booking.customerName}</TableCell>
-                                <TableCell>{booking.customerNumber}</TableCell>
+                                <TableCell>{booking.customerName || '-'}</TableCell>
+                                <TableCell>{booking.customerNumber || '-'}</TableCell>
                                 <TableCell className='max-w-40 truncate'>
                                     {booking.tourName}
                                 </TableCell>
@@ -98,9 +73,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
                                 <TableCell>
                                     <span className={cn(
                                         "px-2.5 py-1 rounded-full text-xs font-medium capitalize",
-                                        getPaymentStatusStyles(booking.paymentStatus)
+                                        getPaymentStatusStyles(booking.orderStatus || "")
                                     )}>
-                                        {booking.paymentStatus}
+                                        {booking.orderStatus || "Not Initiated"}
                                     </span>
                                 </TableCell>
                                 <TableCell className='pr-6'>
@@ -108,7 +83,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
                                         variant="outline"
                                         size="icon"
                                         type='button'
-                                        onClick={() => handleEdit(booking.id)}
+                                        onClick={() => handleEdit(booking._id)}
                                     >
                                         <Icon name="Pencil" />
                                     </Button>
