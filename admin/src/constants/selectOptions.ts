@@ -6,6 +6,11 @@ export const SortingOptions = [
     { label: 'Oldest Added', value: 'createdAt_asc' },
 ];
 
+export const BookingSortingOptions = [
+    { label: 'Newest First', value: 'createdAt_desc' },
+    { label: 'Oldest First', value: 'createdAt_asc' },
+];
+
 export const TourStarHirarchyOptions = [
     { label: '5 Star', value: "5" },
     { label: '4 Star', value: "4" },
