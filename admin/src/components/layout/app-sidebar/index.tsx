@@ -33,8 +33,8 @@ const items: SideBarItem[] = [
         icon: "TramFront",
     },
     {
-        title: "Tickets",
-        url: "/tickets",
+        title: "Bookings",
+        url: "/bookings",
         icon: "TicketCheck",
     },
 ]
