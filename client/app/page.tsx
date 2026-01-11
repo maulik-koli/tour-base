@@ -19,8 +19,8 @@ const Home: React.FC = () => {
     <div className="flex flex-col">
       <HeroSection />
       <CategorySlider />
-      <WhyChooseUsSections />
       <FeatureTourSlider />
+      <WhyChooseUsSections />
       <AboutSection />
       <SocialMediaSection />
     </div>

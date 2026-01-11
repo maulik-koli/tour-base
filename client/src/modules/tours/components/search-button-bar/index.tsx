@@ -20,7 +20,7 @@ const SearchButtonBar: React.FC = () => {
                 type='text'
                 placeholder='Search for tours...'
                 containerClass='w-full'
-                className='bg-card h-12 md:h-15 rounded-2xl pr-24 md:pr-30 text-sm md:text-base'
+                className='bg-card h-12 md:h-15 rounded-2xl pr-24 md:pr-30 text-sm md:text-base focus:ring-2 focus:ring-primary/50'
                 leftIcon='Search'
                 value={searchQuery}
                 onChange={(value) => setSearchQuery(value)}

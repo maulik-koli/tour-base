@@ -3,8 +3,8 @@ import React, { Suspense, useState } from 'react'
 import { PaginationType } from '@/types/api';
 
 import TourListGrid from '../tour-list-grid';
-import TourPagination from '../tour-pagination';
 import TourFilterHeader from '../tour-filter-header';
+import PaginationComponent from '@modules/tours/components/tour-pagination';
 import { CustomSpinner } from '@ui/spinner';
 import { Typography } from '@ui/typography';
 
@@ -38,7 +38,7 @@ const TourPageComponent: React.FC = () => {
                 <TourListGrid viewMode={viewMode} onPaginationChange={setPagination} />
             </Suspense>
 
-            {pagination && <TourPagination pagination={pagination} />}
+            {pagination && <PaginationComponent pagination={pagination} />}
         </div>
     )
 }

@@ -26,7 +26,7 @@ const CardSliderWrapper: React.FC<CardSliderWrapperProps> = ({ tours, children }
                 freeMode={false}
                 navigation
                 grabCursor
-                loop={tours.length > 1}
+                loop={tours.length > 3 ? true : false}
                 breakpoints={{
                     640: {
                         slidesPerView: tours.length < 2 ? tours.length : 2,

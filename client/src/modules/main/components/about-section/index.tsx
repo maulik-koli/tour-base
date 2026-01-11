@@ -16,11 +16,12 @@ const AboutSection: React.FC = () => {
             <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16'>
                 <div className="w-full relative h-64 md:h-96 lg:h-full lg:order-2">
                     <FallbackImage
-                        src="https://res.cloudinary.com/dmcfkem87/image/upload/v1765735247/tour-image_zvcgie.avif"
+                        src="/about-image.jpg"
                         crop="fill"
                         alt="Eklavya Tourism About Us"
                         fill
                         sizes="100vw 100vh"
+                        loading='eager'
                         className='rounded-xl'
                     />
                 </div>
