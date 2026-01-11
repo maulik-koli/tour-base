@@ -3,6 +3,7 @@ import React from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { useGetCategories } from '@modules/category/api/queries';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 import ErrorBlock from '@/components/error-block';
@@ -17,7 +18,12 @@ import "swiper/css/pagination";
 
 
 const CategorySlider: React.FC = () => {
+    const router = useRouter();
     const { data, isLoading, error } = useGetCategories();
+
+    const handleRedirectoin = (category: string) => {
+        router.replace(`/tours?category=${category}`);
+    }
     
 
     const getContent = () => {
@@ -34,7 +40,7 @@ const CategorySlider: React.FC = () => {
             />;
         }
 
-        if(!data || (data && data.data?.length === 0)) {
+        if(!data || !data.data || (data && data.data?.length === 0)) {
             return <ErrorBlock 
                 type='no-data'
                 message='No featured tours found.'
@@ -62,12 +68,13 @@ const CategorySlider: React.FC = () => {
                 }}
                 className="overflow-visible!"
             >
-                {data.data?.map((item) => (
+                {data.data.map((item) => (
                     <SwiperSlide key={item._id}>
                         {({ isActive }) => (
-                            <div
+                            <div 
+                                onClick={() => handleRedirectoin(item.value)}
                                 className={cn(
-                                    "relative h-64 md:h-100 rounded-3xl overflow-hidden transition-all duration-500",
+                                    "relative h-64 md:h-100 rounded-3xl overflow-hidden transition-all duration-500 cursor-pointer hover:shadow-2xl",
                                     isActive ? "scale-105 shadow-2xl" : "scale-95 opacity-80"
                                 )}
                             >

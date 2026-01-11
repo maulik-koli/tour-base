@@ -89,6 +89,7 @@ const Header: React.FC = () => {
                                 src="/logo.png"
                                 alt="Eklavya Tourism Logo"
                                 className='object-cover overflow-hidden rounded-sm'
+                                loading="eager"
                             />
                         </div>
                     </div>

@@ -12,11 +12,12 @@ import {
     PaginationPrevious,
 } from '@ui/pagination'
 
-interface TourPaginationProps {
+interface PaginationComponentProps {
     pagination: PaginationType
 }
 
-const TourPagination: React.FC<TourPaginationProps> = ({ pagination }) => {
+
+const PaginationComponent: React.FC<PaginationComponentProps> = ({ pagination }) => {
     const { filter, applyFilters } = useTourFilters()
 
     const { page, totalPages, isPrevPage, isNextPage } = pagination
@@ -115,4 +116,4 @@ const TourPagination: React.FC<TourPaginationProps> = ({ pagination }) => {
     )
 }
 
-export default TourPagination
+export default PaginationComponent
