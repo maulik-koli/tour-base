@@ -1,0 +1,40 @@
+import api from "@/lib/api/axios";
+import { ApiResponse } from "@/types/api";
+import { 
+    CreateActivityResponse,
+    CreateActivityPayload,
+    GetActivitiesResponse,
+    GetActivitiesParams,
+    GetActivityParam,
+    GetActivityResponse,
+    UpdateActivityPayload,
+    UpdateActivityResponse,
+    DeleteActivityResponse,
+    DeleteActivityPayload
+} from "./types";
+
+
+export const createActivity = async (payload: CreateActivityPayload): Promise<ApiResponse<CreateActivityResponse>> => {
+    const res = await api.post("/activities", payload);
+    return res.data;
+}
+
+export const getActivities = async (params?: GetActivitiesParams): Promise<ApiResponse<GetActivitiesResponse>> => {
+    const res = await api.get("/activities/list", { params });
+    return res.data;
+}
+
+export const getActivity = async (param: GetActivityParam): Promise<ApiResponse<GetActivityResponse>> => {
+    const res = await api.get(`/activities/${param.slug}`);
+    return res.data;
+}
+
+export const updateActivity = async (payload: UpdateActivityPayload): Promise<ApiResponse<UpdateActivityResponse>> => {
+    const res = await api.put(`/activities/${payload.slug}`, payload.data);
+    return res.data;
+}
+
+export const deleteActivity = async (payload: DeleteActivityPayload): Promise<ApiResponse<DeleteActivityResponse>> => {
+    const res = await api.delete(`/activities/${payload.slug}`);
+    return res.data;
+}

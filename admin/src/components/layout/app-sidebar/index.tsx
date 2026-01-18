@@ -37,6 +37,11 @@ const items: SideBarItem[] = [
         url: "/bookings",
         icon: "TicketCheck",
     },
+    {
+        title: "Activities",
+        url: "/activities",
+        icon: "Calendar",
+    }
 ]
 
 const USER = {

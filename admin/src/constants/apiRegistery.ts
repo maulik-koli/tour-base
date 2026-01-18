@@ -13,6 +13,9 @@ export const QUERY_REGISTRY = {
 
     getBookingList: "get-booking-list",
     getBookingDetails: "get-booking-details",
+
+    getActivities: "get-activities",
+    getActivity: "get-activity",
 }
 
 
@@ -37,4 +40,8 @@ export const MUTATION_REGISTRY = {
     deleteCategory: "delete-category",
 
     deleteBooking: "delete-booking",
+
+    createActivity: "create-activity",
+    updateActivity: "update-activity",
+    deleteActivity: "delete-activity",
 };
