@@ -2,25 +2,24 @@
 import React, { useState } from 'react'
 import { useGetBookingList } from '@module/booking/api/queries'
 import { useDebounce } from '@/hooks/useDebounce'
+import { GetBookingListParams } from '@module/booking/api/types'
 
 import BookingsTable from '@module/booking/components/booking-table'
 import BookingFilter from '@module/booking/components/booking-filter'
 import ErrorBlock from '@/components/error-block'
+import PaginationComponent from '@ui/pagination-component'
 import { Typography } from '@ui/typography'
 import { CustomSpinner } from '@ui/spinner'
 
-export type FilterType = {
-    search: string | undefined;
-    status: string | undefined;
-}
-
-export type FilterFields = keyof FilterType;
+export type FilterFields = keyof GetBookingListParams;
 
 
 const BookingsPage: React.FC = () => {
-    const [filters, setFilters] = useState<FilterType>({
+    const [filters, setFilters] = useState<GetBookingListParams>({
         search: undefined,
         status: undefined,
+        limit: 20,
+        page: 1,
     });
 
     const debouncedSearch = useDebounce(filters.search, 300);
@@ -28,9 +27,11 @@ const BookingsPage: React.FC = () => {
     const { data, error, isLoading } = useGetBookingList({
         search: debouncedSearch,
         status: filters.status,
+        limit: filters.limit,
+        page: filters.page,
     })
 
-    const handleFilterChange = (name: FilterFields, value: string | undefined) => {
+    const handleFilterChange = (name: FilterFields, value: string | number | undefined) => {
         setFilters((prev) => ({
             ...prev,
             [name]: value,
@@ -49,7 +50,7 @@ const BookingsPage: React.FC = () => {
                 type='error' 
                 message={error.message} 
                 description='Please try again later.'
-            />;
+            />
         }
 
         if(!data || !data.data || (data && data.data?.bookings.length === 0)) {
@@ -61,7 +62,13 @@ const BookingsPage: React.FC = () => {
         }
 
         return (
-            <BookingsTable bookingsList={data.data.bookings || []} />
+            <>
+                <BookingsTable bookingsList={data.data.bookings || []} />
+                <PaginationComponent 
+                    pagination={data.data.pagination} 
+                    onPageChange={(page) => handleFilterChange("page", page)}
+                />
+            </>
         )
     }
 
