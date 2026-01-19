@@ -1,24 +1,5 @@
 import z from "zod";
-import { isHtmlContentEmpty } from "./activity.utils";
-
-
-const htmlContentSchema = (minLength: number, fieldName: string = 'Content') => {
-    return z.string()
-        .refine((html) => !isHtmlContentEmpty(html), {
-            message: `${fieldName} cannot be empty`,
-        })
-        .refine((html) => {
-            const textContent = html
-                .replace(/<[^>]*>/g, '')
-                .replace(/&nbsp;/gi, ' ')
-                .replace(/&#?[a-z0-9]+;/gi, ' ')
-                .trim();
-            return textContent.length >= minLength;
-        }, {
-            message: `${fieldName} must contain at least ${minLength} characters of actual text`,
-        });
-};
-
+import { htmlContentSchema } from "@/api/core/validation/html.schema";
 
 export const activityZodSchema = z.object({
     title: z.string().min(3, 'Title must be at least 3 characters').trim(),
@@ -28,9 +9,17 @@ export const activityZodSchema = z.object({
     pricePerPerson: z.number().min(0, 'Price must be a positive number'),
     thumbnailImage: z.string().min(1, 'Invalid thumbnail image path').trim(),
     images: z.array(z.string().min(1, 'Invalid image path').trim()),
-    extraNote: htmlContentSchema(10, 'Extra note'),
+    extraNote: htmlContentSchema(10, 'Extra note').optional(),
     isActive: z.boolean(),
 });
 
 
+export const activityListQueriesZodSchema = z.object({
+    search: z.string().trim().optional().transform(s => s === '' ? undefined : s),
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
+
 export type ActivityPayload = z.infer<typeof activityZodSchema>;
+export type ActivityListQueries = z.infer<typeof activityListQueriesZodSchema>;

@@ -1,4 +1,4 @@
-import { ActivityPayload } from "./activity.schema";
+import { ActivityListQueries, ActivityPayload } from "./activity.schema";
 import { 
     createActivity, 
     deleteActivity, 
@@ -7,7 +7,7 @@ import {
     updateActivity 
 } from "./activity.service";
 
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { successResponse } from "@/api/utils/response";
 
 
@@ -65,11 +65,13 @@ export const deleteActivityController = asyncWrapper(async (req, res) => {
 
 
 export const getActivitiesListController = asyncWrapper(async (req, res) => {
-    const activities = await getActivitiesList();
+    const query = req.localsQuery as ActivityListQueries;
+
+    const { activities, pagination } = await getActivitiesList(query);
 
     successResponse(res, {
         message: "Activities list fetched successfully",
         status: 200,
-        data: activities,
+        data: { activities, pagination },
     });
 });

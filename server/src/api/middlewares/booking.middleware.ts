@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 import { findBooking } from "../modules/booking/booking.service";
 
 import { BOOKING_AUTH } from "../modules/booking/booking.utils";
-import { asyncWrapper } from "../utils/apiHelper";
+import { asyncWrapper } from "../utils/asyncWrapper";
 import { CustomError } from "../utils/response";
 import { hashToken } from "../utils/token";
 import { log } from "@api/utils/log";

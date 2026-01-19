@@ -4,8 +4,9 @@ import { CreateTourPayload, TourListAdminQueries, TourListQueries, TourPayload }
 import { addPakagesToTour, deletePackagesByTourId } from "../packages/packages.service";
 
 import { CustomError } from "@/api/utils/response";
-import { ADMIN_SORT_FIELD_MAP, DURATION_MAP, slugify, SORT_FIELD_MAP } from "./tour.utils";
-import { PaginationType } from "@/api/types/common";
+import { ADMIN_SORT_FIELD_MAP, DURATION_MAP, SORT_FIELD_MAP } from "./tour.utils";
+import { PaginationType } from "@/api/core/types/common.type";
+import { slugify } from "@/api/core/helper/data.helper";
 
 
 export const createTour = async (payload: CreateTourPayload) => {

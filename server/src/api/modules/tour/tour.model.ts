@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { embededYoutubeUrl, slugify } from "./tour.utils";
+import { embededYoutubeUrl, slugify } from "@/api/core/helper/data.helper";
 
 export interface IDayDetail {
     title: string;
