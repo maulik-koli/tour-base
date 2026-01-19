@@ -1,25 +1,7 @@
 import z from "zod";
 import { packageZodSchema } from "../packages/packages.schema";
-import { ADMIN_SORT_VALUE, DURATION_VALUE, isHtmlContentEmpty, SORT_VALUE } from "./tour.utils";
-import { log } from "@/api/utils/log";
-
-
-const htmlContentSchema = (minLength: number, fieldName: string = 'Content') => {
-    return z.string()
-        .refine((html) => !isHtmlContentEmpty(html), {
-            message: `${fieldName} cannot be empty`,
-        })
-        .refine((html) => {
-            const textContent = html
-                .replace(/<[^>]*>/g, '')
-                .replace(/&nbsp;/gi, ' ')
-                .replace(/&#?[a-z0-9]+;/gi, ' ')
-                .trim();
-            return textContent.length >= minLength;
-        }, {
-            message: `${fieldName} must contain at least ${minLength} characters of actual text`,
-        });
-};
+import { ADMIN_SORT_VALUE, DURATION_VALUE, SORT_VALUE } from "./tour.utils";
+import { htmlContentSchema } from "@/api/core/validation/html.schema";
 
 
 const listOfStringsSchema = z.array(

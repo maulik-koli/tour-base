@@ -10,7 +10,7 @@ import { hashToken } from "@/api/utils/token";
 import { BOOKING_AUTH, BookingTourPackage } from "./booking.utils";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
-import { PaginationType } from "@/api/types/common";
+import { PaginationType } from "@/api/core/types/common.type";
 
 
 export const createBooking = async (payload: CreateBookingPayload, token: string) => {

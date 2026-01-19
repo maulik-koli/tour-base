@@ -1,5 +1,5 @@
 import Booking from "../booking/booking.model";
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { CustomError, successResponse } from "@/api/utils/response";
 import { sendBookingConfirmationMessage } from "./whatsapp.service";
 

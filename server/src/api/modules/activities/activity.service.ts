@@ -1,8 +1,9 @@
+import { slugify } from "@/api/core/helper/data.helper";
 import Activity, { ActivityFields, ActivityLean } from "./activity.model";
-import { ActivityPayload } from "./activity.schema";
-import { slugify } from "./activity.utils";
+import { ActivityListQueries, ActivityPayload } from "./activity.schema";
 
 import { CustomError } from "@/api/utils/response";
+import { PaginationType } from "@/api/core/types/common.type";
 
 
 export const createActivity = async (payload: ActivityPayload) => {
@@ -60,11 +61,35 @@ export const deleteActivity = async (slug: string) => {
 };
 
 
-export const getActivitiesList = async () => {
-    const activities = await Activity.find()
-        .select('title slug subtitle city pricePerPerson thumbnailImage isActive createdAt')
+export const getActivitiesList = async (query: ActivityListQueries) => {
+    const { page, limit, search } = query;
+
+    const skip = (page - 1) * limit;
+
+    const filter: any = {};
+
+    if (search) {
+        filter.title = { $regex: search, $options: "i" };
+    }
+
+    const activities = await Activity.find(filter)
+        .select('title slug subtitle city pricePerPerson thumbnailImage isActive updatedAt')
         .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
         .lean();
 
-    return activities;
+    const total = await Activity.countDocuments(filter);
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination: PaginationType = {
+        page,
+        limit,
+        totalPages,
+        totalItems: total,
+        isNextPage: page < totalPages,
+        isPrevPage: page > 1,
+    };
+
+    return { activities, pagination };
 };

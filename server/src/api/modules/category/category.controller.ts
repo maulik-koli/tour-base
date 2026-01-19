@@ -1,4 +1,4 @@
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { CategoryPayload } from "./category.schema";
 import { createCategory, deleteCategory, findCategory, getCategories, getCategoryOptions, updateCategory } from "./category.service";
 import { successResponse } from "@/api/utils/response";;

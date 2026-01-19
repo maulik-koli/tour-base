@@ -1,4 +1,4 @@
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { successResponse } from "@/api/utils/response";
 import { 
     closeRequest, 

@@ -1,7 +1,7 @@
 import { getAdminByEmail, verifyAdminToken } from "../modules/admin/admin.service";
 import { ADMIN_AUTH, AdminAuth } from "../modules/admin/admin.utils";
 
-import { asyncWrapper } from "../utils/apiHelper";
+import { asyncWrapper } from "../utils/asyncWrapper";
 import { CustomError } from "../utils/response";
 
 

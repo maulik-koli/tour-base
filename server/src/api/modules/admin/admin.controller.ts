@@ -2,7 +2,7 @@ import { createAdmin, generateAdminToken, getAdminByEmail, verifyAdminPassword }
 import { AdminChangePasswordPayload, AdminLoginPayload, AdminRegisterPayload } from "./admin.schema";
 
 import { ADMIN_AUTH } from "./admin.utils";
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { CustomError, successResponse } from "@/api/utils/response";
 import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
 import { logger } from "@/api/utils/logger";

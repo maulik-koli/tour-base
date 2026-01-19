@@ -6,31 +6,17 @@ import {
     getActivityController, 
     updateActivityController 
 } from "./activity.controller";
-import { activityZodSchema } from "./activity.schema";
-import { validateRequest } from "@/api/middlewares/validate.middlewate";
+import { activityListQueriesZodSchema, activityZodSchema } from "./activity.schema";
+import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 
 const router = express.Router();
 
-
-// Admin routes
 router.post(
     "/",
     authMiddleware,
     validateRequest(activityZodSchema),
     createActivityController
-);
-
-router.get(
-    "/list",
-    authMiddleware,
-    getActivitiesListController
-);
-
-router.get(
-    "/:slug",
-    authMiddleware,
-    getActivityController
 );
 
 router.put(
@@ -46,5 +32,16 @@ router.delete(
     deleteActivityController
 );
 
+// public api
+router.get(
+    "/",
+    validateQuery(activityListQueriesZodSchema),
+    getActivitiesListController
+);
+
+router.get(
+    "/:slug",
+    getActivityController
+);
 
 export default router;

@@ -1,7 +1,7 @@
 import { createPackage, deletePackageById, getPackagesByTourId, updatePackage } from "./packages.service";
 import { findTour } from "../tour/tour.service";
 import { PackagePayload } from "./packages.schema";
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 
 
 export const getPackagesOfTourController = asyncWrapper(async (req, res) => {

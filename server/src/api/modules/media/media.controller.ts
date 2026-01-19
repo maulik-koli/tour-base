@@ -2,7 +2,7 @@ import { generateSignature } from "./media.service";
 import { env } from "@/api/config/env";
 
 import { MediaTypeSchema, UPLOAD_CONFIG } from "./media.utils";
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 

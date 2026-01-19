@@ -1,5 +1,5 @@
 import { Document, model, Schema, Types } from "mongoose";
-import { slugify } from "./activity.utils";
+import { slugify } from "@/api/core/helper/data.helper";
 
 
 export interface IActivity {
@@ -39,7 +39,7 @@ const activitySchema = new Schema<ActivityDocument>({
     pricePerPerson: { type: Number, required: true },
     thumbnailImage: { type: String, required: true },
     images: { type: [String], default: [] },
-    extraNote: { type: String, required: true },
+    extraNote: { type: String },
     isActive: { type: Boolean, default: true },
 }, {
     timestamps: true,
@@ -66,9 +66,8 @@ activitySchema.pre("findOneAndUpdate", function (this) {
 });
 
 
-activitySchema.index({ slug: 1 });
+activitySchema.index({ title: 1 });
 activitySchema.index({ city: 1 });
-activitySchema.index({ isActive: 1 });
 
 const Activity = model<ActivityDocument>("Activity", activitySchema);
 

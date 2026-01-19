@@ -2,7 +2,7 @@ import { verifyCashfreeSignature } from "./payment.service";
 import { updateBookingPaymentStatus } from "../booking/booking.service";
 import { CashfreePaymentWebhookPayload } from "./payment.types";
 
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { CustomError, successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 

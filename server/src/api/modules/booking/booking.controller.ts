@@ -5,7 +5,7 @@ import { AdminBookingListQueries, BookingPaymentPayload, BookingStatusPayload, C
 import { generateAccessToken } from "@/api/utils/token";
 import { getCookiesConfig } from "@/api/utils/getCookiesConfig";
 import { BOOKING_AUTH } from "./booking.utils";
-import { asyncWrapper } from "@/api/utils/apiHelper";
+import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { successResponse } from "@/api/utils/response";
 
 
