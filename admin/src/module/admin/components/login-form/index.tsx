@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { useAdminLogin } from "../../api/mutations"
 import { useToast } from "@/hooks/useToast"
 import { LoginPayload } from "../../api/types"
-import { flatZodError } from "@/lib/flatZodError"
+import { flatZodError } from "@/lib/zod/flatZodError"
 import { adminLoginSchema, loginFormDefaultValues } from "../../utils/schema"
 
 import InputField from "@/components/form/input-field"

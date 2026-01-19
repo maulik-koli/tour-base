@@ -5,9 +5,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 import { useToast } from '@/hooks/useToast'
 import { useSubmitActivity } from '@module/activities/hooks/useSubmitActivity'
-import { ActivityPayload, activityZodSchema } from '@module/activities/utils/schema'
+import { ActivityPayload, activitySchema } from '@module/activities/utils/schema'
 import { GetActivityResponse } from '@module/activities/api/types'
-import { flatZodError } from '@/lib/flatZodError'
+import { flatZodError } from '@/lib/zod/flatZodError'
 import { logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'
@@ -28,9 +28,9 @@ interface UpdateActivityFormProps {
 
 const UpdateActivityForm: React.FC<UpdateActivityFormProps> = ({ data }) => {
     const form = useForm<ActivityPayload>({
-        resolver: zodResolver(activityZodSchema),
+        resolver: zodResolver(activitySchema),
         mode: 'onSubmit',
-        defaultValues: data.activity
+        defaultValues: data
     })
 
     const { getValues, formState: { errors, isDirty }, handleSubmit } = form;
@@ -40,7 +40,7 @@ const UpdateActivityForm: React.FC<UpdateActivityFormProps> = ({ data }) => {
     useEffect(() => {
         if(Object.keys(errors).length > 0) {
             logger("Form data", getValues())
-            const error = flatZodError(activityZodSchema, getValues())
+            const error = flatZodError(activitySchema, getValues())
             if(error) toast.error(error)
         }
     }, [errors]);
@@ -51,7 +51,7 @@ const UpdateActivityForm: React.FC<UpdateActivityFormProps> = ({ data }) => {
             <div className='flex items-center justify-between'>
                 <Typography variant="h2">Update Activity</Typography>
                 <div className='flex items-center gap-4'>
-                    <DeleteActivityButton slug={data.activity.slug} /> 
+                    <DeleteActivityButton slug={data.slug} /> 
                     <Button 
                         type='button'
                         onClick={handleSubmit(onUpdateSubmit)}

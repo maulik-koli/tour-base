@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 import { typographyVariants } from '@/components/ui/typography'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-interface ActivityFormCardWrapperProps {
+interface FormSectionWrapperProps {
     cardTitle: string
     children: React.ReactNode
     contentClassName?: string
@@ -11,7 +11,7 @@ interface ActivityFormCardWrapperProps {
     isChildrenEmpty?: boolean
 }
 
-const ActivityFormCardWrapper: React.FC<ActivityFormCardWrapperProps> = ({ 
+const FormSectionWrapper: React.FC<FormSectionWrapperProps> = ({
     cardTitle, children, contentClassName, headerNode, isChildrenEmpty= false
 }) => {
     return (
@@ -33,4 +33,4 @@ const ActivityFormCardWrapper: React.FC<ActivityFormCardWrapperProps> = ({
     )
 }
 
-export default ActivityFormCardWrapper
+export default FormSectionWrapper

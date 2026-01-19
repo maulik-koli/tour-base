@@ -1,4 +1,3 @@
-"use client"
 import React from 'react'
 import CreateActivityForm from '@module/activities/forms/create-activity-form'
 

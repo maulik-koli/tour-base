@@ -29,7 +29,7 @@ const ActivityPage: React.FC = () => {
         else if (error) {
             return <ErrorBlock type='error' message={error.message} />
         }
-        else if (!data?.data?.activity) {
+        else if (!data?.data) {
             return <ErrorBlock type='no-data' message="Activity not found!" />
         }
         else {

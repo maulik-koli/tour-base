@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/useToast'
 import { useSubmitTour } from '@module/tours/hooks/useSubmitTour'
 import { CreateTourFormType, createTourSchema, defaultTourFormValues } from '@module/tours/utils/schema'
-import { flatZodError } from '@/lib/flatZodError'
+import { flatZodError } from '@/lib/zod/flatZodError'
 
 
 import Icon from '@/components/icons'

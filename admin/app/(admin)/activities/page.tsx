@@ -1,4 +1,3 @@
-"use client"
 import React from 'react'
 import ActivityHeader from '@module/activities/components/activity-header'
 import ActivityGrid from '@module/activities/components/activity-grid'

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+"use client"
+import React, { useCallback, useState } from 'react'
 import { useGetActivities } from '@module/activities/api/queries'
 import { useDebounce } from '@/hooks/useDebounce'
 
@@ -7,33 +8,19 @@ import ActivityFilter from '../activity-filter'
 import ErrorBlock from '@/components/error-block'
 import { CustomSpinner } from '@ui/spinner'
 
-export type FilterType = {
-    search: string | undefined;
-    sort: string | undefined;
-}
-
-export type FilterFields = keyof FilterType;
-
 
 const ActivityGrid: React.FC = () => {
-    const [filters, setFilters] = useState<FilterType>({
-        search: undefined,
-        sort: undefined,
-    });
+    const [searchFilters, setSearchFilters] = useState<string | undefined>(undefined);
 
-    const debouncedSearch = useDebounce(filters.search, 300);
+    const debouncedSearch = useDebounce(searchFilters, 300);
 
     const { data, error, isLoading } = useGetActivities({
         search: debouncedSearch,
-        sort: filters.sort,
     });
 
-    const handleFilterChange = (name: FilterFields, value: string | undefined) => {
-        setFilters((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    }
+    const handleFilterChange = useCallback((value: string | undefined) => {
+        setSearchFilters(value);
+    }, []);
 
 
     const getContent = () => {
@@ -71,7 +58,7 @@ const ActivityGrid: React.FC = () => {
 
     return (
         <>
-            <ActivityFilter filter={filters} onChange={handleFilterChange} />
+            <ActivityFilter searchFilters={searchFilters} onChange={handleFilterChange} />
             {getContent()}
         </>
     )

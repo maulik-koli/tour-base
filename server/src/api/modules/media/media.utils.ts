@@ -2,7 +2,9 @@ import z from "zod";
 
 // constants
 export const Image_FORMATE = ['jpg', 'jpeg', 'png', 'webp'] as const;
-const UPLOAD_CONFIGS_TYPES = ["tours", "tour-thumbnails", "tour-slider", "categories", "default"] as const;
+const UPLOAD_CONFIGS_TYPES = [
+    "tours", "tour-thumbnails", "tour-slider", "categories", "activities", "activity-thumbnails", "default"
+] as const;
 
 export type UploadConfigsType = typeof UPLOAD_CONFIGS_TYPES[number];
 
@@ -12,6 +14,8 @@ export const UPLOAD_CONFIG: Record<UploadConfigsType, { folder: string; maxSize:
     'tour-thumbnails': { folder: 'tours/thumbnails', maxSize: 3 * 1024 * 1024 }, // 3 MB
     'tour-slider': { folder: 'tours/slider', maxSize: 3 * 1024 * 1024 }, // 3 MB
     'categories': { folder: 'categories', maxSize: 3 * 1024 * 1024 }, // 3 MB
+    'activities': { folder: 'activities', maxSize: 3 * 1024 * 1024 }, // 3 MB
+    'activity-thumbnails': { folder: 'activities/thumbnails', maxSize: 3 * 1024 * 1024 }, // 3 MB
     'default': { folder: 'uploads', maxSize: 2 * 1024 * 1024 } // 2 MB
 };
 

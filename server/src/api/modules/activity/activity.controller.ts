@@ -14,12 +14,12 @@ import { successResponse } from "@/api/utils/response";
 export const createActivityController = asyncWrapper(async (req, res) => {
     const payload = req.body as ActivityPayload;
 
-    const activity = await createActivity(payload);
+    await createActivity(payload);
 
     successResponse(res, {
         message: "Activity created successfully",
         status: 201,
-        data: activity,
+        data: null,
     });
 });
 

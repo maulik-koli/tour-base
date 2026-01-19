@@ -4,11 +4,11 @@ import { SortingOptions } from '@/constants/selectOptions';
 import InputField from '@/components/form/input-field'
 import SelectField from '@/components/form/select-field';
 import { Typography } from '@/components/ui/typography';
-import { FilterFields, FilterType } from '../tour-grid';
+import { GetToursParams, TourFilterFields } from '@module/tours/api/types';
 
 interface TourFilterProps {
-    onChange: (name: FilterFields, value: string | undefined) => void;
-    filter: FilterType
+    onChange: (name: TourFilterFields, value: string | undefined) => void;
+    filter: GetToursParams
 }
 
 

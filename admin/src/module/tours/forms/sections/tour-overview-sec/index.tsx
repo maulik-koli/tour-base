@@ -2,7 +2,7 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { CreateTourFormType } from '@module/tours/utils/schema'
 
-import TourFormCardWrapper from '../tour-form-card-wrapper'
+import FormSectionWrapper from '@/components/form-section-wrapper'
 import { InputField } from '@/components/form'
 import { FieldLabel } from '@ui/field'
 import { Typography } from '@ui/typography'
@@ -18,7 +18,7 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <TourFormCardWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
             <Controller
                 control={control}
                 name='tour.name'
@@ -77,7 +77,7 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
                     {featuredButton}
                 </>
             )}
-        </TourFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 
