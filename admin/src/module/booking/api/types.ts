@@ -10,6 +10,8 @@ export interface GetBookingListParams {
     limit?: number;
 }
 
+export type BookingFilterFields = keyof GetBookingListParams
+
 export type BookingListType = {
     _id: string,
     bookingStatus: BookingStatus,

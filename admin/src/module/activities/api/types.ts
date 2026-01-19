@@ -9,15 +9,16 @@ export type ActivityListType = {
     _id: string,
     title: string,
     slug: string,
+    subtitle: string,
+    city: string,
+    pricePerPerson: number,
     thumbnailImage: string,
-    createdAt: string,
+    isActive: boolean,
     updatedAt: string,
-    pricePerPerson: number
 }
 
 export interface GetActivitiesParams {
     search?: string;
-    sort?: string;
     page?: number;
     limit?: number;
 }
@@ -33,13 +34,11 @@ interface ActivityParam {
 
 export type GetActivityParam = ActivityParam;
 
-export interface GetActivityResponse {
-    activity: ActivityPayload & {
-        _id: string;
-        slug: string;
-        createdAt: string;
-        updatedAt: string;
-    };
+export interface GetActivityResponse extends ActivityPayload {
+    _id: string;
+    slug: string;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface UpdateActivityPayload { 

@@ -2,15 +2,16 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { CreateTourFormType } from '@module/tours//utils/schema'
 
-import TourFormCardWrapper from '../tour-form-card-wrapper'
-import { ArrayListInput, CategorySelect, RichTextEditor } from '@module/tours/forms/fields'
+import FormSectionWrapper from '@/components/form-section-wrapper'
+import { ArrayListInput, CategorySelect } from '@module/tours/forms/fields'
+import { RichTextEditor } from '@/components/form'
 
 
 const TourDetailsSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <TourFormCardWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
+        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
             <Controller
                 control={control}
                 name='tour.description'
@@ -38,7 +39,7 @@ const TourDetailsSection: React.FC = () => {
                     placeholder='What is excluded'
                 />
             </div>
-        </TourFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

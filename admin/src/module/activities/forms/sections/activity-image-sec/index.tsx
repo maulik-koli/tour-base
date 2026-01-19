@@ -3,16 +3,15 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ActivityPayload } from '@module/activities/utils/schema'
 
-import ActivityFormCardWrapper from '../activity-form-card-wrapper'
-import { ImageUploadGrid } from '@module/tours/forms/fields'
-import { ImageDropzone } from '@/components/form'
+import FormSectionWrapper from '@/components/form-section-wrapper'
+import { ImageDropzone, ImageUploadGrid } from '@/components/form'
 
 
 const ActivityImageSection: React.FC = () => {
     const { control } = useFormContext<ActivityPayload>();
 
     return (
-        <ActivityFormCardWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
             <Controller
                 control={control}
                 name='thumbnailImage'
@@ -32,7 +31,7 @@ const ActivityImageSection: React.FC = () => {
                 imageType='activities'
                 label="Activity Images"
             />
-        </ActivityFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

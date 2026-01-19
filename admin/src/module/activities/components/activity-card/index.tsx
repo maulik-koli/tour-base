@@ -40,7 +40,7 @@ const ActivityCard: React.FC<ActivityCardProps> = ({ activity, className }) => {
                 <div className='grid grid-cols-2 gap-y-3 text-muted-foreground'>
                     <div className='flex gap-1 items-center'>
                         <Icon name="IndianRupee" width={16} height={16} stroke="currentColor" />
-                        <Typography variant="small">{activity.pricePerPerson} per person</Typography>
+                        <Typography variant="small">{activity.pricePerPerson}</Typography>
                     </div>
                 </div>
                 <Separator />

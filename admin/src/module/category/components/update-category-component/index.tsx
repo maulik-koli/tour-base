@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/useToast'
 import { useUpdateCategory } from '@module/category/api/mutations'
 import { categorySchema, CategoryFormType } from '@module/category/utils/schema'
-import { flatZodError } from '@/lib/flatZodError'
+import { flatZodError } from '@/lib/zod/flatZodError'
 import { logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'

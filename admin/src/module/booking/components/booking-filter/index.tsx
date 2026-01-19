@@ -4,11 +4,11 @@ import {  BookingStatusOptions } from '@/constants/selectOptions'
 import InputField from '@/components/form/input-field'
 import SelectField from '@/components/form/select-field'
 import { Typography } from '@/components/ui/typography'
-import { FilterFields, FilterType } from '@app/(admin)/bookings/page'
+import { BookingFilterFields, GetBookingListParams } from '@module/booking/api/types'
 
 interface BookingFilterProps {
-    onChange: (name: FilterFields, value: string | undefined) => void;
-    filter: FilterType
+    onChange: (name: BookingFilterFields, value: string | undefined) => void;
+    filter: GetBookingListParams
 }
 
 

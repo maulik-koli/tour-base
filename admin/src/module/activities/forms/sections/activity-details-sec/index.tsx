@@ -2,15 +2,15 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ActivityPayload } from '@module/activities/utils/schema'
 
-import ActivityFormCardWrapper from '../activity-form-card-wrapper'
-import { RichTextEditor } from '@module/tours/forms/fields'
+import FormSectionWrapper from '@/components/form-section-wrapper'
+import { RichTextEditor } from '@/components/form'
 
 
 const ActivityDetailsSection: React.FC = () => {
     const { control } = useFormContext<ActivityPayload>();
 
     return (
-        <ActivityFormCardWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
+        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
             <Controller
                 control={control}
                 name='description'
@@ -35,7 +35,7 @@ const ActivityDetailsSection: React.FC = () => {
                     />
                 )}
             />
-        </ActivityFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

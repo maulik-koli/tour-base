@@ -7,7 +7,7 @@ import { useToast } from '@/hooks/useToast'
 import { useSubmitTour } from '@module/tours/hooks/useSubmitTour'
 import { CreateTourFormType, createTourSchema } from '@module/tours/utils/schema'
 import { GetTourResponse } from '@module/tours/api/types'
-import { flatZodError } from '@/lib/flatZodError'
+import { flatZodError } from '@/lib/zod/flatZodError'
 import { logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'

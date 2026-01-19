@@ -4,9 +4,8 @@ import { CreateTourFormType, DEFAILT_DAY_PLAN } from '@module/tours/utils/schema
 
 import Icon from '@/components/icons';
 import CollapsibleComponent from '@ui/collapsible/index';
-import TourFormCardWrapper from '../tour-form-card-wrapper'
-import { RichTextEditor } from '@module/tours/forms/fields';
-import { InputField } from '@/components/form';
+import FormSectionWrapper from '@/components/form-section-wrapper';
+import { InputField, RichTextEditor } from '@/components/form';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
 import { cn } from '@/lib/utils';
@@ -22,7 +21,7 @@ const ToursFormDaysSections: React.FC = () => {
 
 
     return (
-        <TourFormCardWrapper
+        <FormSectionWrapper
             cardTitle="Days Plan"
             contentClassName='flex flex-col gap-4'
             isChildrenEmpty={fields.length === 0}
@@ -109,7 +108,7 @@ const ToursFormDaysSections: React.FC = () => {
                     }
                 })}
             />
-        </TourFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

@@ -7,15 +7,15 @@ import { TourStarHirarchyOptions } from '@/constants/selectOptions';
 import { usePackageActions } from '@module/packages/hooks/usePackageActions';
 import { PackageFieldType } from '@module/packages/utils/helper';
 import { useModelStore } from '@/store';
+import { cn, logger } from '@/lib/utils';
 
 import Icon from '@/components/icons';
-import TourFormCardWrapper from '../tour-form-card-wrapper';
 import CollapsibleComponent from '@ui/collapsible/index';
+import FormSectionWrapper from '@/components/form-section-wrapper';
 import { InputField, CounterInput, SelectField } from '@/components/form';
 import { HotelInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
-import { cn, logger } from '@/lib/utils';
 
 interface TourFormPackageSectionProps {
     type?: 'create' | 'update';
@@ -92,7 +92,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
 
 
     return (
-        <TourFormCardWrapper 
+        <FormSectionWrapper 
             cardTitle="Packages" 
             contentClassName='flex flex-col gap-4'
             isChildrenEmpty={fields.length === 0}
@@ -270,7 +270,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                     }
                 })}
             />
-        </TourFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

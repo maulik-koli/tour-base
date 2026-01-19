@@ -3,16 +3,15 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { CreateTourFormType } from '@module/tours/utils/schema'
 
-import TourFormCardWrapper from '../tour-form-card-wrapper'
-import { ImageUploadGrid } from '@module/tours/forms/fields'
-import { ImageDropzone } from '@/components/form'
+import FormSectionWrapper from '@/components/form-section-wrapper'
+import { ImageDropzone, ImageUploadGrid } from '@/components/form'
 
 
 const TourImageSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <TourFormCardWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
             <ImageUploadGrid
                 control={control}
                 name="tour.images"
@@ -38,7 +37,7 @@ const TourImageSection: React.FC = () => {
                     />
                 )}
             />
-        </TourFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

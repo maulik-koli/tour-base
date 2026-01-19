@@ -4,8 +4,8 @@ import { FormProvider, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useToast } from '@/hooks/useToast'
 import { useSubmitActivity } from '@module/activities/hooks/useSubmitActivity'
-import { ActivityPayload, activityZodSchema, defaultActivityFormValues } from '@module/activities/utils/schema'
-import { flatZodError } from '@/lib/flatZodError'
+import { ActivityPayload, activitySchema, defaultActivityFormValues } from '@module/activities/utils/schema'
+import { flatZodError } from '@/lib/zod/flatZodError'
 import { logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'
@@ -20,7 +20,7 @@ import {
 
 const CreateActivityForm: React.FC = () => {
     const form = useForm<ActivityPayload>({
-        resolver: zodResolver(activityZodSchema),
+        resolver: zodResolver(activitySchema),
         mode: 'onSubmit',
         defaultValues: defaultActivityFormValues
     })
@@ -31,7 +31,7 @@ const CreateActivityForm: React.FC = () => {
     useEffect(() => {
         if(Object.keys(form.formState.errors).length > 0) {
             logger("Form data", form.getValues())
-            const error = flatZodError(activityZodSchema, form.getValues())
+            const error = flatZodError(activitySchema, form.getValues())
             if(error) toast.error(error)
         }
     }, [form.formState.errors]);

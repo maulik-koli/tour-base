@@ -19,7 +19,7 @@ import categoryRoutes from '@api/modules/category/category.routes';
 import bookingRoutes from '@api/modules/booking/booking.routes';
 import paymentRoutes from '@api/modules/payment/payment.routes';
 import whatsappRoutes from '@api/modules/whatsapp/whatsapp.routes';
-import activityRoutes from '@api/modules/activities/activity.routes';
+import activityRoutes from '@/api/modules/activity/activity.routes';
 
 
 const app: Application = express();

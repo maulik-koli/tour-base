@@ -2,7 +2,7 @@ import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { ActivityPayload } from '@module/activities/utils/schema'
 
-import ActivityFormCardWrapper from '../activity-form-card-wrapper'
+import FormSectionWrapper from '@/components/form-section-wrapper'
 import { InputField } from '@/components/form'
 import { FieldLabel } from '@ui/field'
 import { Typography } from '@ui/typography'
@@ -13,7 +13,7 @@ const ActivityOverviewSection: React.FC = () => {
     const { control } = useFormContext<ActivityPayload>();
 
     return (
-        <ActivityFormCardWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
             <Controller
                 control={control}
                 name='title'
@@ -80,7 +80,7 @@ const ActivityOverviewSection: React.FC = () => {
                     )}
                 />
             </div>
-        </ActivityFormCardWrapper>
+        </FormSectionWrapper>
     )
 }
 

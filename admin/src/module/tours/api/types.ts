@@ -26,6 +26,8 @@ export interface GetToursParams {
     limit?: number;
 }
 
+export type TourFilterFields = keyof GetToursParams;
+
 export interface GetToursResponse {
     pagination: PaginationType;
     tours: TourListType[];
