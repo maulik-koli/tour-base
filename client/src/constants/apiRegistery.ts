@@ -8,6 +8,9 @@ export const QUERY_REGISTRY = {
     getCategories: 'get-categories',
     
     getBookingData: "get-booking-data",
+
+    getActivities: 'get-activities',
+    getActivityDetails: 'get-activity-details',
 } as const;
 
 

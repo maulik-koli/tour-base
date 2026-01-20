@@ -11,6 +11,7 @@ import { Button } from '@ui/button'
 const HEADER_DATA = [
     { title: 'Home', href: '/' },
     { title: 'Tours', href: '/tours' },
+    { title: 'Activities', href: '/activities' },
     { title: 'Your Booking', href: '/your-booking' },
     { title: 'Contact', href: '/contact-us' },
 ]

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Typography } from '@ui/typography';
+import PageHeader from '@/components/page-header';
 
 export const metadata = {
     title: "Terms and Conditions",
@@ -12,18 +13,15 @@ export const metadata = {
 
 const TermsAndConditionsPage: React.FC = () => {
     return (
-        <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-20'>
+        <div className='min-h-screen bg-background'>
+            <PageHeader 
+                title="Terms & Conditions"
+                subtitle="Please read these terms and conditions carefully before booking any tour with us. By making a booking, you agree to be bound by these terms."
+                align="center"
+            />
+            
+            <div className='py-12 px-4 sm:px-6 lg:px-20'>
             <div className='max-w-5xl mx-auto'>
-                <div className='mb-12 pb-8 border-b border-border'>
-                    <Typography variant="h1" className='mb-4'>
-                        Terms & Conditions
-                    </Typography>
-                    <Typography variant="muted" className='text-base'>
-                        Please read these terms and conditions carefully before booking any tour with us.
-                        By making a booking, you agree to be bound by these terms.
-                    </Typography>
-                </div>
-
                 <section className='mb-10'>
                     <Typography variant="h2" className='mb-6 text-primary'>
                         General Terms
@@ -355,6 +353,7 @@ const TermsAndConditionsPage: React.FC = () => {
                         For any queries regarding these terms and conditions, please contact our customer support.
                     </Typography>
                 </div>
+            </div>
             </div>
         </div>
     );

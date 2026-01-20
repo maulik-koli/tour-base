@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { useTourFilters } from '@/hooks/useTourFilters'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { PaginationType } from '@/types/api'
 import {
     Pagination,
@@ -18,13 +18,23 @@ interface PaginationComponentProps {
 
 
 const PaginationComponent: React.FC<PaginationComponentProps> = ({ pagination }) => {
-    const { filter, applyFilters } = useTourFilters()
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
     const { page, totalPages, isPrevPage, isNextPage } = pagination
 
     const handlePageChange = (newPage: number) => {
-        applyFilters({ ...filter, page: newPage }, false)
-        window.scrollTo({ top: 0, behavior: 'smooth' })
+        const params = new URLSearchParams(searchParams.toString());
+        
+        if (newPage > 1) {
+            params.set('page', String(newPage));
+        } else {
+            params.delete('page');
+        }
+        
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     const getVisiblePages = (): number[] => {

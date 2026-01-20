@@ -61,7 +61,7 @@ export const deleteActivity = async (slug: string) => {
 };
 
 
-export const getActivitiesList = async (query: ActivityListQueries) => {
+export const getActivitiesList = async (query: ActivityListQueries, filterQuery?: Partial<ActivityLean>) => {
     const { page, limit, search } = query;
 
     const skip = (page - 1) * limit;
@@ -69,8 +69,13 @@ export const getActivitiesList = async (query: ActivityListQueries) => {
     const filter: any = {};
 
     if (search) {
-        filter.title = { $regex: search, $options: "i" };
+        filter.$or = [
+            { title: { $regex: search, $options: "i" } },
+            { city: { $regex: search, $options: "i" } }
+        ];
     }
+
+    Object.assign(filter, filterQuery);
 
     const activities = await Activity.find(filter)
         .select('title slug subtitle city pricePerPerson thumbnailImage isActive updatedAt')

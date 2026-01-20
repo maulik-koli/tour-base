@@ -24,7 +24,7 @@ export const createActivityController = asyncWrapper(async (req, res) => {
 });
 
 
-export const getActivityController = asyncWrapper(async (req, res) => {
+export const getActivityAdminController = asyncWrapper(async (req, res) => {
     const slug = req.params.slug;
 
     const activity = await findActivity({ slug });
@@ -64,10 +64,40 @@ export const deleteActivityController = asyncWrapper(async (req, res) => {
 });
 
 
-export const getActivitiesListController = asyncWrapper(async (req, res) => {
+export const getActivitiesListAdminController = asyncWrapper(async (req, res) => {
     const query = req.localsQuery as ActivityListQueries;
 
     const { activities, pagination } = await getActivitiesList(query);
+
+    successResponse(res, {
+        message: "Activities list fetched successfully",
+        status: 200,
+        data: { activities, pagination },
+    });
+});
+
+
+export const getActivityController = asyncWrapper(async (req, res) => {
+    const slug = req.params.slug;
+
+    const activity = await findActivity({ 
+        slug,
+        isActive: true,
+    });
+
+    successResponse(res, {
+        message: "Activity fetched successfully",
+        status: 200,
+        data: activity,
+    });
+});
+
+
+export const getActivitiesListController = asyncWrapper(async (req, res) => {
+    const query = req.localsQuery as ActivityListQueries;
+    const { activities, pagination } = await getActivitiesList(query, {
+        isActive: true,
+    });
 
     successResponse(res, {
         message: "Activities list fetched successfully",
