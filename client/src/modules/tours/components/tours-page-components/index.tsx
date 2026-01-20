@@ -4,9 +4,9 @@ import { PaginationType } from '@/types/api';
 
 import TourListGrid from '../tour-list-grid';
 import TourFilterHeader from '../tour-filter-header';
-import PaginationComponent from '@modules/tours/components/tour-pagination';
+import PaginationComponent from '@/components/pagination';
+import PageHeader from '@/components/page-header';
 import { CustomSpinner } from '@ui/spinner';
-import { Typography } from '@ui/typography';
 
 export type ViewMode = 'grid' | 'list';
 
@@ -20,16 +20,14 @@ const TourPageComponent: React.FC = () => {
     }
 
     return (
-        <div className='pt-4 md:pt-6 lg:pt-8 pb-8 md:pb-12 lg:pb-16 px-4 md:px-12 lg:px-20 flex flex-col gap-4 md:gap-6 bg-backgroud'>
-            <div className='flex flex-col gap-2'>
-                <Typography variant="h1" className='font-semibold'>
-                    Explore Our Tours
-                </Typography>
-                <Typography variant="h4" className='text-muted-foreground font-normal'>
-                    Discover amazing destinations and create unforgettable memories
-                </Typography>
-            </div>
-
+        <div className='bg-backgroud'>
+            <PageHeader 
+                title="Explore Our Tours"
+                subtitle="Discover amazing experiences and adventures in beautiful destinations"
+                align="left"
+            />
+            
+            <div className='px-4 md:px-12 lg:px-20 pt-6 md:pt-8 pb-8 md:pb-12 lg:pb-16 flex flex-col gap-4 md:gap-6'>
             <Suspense fallback={<div><CustomSpinner /></div>}>
                 <TourFilterHeader viewMode={viewMode} onToggleViewMode={toggleViewMode} />
             </Suspense>
@@ -39,6 +37,7 @@ const TourPageComponent: React.FC = () => {
             </Suspense>
 
             {pagination && <PaginationComponent pagination={pagination} />}
+            </div>
         </div>
     )
 }

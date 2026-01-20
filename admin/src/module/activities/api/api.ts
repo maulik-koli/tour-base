@@ -20,12 +20,12 @@ export const createActivity = async (payload: CreateActivityPayload): Promise<Ap
 }
 
 export const getActivities = async (params?: GetActivitiesParams): Promise<ApiResponse<GetActivitiesResponse>> => {
-    const res = await api.get("/activity", { params });
+    const res = await api.get("/activity/admin/list", { params });
     return res.data;
 }
 
 export const getActivity = async (param: GetActivityParam): Promise<ApiResponse<GetActivityResponse>> => {
-    const res = await api.get(`/activity/${param.slug}`);
+    const res = await api.get(`/activity/admin/${param.slug}`);
     return res.data;
 }
 

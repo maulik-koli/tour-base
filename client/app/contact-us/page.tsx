@@ -1,6 +1,7 @@
 import React from "react";
 import Icon, { IconName } from "@/components/icons";
 import { Typography } from "@ui/typography";
+import PageHeader from "@/components/page-header";
 
 const CONTACT_US_PAGE_DATA: { icon: IconName, title: string, subtitle: string }[] = [
     {
@@ -30,17 +31,15 @@ export const metadata = {
 
 const ContactUsPage: React.FC = () => {
     return (
-        <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-20'>
+        <div className='min-h-screen bg-background'>
+            <PageHeader 
+                title="Get In Touch"
+                subtitle="We're here to help you plan your perfect journey. Reach out to us anytime!"
+                align="center"
+            />
+            
+            <div className='py-12 px-4 sm:px-6 lg:px-20'>
             <div className='max-w-7xl mx-auto'>
-                <div className='mb-12 text-center'>
-                    <Typography variant="h1" className='mb-4'>
-                        Get In Touch
-                    </Typography>
-                    <Typography variant="muted" className='text-base max-w-2xl mx-auto'>
-                        We're here to help you plan your perfect journey. Reach out to us anytime!
-                    </Typography>
-                </div>
-
                 <div className='grid lg:grid-cols-2 gap-8 mb-12'>
                     <div className='bg-linear-to-br from-primary/5 via-primary/10 to-secondary/10 rounded-2xl p-8 lg:p-10 h-fit border-2 border-primary/20 shadow-lg'>
                         <Typography variant="h2" className='mb-8 text-primary'>
@@ -228,6 +227,7 @@ const ContactUsPage: React.FC = () => {
                         ))}
                     </div>
                 </section>
+            </div>
             </div>
         </div>
     )

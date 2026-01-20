@@ -1,5 +1,6 @@
 import React from 'react'
 import { Typography } from '@ui/typography'
+import PageHeader from '@/components/page-header'
 
 export const metadata = {
     title: "Refund Policy",
@@ -12,18 +13,15 @@ export const metadata = {
 
 const RefundPolicy: React.FC = () => {
     return (
-        <div className='min-h-screen bg-background py-12 px-4 sm:px-6 lg:px-20'>
+        <div className='min-h-screen bg-background'>
+            <PageHeader 
+                title="Refund Policy"
+                subtitle="Understanding our cancellation and refund terms to help you make informed booking decisions"
+                align="center"
+            />
+            
+            <div className='py-12 px-4 sm:px-6 lg:px-20'>
             <div className='max-w-5xl mx-auto'>
-                {/* Header Section */}
-                <div className='mb-12 pb-8 border-b border-border'>
-                    <Typography variant="h1" className='mb-4'>
-                        Refund Policy
-                    </Typography>
-                    <Typography variant="muted" className='text-base'>
-                        Understanding our cancellation and refund terms to help you make informed booking decisions.
-                    </Typography>
-                </div>
-
                 {/* Cancellation Timeline */}
                 <section className='mb-10'>
                     <Typography variant="h2" className='mb-6 text-primary'>
@@ -270,6 +268,7 @@ const RefundPolicy: React.FC = () => {
                         For cancellation requests or refund inquiries, please contact our customer support.
                     </Typography>
                 </div>
+            </div>
             </div>
         </div>
     )

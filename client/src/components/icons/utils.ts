@@ -58,7 +58,10 @@ import {
     Mail,
     MapPin,
     Users,
-    ExternalLink
+    ExternalLink,
+    ChevronLeft,
+    ChevronRight,
+    Sparkles
 } from "lucide-react"
 import { FaceBookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, YouTubeIcon } from "./custom"
 
@@ -123,7 +126,10 @@ export const LUCIDE_ICON_MAP = {
     Mail,
     MapPin,
     Users,
-    ExternalLink
+    ExternalLink,
+    ChevronLeft,
+    ChevronRight,
+    Sparkles
 }
 
 

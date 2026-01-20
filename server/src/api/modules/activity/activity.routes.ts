@@ -2,7 +2,9 @@ import express from "express";
 import { 
     createActivityController, 
     deleteActivityController, 
+    getActivitiesListAdminController, 
     getActivitiesListController, 
+    getActivityAdminController, 
     getActivityController, 
     updateActivityController 
 } from "./activity.controller";
@@ -32,6 +34,19 @@ router.delete(
     deleteActivityController
 );
 
+router.get(
+    "/admin/list",
+    authMiddleware,
+    validateQuery(activityListQueriesZodSchema),
+    getActivitiesListAdminController
+);
+
+router.get(
+    "/admin/:slug",
+    authMiddleware,
+    getActivityAdminController
+);
+
 // public api
 router.get(
     "/",
@@ -43,5 +58,6 @@ router.get(
     "/:slug",
     getActivityController
 );
+
 
 export default router;
