@@ -1,10 +1,17 @@
 import { z } from "zod";
+import { PackageCategoryValues } from "./packge.utils";
 
 const hotelZodSchema = z.object({
     hotelName: z.string().min(2, 'Hotel name must be at least 2 characters').trim(),
     city: z.string().min(2, 'City must be at least 2 characters').trim(),
     nightNo: z.number().int().min(1, 'Night number must be positve and at least 1'),
 });
+
+const priceSlotZodSchema = z.object({
+    persons: z.number().int().min(2, 'Persons must be positive and at least 2').max(12, 'Persons must be at most 12'),
+    price: z.number().int().min(1, 'Price must be positive and greater than zero'),
+});
+
 
 export const packageZodSchema = z.object({
     name: z.string().min(3, 'Package name must be at least 3 characters').trim(),
@@ -13,14 +20,13 @@ export const packageZodSchema = z.object({
 
     pricePerPerson: z.number().int().min(1, 'Price per person must be positive and greater than zero'),
     childrenPrice: z.number().int().min(0, 'Children price must be positive or zero'),
-    starHierarchy: z.number()
-        .int()
-        .min(1, 'Star number must be at least 1')
-        .max(5, 'Star number must be at most 5'),
+    priceSlots: z.array(priceSlotZodSchema).length(11, 'There must be exactly 11 price slots'),
+    category: z.enum(PackageCategoryValues, 'Invalid package category'),
 
     startCity: z.string().min(2, 'Start city must be at least 2 characters').trim(),
     endCity: z.string().min(2, 'End city must be at least 2 characters').trim(),
     hotels: z.array(hotelZodSchema),
 });
 
+export type PackagePriceSolt = z.infer<typeof priceSlotZodSchema>;
 export type PackagePayload = z.infer<typeof packageZodSchema>;

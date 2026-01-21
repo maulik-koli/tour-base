@@ -3,7 +3,7 @@ import React from 'react'
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import { CreateTourFormType } from '@module/tours/utils/schema';
 import { DEFAULT_PACKAGE } from '@module/packages/utils/schema';
-import { TourStarHirarchyOptions } from '@/constants/selectOptions';
+import { PackageCategoryOptions } from '@/constants/selectOptions';
 import { usePackageActions } from '@module/packages/hooks/usePackageActions';
 import { PackageFieldType } from '@module/packages/utils/helper';
 import { useModelStore } from '@/store';
@@ -16,6 +16,7 @@ import { InputField, CounterInput, SelectField } from '@/components/form';
 import { HotelInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
+import PriceSlotInput from '../../fields/price-slot-input';
 
 interface TourFormPackageSectionProps {
     type?: 'create' | 'update';
@@ -222,13 +223,14 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                 <div className='grid grid-cols-3 gap-6'>
                                     <Controller
                                         control={control}
-                                        name={`packages.${index}.starHierarchy`}
+                                        name={`packages.${index}.category`}
                                         render={({ field }) => (
                                             <SelectField
-                                                label="Star"
-                                                options={TourStarHirarchyOptions}
-                                                onChange={(value) => field.onChange(Number(value))}
-                                                value={field.value.toString()}
+                                                label="Star Category"
+                                                placeholder="Select star category"
+                                                options={PackageCategoryOptions}
+                                                onChange={field.onChange}
+                                                value={field.value}
                                                 containerClass='min-w-50'
                                             />
                                         )}
@@ -264,6 +266,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         )}
                                     />
                                 </div>
+                                <PriceSlotInput packageIndex={index} />
                                 <HotelInput packageIndex={index} />
                             </div>
                         )

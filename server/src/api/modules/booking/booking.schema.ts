@@ -33,7 +33,8 @@ export const customerDetailsZodSchema = z.object({
         fullName: z.string().min(3, 'Full name must be at least 3 characters').trim(),
         age: z.number().int().min(0, 'Age must be at least 0').max(120, 'Age must be at most 120'),
         gender: z.enum(["M", "F"]),
-    })).min(1, 'At least one member is required'),
+    })).min(1, 'At least one member is required')
+       .max(12, 'At most 12 members are allowed'),
 });
 
 

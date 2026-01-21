@@ -1,5 +1,15 @@
 import { PackageFormType } from "../utils/schema";
 
+export enum PackageCategory {
+    BUDGET = 'BUDGET',
+    DELUXE = 'DELUXE',
+    PREMIUM = 'PREMIUM',
+    DIAMOND = 'DIAMOND',
+}
+
+export type PackageCategoryType = keyof typeof PackageCategory;
+export const PackageCategoryValues = Object.values(PackageCategory);
+
 export interface PackageResponse extends PackageFormType {
     _id: string;
     tourId: string;

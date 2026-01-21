@@ -14,7 +14,8 @@ export const preparePackagePayload = (data: PackageFieldType): PackageFormType =
         nights: data.nights,
         pricePerPerson: data.pricePerPerson,
         startCity: data.startCity,
-        starHierarchy: data.starHierarchy,
+        priceSlots: data.priceSlots,
+        category: data.category,
         childrenPrice: data.childrenPrice,
     }
 }
