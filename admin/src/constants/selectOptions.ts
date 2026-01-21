@@ -1,3 +1,4 @@
+import { PackageCategory } from "@module/packages/api/types";
 
 export const SortingOptions = [
     { label: 'Recently Created', value: 'createdAt_desc' },
@@ -15,10 +16,9 @@ export const BookingStatusOptions: { label: string, value: string }[]= [
     { label: 'None', value: 'NONE' },
 ];
 
-export const TourStarHirarchyOptions = [
-    { label: '5 Star', value: "5" },
-    { label: '4 Star', value: "4" },
-    { label: '3 Star', value: "3" },
-    { label: '2 Star', value: "2" },
-    { label: '1 Star', value: "1" },
+export const PackageCategoryOptions = [
+    { label: 'Diamond 5*', value: PackageCategory.DIAMOND },
+    { label: 'Premium 4*', value: PackageCategory.PREMIUM },
+    { label: 'Deluxe 3*', value: PackageCategory.DELUXE },
+    { label: 'Budget 2*', value: PackageCategory.BUDGET },
 ];

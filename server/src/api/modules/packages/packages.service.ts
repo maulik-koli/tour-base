@@ -1,7 +1,7 @@
 import mongoose, { Types } from "mongoose";
 import Package, { TourPackageFields, TourPackageLean } from "./packages.model";
 import Tour from "../tour/tour.model";
-import { PackagePayload } from "./packages.schema";
+import { PackagePayload, PackagePriceSolt } from "./packages.schema";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 
@@ -9,6 +9,28 @@ type AddPackageTourType = {
     tourId: Types.ObjectId;
     numberOfDays: number;
 }
+
+const validatePriceSlot = function(priceSlots: PackagePriceSolt[], end = 12, start = 2) {
+    const expectedLength = end - start + 1;
+
+    if (priceSlots.length !== expectedLength) return false;
+
+    const persons = priceSlots
+        .map(slot => slot.persons)
+        .sort((a, b) => a - b);
+
+    if (persons[0] !== start) return false;
+    if (persons[persons.length - 1] !== end) return false;
+
+    for (let i = 1; i < persons.length; i++) {
+        if (persons[i] !== persons[i - 1] + 1) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 const validatePackages = function(packages: PackagePayload[], tourDays: number) {
     const invalidPackages = packages
@@ -22,13 +44,22 @@ const validatePackages = function(packages: PackagePayload[], tourDays: number) 
             return invalidByDays || invalidByNights;
         })
         .map(pckg => pckg.name);
-
-    log.info('Invalid Packages:', invalidPackages);
-
+    
     if (invalidPackages.length > 0) {
         throw new CustomError(
             400, 
             `Number of days or nights are mismatch. Please check number of days plan with package days or number of total hotels nights with package nights.`
+        );
+    }
+    
+    const isPriceSlotValid = packages.every(pkg =>
+        validatePriceSlot(pkg.priceSlots)
+    );
+
+    if (!isPriceSlotValid) {
+        throw new CustomError(
+            400,
+            'Price slots are invalid. Please ensure price slots cover persons from 2 to 12 with no missing or duplicate values.'
         );
     }
 }

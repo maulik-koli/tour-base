@@ -1,5 +1,5 @@
 import { model, Schema, Types } from "mongoose";
-
+import { PackageCategoryType, PackageCategoryValues } from "./packge.utils";
 
 export interface IHotelPlan {
     hotelName: string;
@@ -11,6 +11,15 @@ interface HotelPlanDocument extends IHotelPlan, Document {
     _id: Types.ObjectId;
 }
 
+export interface IPricingSlot {
+    persons: number;
+    price: number;
+}
+
+interface PricingSlotDocument extends IPricingSlot, Document {
+    _id: Types.ObjectId;
+}
+
 export interface ITourPackage {
     tourId: Types.ObjectId;
     name: string;
@@ -19,7 +28,8 @@ export interface ITourPackage {
 
     pricePerPerson: number;
     childrenPrice: number;
-    starHierarchy: number; // hierarchy of the package value
+    priceSlots: IPricingSlot[];
+    category: PackageCategoryType;
     
     startCity: string;
     endCity: string;
@@ -51,6 +61,15 @@ const hotelSchema = new Schema<HotelPlanDocument>({
 });
 
 
+const priceSlotSchema = new Schema<PricingSlotDocument>({
+    persons: { type: Number, required: true },
+    price: { type: Number, required: true },
+}, {
+    versionKey: false,
+    _id: false,
+});
+
+
 const packageSchema = new Schema<TourPackageDocument>({
     tourId: { type: Schema.Types.ObjectId, required: true, ref: 'Tour' },
     name: { type: String, required: true },
@@ -59,7 +78,8 @@ const packageSchema = new Schema<TourPackageDocument>({
 
     pricePerPerson: { type: Number, required: true },
     childrenPrice: { type: Number, required: true },
-    starHierarchy: { type: Number, required: true },
+    priceSlots: { type: [priceSlotSchema], default: [] },
+    category: { type: String, enum: PackageCategoryValues, required: false }, // temporary not required
 
     startCity: { type: String, required: true },
     endCity: { type: String, required: true },
@@ -68,7 +88,6 @@ const packageSchema = new Schema<TourPackageDocument>({
     versionKey: false,
     timestamps: true,
 });
-
 
 packageSchema.index({ tourId: 1 });
 
