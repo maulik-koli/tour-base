@@ -424,3 +424,38 @@ export const getFeaturedTours = async () => {
 
     return tours;
 }
+
+
+export const getAllToursWithReviewCount = async () => {
+    return await Tour.aggregate([
+        {
+            $lookup: {
+                from: "reviews",
+                let: { tourId: "$_id" },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: { $eq: ["$tourId", "$$tourId"] }
+                        }
+                    },
+                    { $count: "count" }
+                ],
+                as: "reviews"
+            }
+        },
+        {
+            $addFields: {
+                reviewCount: {
+                    $ifNull: [{ $arrayElemAt: ['$reviews.count', 0] }, 0]
+                }
+            }
+        },
+        {
+            $project: {
+                name: 1,
+                slug: 1,
+                reviewCount: 1
+            }
+        }
+    ]);
+}

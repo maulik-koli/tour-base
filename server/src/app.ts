@@ -20,6 +20,7 @@ import bookingRoutes from '@api/modules/booking/booking.routes';
 import paymentRoutes from '@api/modules/payment/payment.routes';
 import whatsappRoutes from '@api/modules/whatsapp/whatsapp.routes';
 import activityRoutes from '@/api/modules/activity/activity.routes';
+import reviewRoutes from '@/api/modules/review/review.routes';
 
 
 const app: Application = express();
@@ -87,6 +88,7 @@ app.use('/api/booking', bookingRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/activity', activityRoutes);
+app.use('/api/review', reviewRoutes);
 
 
 // test route
