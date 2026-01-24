@@ -15,7 +15,7 @@ export const createReviewController = asyncWrapper(async (req, res) => {
     successResponse(res, {
         message: "Review created successfully",
         status: 201,
-        data: review,
+        data: null,
     });
 });
 
@@ -50,19 +50,19 @@ export const deleteReviewController = asyncWrapper(async (req, res) => {
 export const getReviewsByTourController = asyncWrapper(async (req, res) => {
     const tourId = req.params.tourId;
 
-    const reviews = await getReviewsByTourId(tourId);
+    const { reviews, tour } = await getReviewsByTourId(tourId);
 
     successResponse(res, {
         message: "Reviews fetched successfully",
         status: 200,
-        data: reviews,
+        data: { reviews, tour },
     });
 });
 
 
 export const getTousWithReviewCountsCotroller = asyncWrapper(async (req, res) => {
     const params = req.localsQuery as TourListWithReviewsParams;
-    const tours = await getAllToursWithReviewCount();
+    const tours = await getAllToursWithReviewCount(params);
     
     successResponse(res, {
         message: "Reviews fetched successfully",

@@ -5,7 +5,7 @@ const mb2 = 2 * 1024 * 1024 // 2 MB
 
 // export const Image_FORMATE = ['jpg', 'jpeg', 'png', 'webp'] as const;
 const UPLOAD_CONFIGS_TYPES = [
-    "tours", "tour-thumbnails", "tour-slider", "categories", "activities", "activity-thumbnails", "default"
+    "tours", "tour-thumbnails", "tour-slider", "categories", "activities", "activity-thumbnails", "reviews", "default"
 ] as const;
 
 export type UploadConfigsType = typeof UPLOAD_CONFIGS_TYPES[number];
@@ -18,6 +18,7 @@ export const UPLOAD_CONFIG: Record<UploadConfigsType, number> = {
     'categories': mb3,
     'activities': mb3,
     'activity-thumbnails': mb3,
+    'reviews': mb2,
     'default': mb2,
 };
 

@@ -20,7 +20,7 @@ export const packageZodSchema = z.object({
 
     pricePerPerson: z.number().int().min(1, 'Price per person must be positive and greater than zero'),
     childrenPrice: z.number().int().min(0, 'Children price must be positive or zero'),
-    priceSlots: z.array(priceSlotZodSchema).length(11, 'There must be exactly 11 price slots'),
+    priceSlots: z.array(priceSlotZodSchema).max(11, 'At most 11 price slots are allowed'),
     category: z.enum(PackageCategoryValues, 'Invalid package category'),
 
     startCity: z.string().min(2, 'Start city must be at least 2 characters').trim(),
