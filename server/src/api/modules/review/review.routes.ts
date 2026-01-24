@@ -13,7 +13,7 @@ import { authMiddleware } from "@/api/middlewares/auth.middleware";
 const router = express.Router();
 
 router.post(
-    "/:tourId",
+    "/tours/:tourId",
     authMiddleware,
     validateRequest(reviewZodSchema),
     createReviewController
@@ -26,9 +26,8 @@ router.get(
     getTousWithReviewCountsCotroller
 );
 
-
 router.get(
-    "/:tourId",
+    "/tours/:tourId",
     authMiddleware,
     getReviewsByTourController
 );

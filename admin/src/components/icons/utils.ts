@@ -37,6 +37,13 @@ import {
     Underline,
     Link,
     Palette,
+    Eye,
+    Star,
+    Check,
+    ChevronUp,
+    ChevronDown,
+    ArrowLeft,
+    SquareStar
 } from "lucide-react"
 
 
@@ -79,4 +86,11 @@ export const LUCIDE_ICON_MAP = {
     Underline,
     Link,
     Palette,
+    Eye,
+    Star,
+    Check,
+    ChevronUp,
+    ChevronDown,
+    ArrowLeft,
+    SquareStar
 }

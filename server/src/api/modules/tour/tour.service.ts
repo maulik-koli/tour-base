@@ -7,6 +7,7 @@ import { CustomError } from "@/api/utils/response";
 import { ADMIN_SORT_FIELD_MAP, DURATION_MAP, SORT_FIELD_MAP } from "./tour.utils";
 import { PaginationType } from "@/api/core/types/common.type";
 import { slugify } from "@/api/core/helper/data.helper";
+import { TourListWithReviewsParams } from "../review/review.schema";
 
 
 export const createTour = async (payload: CreateTourPayload) => {
@@ -426,8 +427,19 @@ export const getFeaturedTours = async () => {
 }
 
 
-export const getAllToursWithReviewCount = async () => {
-    return await Tour.aggregate([
+export const getAllToursWithReviewCount = async (params: TourListWithReviewsParams) => {
+    const { page, limit, search } = params;
+
+    const skip = (page - 1) * limit;
+
+    const matchStage: any = {};
+    
+    if (search) {
+        matchStage.name = { $regex: search, $options: "i" };
+    }
+    
+    const result = await Tour.aggregate([
+        ...(Object.keys(matchStage).length > 0 ? [{ $match: matchStage }] : []),
         {
             $lookup: {
                 from: "reviews",
@@ -451,11 +463,35 @@ export const getAllToursWithReviewCount = async () => {
             }
         },
         {
-            $project: {
-                name: 1,
-                slug: 1,
-                reviewCount: 1
+            $facet: {
+                metadata: [{ $count: "total" }],
+                data: [
+                    { $skip: skip },
+                    { $limit: limit },
+                    {
+                        $project: {
+                            name: 1,
+                            slug: 1,
+                            reviewCount: 1
+                        }
+                    }
+                ]
             }
         }
     ]);
+
+    const tours = result[0]?.data || [];
+    const total = result[0]?.metadata[0]?.total || 0;
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination: PaginationType = {
+        page,
+        limit,
+        totalItems: total,
+        totalPages,
+        isNextPage: page < totalPages,
+        isPrevPage: page > 1,
+    };
+
+    return { tours, pagination };
 }

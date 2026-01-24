@@ -16,6 +16,9 @@ export const QUERY_REGISTRY = {
 
     getActivities: "get-activities",
     getActivity: "get-activity",
+
+    getTourReviewList: "get-tour-review-list",
+    getTourReviews: "get-tour-reviews",
 }
 
 
@@ -44,4 +47,8 @@ export const MUTATION_REGISTRY = {
     createActivity: "create-activity",
     updateActivity: "update-activity",
     deleteActivity: "delete-activity",
+
+    createReview: "create-review",
+    updateReview: "update-review",
+    deleteReview: "delete-review",
 };
