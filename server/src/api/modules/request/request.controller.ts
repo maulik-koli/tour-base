@@ -55,11 +55,7 @@ export const adminCloseRequestController = asyncWrapper(async (req, res) => {
 export const generateOtpController = asyncWrapper(async (req, res) => {
     const payload = req.body as GenerateOtpPayload;
 
-    const result = await createOtpRequest({
-        phone: payload.phone,
-        travelDate: payload.travelDate,
-        requestType: payload.requestType,
-    });
+    const result = await createOtpRequest(payload);
 
     successResponse(res, {
         message: "OTP sent successfully",

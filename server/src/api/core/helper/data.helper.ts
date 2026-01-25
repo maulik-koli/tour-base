@@ -21,3 +21,21 @@ export const embededYoutubeUrl = (videoUrl: string | null): string | null => {
         return videoUrl;
     }
 }
+
+
+export const normalizeDateRange = (date: Date | string) => {
+    const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(date);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
+    return { startOfDay, endOfDay };
+}
+
+
+export const normalizeDate = (date: Date | string): Date => {
+    const normalized = new Date(date);
+    normalized.setUTCHours(0, 0, 0, 0);
+    return normalized;
+}

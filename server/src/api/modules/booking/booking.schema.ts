@@ -1,19 +1,13 @@
 import { z } from "zod";
 import { Types } from "mongoose";
 import { bookingStatusEnum, paymentOptionsEnum } from "./booking.model";
+import { phoneNumberSchema } from "@/api/core/validation/customer.schema";
 
 const mongoIdSchema = (field: string) => z
     .string()
     .refine((val) => Types.ObjectId.isValid(val), {
         message:  `Invalid ${field} ID`,
     });
-
-const phoneNumberSchema = z.string()
-    .trim()
-    .refine((val) => /^\d{10}$/.test(val), {
-        message: 'Phone number must be exactly 10 digits',
-    });
-
 
 export const createBookingZodSchema = z.object({
     tourId: mongoIdSchema("tour"),

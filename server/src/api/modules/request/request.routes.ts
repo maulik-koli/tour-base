@@ -38,7 +38,7 @@ router.patch(
 // ==================== User Routes ====================
 
 router.post(
-    "/otp/generate",
+    "/otp-generate",
     validateRequest(generateOtpZodSchema),
     generateOtpController
 );
@@ -49,7 +49,7 @@ router.get(
 );
 
 router.post(
-    "/otp/verify",
+    "/otp-verify",
     validateRequest(verifyOtpZodSchema),
     verifyOtpController
 );
