@@ -1,11 +1,6 @@
 import { z } from "zod";
 import { resquestEnum } from "./request.model";
-
-const phoneNumberSchema = z.string()
-    .trim()
-    .refine((val) => /^\d{10}$/.test(val), {
-        message: 'Phone number must be exactly 10 digits',
-    });
+import { phoneNumberSchema } from "@/api/core/validation/customer.schema";
 
 
 export const generateOtpZodSchema = z.object({

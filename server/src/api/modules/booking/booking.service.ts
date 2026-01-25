@@ -11,6 +11,7 @@ import { BOOKING_AUTH, BookingTourPackage } from "./booking.utils";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
 import { PaginationType } from "@/api/core/types/common.type";
+import { normalizeDate } from "@/api/core/helper/data.helper";
 
 
 export const createBooking = async (payload: CreateBookingPayload, token: string) => {
@@ -187,7 +188,10 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
         { _id: bookingId, bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] } },
         {
             $set: {
-                customerDetails: payload,
+                customerDetails: {
+                    ...payload,
+                    dateOfTravel: normalizeDate(payload.dateOfTravel),
+                },
                 tourDetails: booking.tour,
                 packageDetails: booking.package,
                 bookingStatus: "DETAILS_FILLED",

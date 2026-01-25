@@ -5,6 +5,8 @@ import Booking from "../booking/booking.model";
 
 import { CustomError } from "@/api/utils/response";
 import { generateOtp, OTP_CONFIG } from "./request.utils";
+import { GenerateOtpPayload } from "./request.schema";
+import { normalizeDateRange } from "@/api/core/helper/data.helper";
 
 
 // ==================== Admin Services ====================
@@ -48,14 +50,12 @@ export const closeRequest = async (requestId: string) => {
 
 // ==================== User Services ====================
 
-type GenerateOtpParams = {
-    phone: string;
-    travelDate: Date;
-    requestType: RequestType;
-}
 
-export const createOtpRequest = async (params: GenerateOtpParams) => {
+export const createOtpRequest = async (params: GenerateOtpPayload) => {
     const { phone, travelDate, requestType } = params;
+
+    // Normalize date to compare only date part (ignore time)
+    const { startOfDay, endOfDay } = normalizeDateRange(travelDate);
 
     // Check if booking exists with matching phone and travel date
     const booking = await Booking.findOne({
@@ -63,7 +63,10 @@ export const createOtpRequest = async (params: GenerateOtpParams) => {
             { "customerDetails.phone1": phone },
             { "customerDetails.phone2": phone }
         ],
-        "customerDetails.dateOfTravel": travelDate,
+        "customerDetails.dateOfTravel": {
+            $gte: startOfDay,
+            $lte: endOfDay
+        },
         bookingStatus: { $in: ["PAID_PARTIAL", "PAID_FULL"] }
     })
     .select("_id customerDetails.fullName totalAmount bookingStatus createdAt")
@@ -76,14 +79,22 @@ export const createOtpRequest = async (params: GenerateOtpParams) => {
     // Check for existing open request with same phone and travel date
     const existingRequest = await RequestModel.findOne({
         phone,
-        travelDate,
+        travelDate: {
+            $gte: startOfDay,
+            $lte: endOfDay
+        },
         isOpen: true,
         "otpData.sessionCreatedAt": { 
-            $gte: new Date(Date.now() - OTP_CONFIG.SESSION_EXPIRY_TIME) 
+            $gte: new Date(Date.now() - OTP_CONFIG.SESSION_EXPIRY_TIME)
         }
     }).lean();
 
     if (existingRequest) {
+        // Check if OTP is already verified
+        if (existingRequest.otpData.isVerified) {
+            throw new CustomError(400, "OTP already verified. Please proceed with your request");
+        }
+
         // Check if max resend count reached
         if (existingRequest.otpData.resendCount >= OTP_CONFIG.MAX_RESEND_COUNT) {
             throw new CustomError(429, "Maximum OTP resend limit reached. Please try again later");
@@ -122,7 +133,7 @@ export const createOtpRequest = async (params: GenerateOtpParams) => {
     const request = await RequestModel.create({
         requestType,
         phone,
-        travelDate,
+        travelDate: startOfDay, // Store normalized date for consistency
         isOpen: true,
         otpData: {
             otp,
