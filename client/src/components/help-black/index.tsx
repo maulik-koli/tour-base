@@ -1,6 +1,7 @@
 import React from 'react'
 import Icon from '../icons'
 import { Typography } from '../ui/typography'
+import { PHONE_NUMBER_DISPLAY } from '@/constants/static-data'
 
 const HelpBlock: React.FC = () => {
     return (
@@ -11,7 +12,7 @@ const HelpBlock: React.FC = () => {
                     <Icon name='Phone' width={24} height={24} className='text-primary' />
                     <div>
                         <Typography variant="p" className='font-semibold'>Call Us</Typography>
-                        <Typography variant="p" className='text-muted-foreground'>+91 8000057070</Typography>
+                        <Typography variant="p" className='text-muted-foreground'>{PHONE_NUMBER_DISPLAY}</Typography>
                     </div>
                 </div>
                 <div className='flex items-center gap-3'>

@@ -61,7 +61,8 @@ import {
     ExternalLink,
     ChevronLeft,
     ChevronRight,
-    Sparkles
+    Sparkles,
+    MinusIcon
 } from "lucide-react"
 import { FaceBookIcon, InstagramIcon, TwitterIcon, WhatsAppIcon, YouTubeIcon } from "./custom"
 
@@ -129,7 +130,8 @@ export const LUCIDE_ICON_MAP = {
     ExternalLink,
     ChevronLeft,
     ChevronRight,
-    Sparkles
+    Sparkles,
+    MinusIcon
 }
 
 

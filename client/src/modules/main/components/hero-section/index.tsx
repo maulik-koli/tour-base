@@ -9,7 +9,7 @@ const HeroSection: React.FC = () => {
     return (
         <section className="bg-card relative w-full min-h-[calc(100svh-4rem)] h-[calc(100svh-4rem)]">
             <FallbackImage
-                src="/hero-image.jpg"
+                src="/hero.jpg"
                 alt="Eklavya Tourism Hero Image"
                 fill
                 className="object-cover"

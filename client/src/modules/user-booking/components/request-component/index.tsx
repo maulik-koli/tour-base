@@ -1,69 +1,16 @@
-"use client";
-import React, { useState, useCallback } from 'react'
-import { cn } from '@/lib/utils'
-import Icon from '@/components/icons'
-import { Button } from '@ui/button'
-import { Typography } from '@ui/typography'
-import PageHeader from '@/components/page-header'
-import ResponseBlock from '@modules/user-booking/components/response-block';
-import { UserRequestType } from '@modules/user-booking/api/types';
-import RequestForm from '@modules/user-booking/components/request-form';
+import React from 'react'
+import { useRequestOtpStore } from '@/store';
 import { PHONE_NUMBER, PHONE_NUMBER_DISPLAY, WHATSAPP_MESSAGE_URL } from '@/constants/static-data';
 
-type Step = 'selection' | 'otp-sent' | 'verified';
-
-interface FormData {
-    phoneNumber: string;
-    travelDate: string;
-}
-
-const YourBookingPage: React.FC = () => {
-    const [requestType, setRequestType] = useState<UserRequestType | null>(null);
-    const [step, setStep] = useState<Step>('selection');
-    const [formData, setFormData] = useState<FormData>({
-        phoneNumber: '',
-        travelDate: ''
-    });
-    const [otp, setOtp] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [resendTimer, setResendTimer] = useState(0);
-
-    const isOtpValid = otp.length === 6;
+import Icon from '@/components/icons';
+import PageHeader from '@/components/page-header';
+import ResponseBlock from '../response-block';
+import RequestForm from '../request-form';
+import { Typography } from '@ui/typography';
 
 
-    const handleVerifyOtp = useCallback(async () => {
-        if (!isOtpValid) return;
-        setIsLoading(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsLoading(false);
-        setStep('verified');
-    }, [isOtpValid]);
-
-    const handleResendOtp = useCallback(async () => {
-        if (resendTimer > 0) return;
-        setIsLoading(true);
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setIsLoading(false);
-        setResendTimer(30);
-        
-        const interval = setInterval(() => {
-            setResendTimer(prev => {
-                if (prev <= 1) {
-                    clearInterval(interval);
-                    return 0;
-                }
-                return prev - 1;
-            });
-        }, 1000);
-    }, [resendTimer]);
-
-    const handleReset = useCallback(() => {
-        setRequestType(null);
-        setStep('selection');
-        setFormData({ phoneNumber: '', travelDate: '' });
-        setOtp('');
-    }, []);
+const RequestComponent: React.FC = () => {
+    const step = useRequestOtpStore(state => state.step);
 
     return (
         <div className='min-h-screen bg-background'>
@@ -76,22 +23,13 @@ const YourBookingPage: React.FC = () => {
             <div className='py-8 md:py-12 px-4 sm:px-6 lg:px-20'>
                 <div className='max-w-2xl mx-auto'>
                     {/* Success State */}
-                    {step === 'verified' && (
-                        <ResponseBlock
-                            handleReset={handleReset}
-                            requestType={requestType}
-                        />
-                    )}
+                    {step === 'verified' && <ResponseBlock />}
 
                     {/* Main Flow */}
                     {step !== 'verified' && (
                         <div className='space-y-6'>
                             {/* Step 1: Request Type Selection */}
-                            <RequestForm
-                                requestType={requestType}
-                                handleRequestType={setRequestType}
-                                setStep={setStep}
-                            />
+                            <RequestForm />
 
                             {/* Step 4: OTP Verification */}
                             {step === 'otp-sent' && (
@@ -211,7 +149,7 @@ const YourBookingPage: React.FC = () => {
     )
 }
 
-export default YourBookingPage
+export default RequestComponent
 
 
 

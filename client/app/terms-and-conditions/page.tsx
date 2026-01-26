@@ -75,7 +75,7 @@ const TermsAndConditionsPage: React.FC = () => {
                         </Typography>
                         <div className='space-y-3'>
                             <Typography variant="p" className='leading-relaxed'>
-                                Traveller should communicate any correspondence towards cancellation from their registered email-Id with Kesari on email.
+                                Traveller should communicate any correspondence towards cancellation from their registered email-Id with EKLAVYA on email.
                             </Typography>
                             <Typography variant="p" className='leading-relaxed'>
                                 Applicable Refund as per cancellation policy will be paid within 30 to 45 working days from the date of cancellation in INR only.
