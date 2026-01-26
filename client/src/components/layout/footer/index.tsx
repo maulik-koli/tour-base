@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import { SOCIAL_LINKS } from '@/constants/static-data'
+import { PHONE_NUMBER, PHONE_NUMBER_DISPLAY, SOCIAL_LINKS } from '@/constants/static-data'
 
 import Icon, { IconName } from '@/components/icons'
 import FallbackImage from '@/components/fallback-image'
@@ -103,8 +103,8 @@ const Footer: React.FC = () => {
                             <ul className='space-y-2 md:space-y-3'>
                                 <li className='flex items-center gap-2 md:gap-3'>
                                     <Icon name='Phone' className='w-3.5 h-3.5 md:w-4 md:h-4 text-primary shrink-0' />
-                                    <a href="tel:+918000057070" className='text-foreground hover:text-primary transition-colors text-sm md:text-lg'>
-                                        +91 8000057070
+                                    <a href={`tel:${PHONE_NUMBER}`} className='text-foreground hover:text-primary transition-colors text-sm md:text-lg'>
+                                        {PHONE_NUMBER_DISPLAY}
                                     </a>
                                 </li>
                                 <li className='flex items-center gap-2 md:gap-3'>

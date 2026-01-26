@@ -2,6 +2,7 @@ import React from "react";
 import Icon, { IconName } from "@/components/icons";
 import { Typography } from "@ui/typography";
 import PageHeader from "@/components/page-header";
+import { PHONE_NUMBER, PHONE_NUMBER_DISPLAY } from "@/constants/static-data";
 
 const CONTACT_US_PAGE_DATA: { icon: IconName, title: string, subtitle: string }[] = [
     {
@@ -59,9 +60,9 @@ const ContactUsPage: React.FC = () => {
                                         <Typography variant="p" className='font-semibold'>
                                             Hitesh Waghela:
                                         </Typography>
-                                        <a href="tel:+918000057070" className='block hover:text-primary transition-colors'>
+                                        <a href={`tel:${PHONE_NUMBER}`} className='block hover:text-primary transition-colors'>
                                             <Typography variant="p" className='font-semibold'>
-                                                +91 8000057070
+                                                {PHONE_NUMBER_DISPLAY}
                                             </Typography>
                                         </a>
                                     </div>
@@ -182,7 +183,7 @@ const ContactUsPage: React.FC = () => {
                             </Typography>
                             <div className='flex gap-3 flex-wrap'>
                                 <a 
-                                    href="tel:+918000057070" 
+                                    href={`tel:${PHONE_NUMBER}`} 
                                     className='inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm font-medium'
                                 >
                                     <Icon name="Phone" className='w-4 h-4' />

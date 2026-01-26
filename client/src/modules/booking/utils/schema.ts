@@ -1,10 +1,6 @@
 import { z } from 'zod';
+import { phoneNumberSchema } from '@/lib/zod/commonSchema';
 
-const phoneNumberSchema = z.string()
-    .trim()
-    .refine((val) => /^\d{10}$/.test(val), {
-        message: 'Phone number must be exactly 10 digits',
-    });
 
 export const customerDetailsSchema = z.object({
     fullName: z.string()
