@@ -20,10 +20,24 @@ export interface GetRequestSessionResponse {
     isVerified: boolean;
 }
 
-export type GenerateOtpPayload = GenerateOtpFormType
+export interface GenerateOtpPayload extends GenerateOtpFormType {
+    requestType: UserRequestType;
+}
 
 export interface GenerateOtpResponse {
     sessionId: string;
     resendCount: number;
     expiresAt: string;
+}
+
+
+export interface VerifyOtpPayload {
+    sessionId: string;
+    otp: string;
+}
+
+export interface VerifyOtpResponse {
+    sessionId: string;
+    requestType: UserRequestType;
+    isVerified: boolean;
 }

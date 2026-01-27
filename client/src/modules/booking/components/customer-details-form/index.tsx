@@ -12,7 +12,7 @@ import { Separator } from '@ui/separator'
 import { SpinnerOverlay } from '@ui/spinner'
 import { useCustomerBooking } from '@modules/booking/api/mutations'
 import { logger } from '@/lib/utils'
-import { flatZodError } from '@/lib/flatZodError'
+import { flatZodError } from '@/lib/zod/flatZodError'
 import { useToast } from '@/hooks/useToast'
 
 interface CustomerDetailsFormProps {

@@ -1,71 +1,77 @@
-import React from 'react'
+"use client"
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { Controller, useForm } from 'react-hook-form'
 import { useRequestOtpStore } from '@/store'
 import { useGenerateOtp } from '@modules/user-booking/api/mutation'
-import { UserRequestType } from '@modules/user-booking/api/types'
-import { GenerateOtpFormType } from '@modules/user-booking/utils/schema'
-import { cn } from '@/lib/utils'
+import { GenerateOtpPayload, UserRequestType } from '@modules/user-booking/api/types'
+import { GenerateOtpFormType, generateOtpSchema } from '@modules/user-booking/utils/schema'
+import { cn, logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'
+import { RequestCardHeader } from '../static-components'
 import { DatePicker, InputField } from '@/components/form'
 import { Typography } from '@ui/typography'
 import { Button } from '@ui/button'
+import { flatZodError } from '@/lib/zod/flatZodError'
+import { useToast } from '@/hooks/useToast'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 
 const RequestForm: React.FC = () => {
     const { 
         requestType, 
         setStep,
-        setRequestType,
-        setSessionId
+        setSessionId,
+        step,
+        setFormState
     } = useRequestOtpStore((state) => state);
     
-
-    const { control, handleSubmit } = useForm<GenerateOtpFormType>();
+    const { control, handleSubmit, getValues, formState } = useForm<GenerateOtpFormType>({
+        resolver: zodResolver(generateOtpSchema),
+        mode: 'onSubmit',
+    });
 
     const { mutate, isPending } = useGenerateOtp();
-
-    const handleRequestType = (type: UserRequestType) => {
-        setRequestType(type);
-    }
+    const toast = useToast();
     
     const onSubmit = (data: GenerateOtpFormType) => {
-        mutate(data, {
+        if (!requestType) return;
+
+        const payload : GenerateOtpPayload = {
+            requestType,
+            phone: data.phone,
+            travelDate: data.travelDate
+        }
+        mutate(payload, {
             onSuccess: (response) => {
                 if (response.data) {
+                    toast.success('OTP sent successfully, check your WhatsApp messages.');
                     setSessionId(response.data.sessionId);
+                    setFormState(data);
                     setStep('otp-sent');
                 }
             }
         });
     }
 
+    useEffect(() => {
+        if(Object.keys(formState.errors).length > 0) {
+            logger("Form data", getValues())
+            const error = flatZodError(generateOtpSchema, getValues())
+            if(error) toast.error(error)
+        }
+    }, [formState.errors]);
+    
 
     return (
         <>
             <div className='space-y-4'>
-                <div className='flex items-center gap-2'>
-                    <div className='w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium'>
-                        1
-                    </div>
-                    <Typography variant="large">
-                        What would you like to do?
-                    </Typography>
-                </div>
+                <RequestCardHeader stepNumber={1} title="Select request type" />
 
                 <div className='grid gap-4'>
-                    <RequestTypeButton
-                        requestType={requestType}
-                        handleRequestType={handleRequestType}
-                        buttonType="GET_DETAILS"
-                    />
-
-                    <RequestTypeButton
-                        requestType={requestType}
-                        handleRequestType={handleRequestType}
-                        buttonType="CANCEL_BOOKING"
-                    />
+                    <RequestTypeButton buttonType="GET_DETAILS" />
+                    <RequestTypeButton buttonType="CANCEL_BOOKING"/>
                 </div>
             </div>
 
@@ -131,16 +137,11 @@ const RequestForm: React.FC = () => {
             {requestType && (
                 <div className='animate-in fade-in slide-in-from-top-2 duration-300 delay-100'>
                     <div className='space-y-4'>
-                        <div className='flex items-center gap-2'>
-                            <div className='w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium'>
-                                2
-                            </div>
-                            <Typography variant="large">
-                                Enter your details
-                            </Typography>
-                        </div>
+                        <RequestCardHeader stepNumber={2} title='Enter your details'  />
 
-                        <form className='bg-card border border-border rounded-xl p-4 md:p-6 space-y-4'>
+                        <form 
+                            onSubmit={handleSubmit(onSubmit)}
+                        className='bg-card border border-border rounded-xl p-4 md:p-6 space-y-4'>
                             <Controller
                                 name="phone"
                                 control={control}
@@ -153,7 +154,7 @@ const RequestForm: React.FC = () => {
                                         onChange={field.onChange}
                                         leftIcon='Phone'
                                         errMsg={formState.errors.phone?.message}
-                                        // disabled={step === 'otp-sent'}
+                                        disabled={step === 'otp-sent'}
                                     />
                                 )}
                             />
@@ -166,30 +167,31 @@ const RequestForm: React.FC = () => {
                                         label='Travel date used during booking'
                                         value={field.value}
                                         onChange={field.onChange}
+                                        isDisabled={step === 'otp-sent'}
                                     />
                                 )}
                             />
 
-                            {/* {step === 'selection' && ( */}
-                            <Button
-                                className='w-full'
-                                type='button'
-                                disabled={isPending}
-                                onClick={() => handleSubmit(onSubmit)}
-                            >
-                                {isPending ? (
-                                    <>
-                                        <Icon name='Loader2' className='w-4 h-4 animate-spin' />
-                                        Sending OTP...
-                                    </>
-                                ) : (
-                                    <>
-                                        Send OTP
-                                        <Icon name='ArrowRight' className='w-4 h-4' />
-                                    </>
-                                )}
-                            </Button>
-                            {/* )} */}
+                            {step === "selection" && (
+                                <Button
+                                    className='w-full'
+                                    type='button'
+                                    disabled={isPending}
+                                    onClick={handleSubmit(onSubmit)}
+                                >
+                                    {isPending ? (
+                                        <>
+                                            <Icon name='Loader2' className='w-4 h-4 animate-spin' />
+                                            Sending OTP...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Send OTP
+                                            <Icon name='ArrowRight' className='w-4 h-4' />
+                                        </>
+                                    )}
+                                </Button>
+                            )}
                         </form>
                     </div>
                 </div>
@@ -202,24 +204,17 @@ export default RequestForm
 
 
 
-interface RequestTypeButtonProps {
-    requestType: UserRequestType | null
-    buttonType: UserRequestType
-}
-
-const RequestTypeButton: React.FC<RequestTypeButtonProps> = function({ buttonType }) {
+const RequestTypeButton: React.FC<{ buttonType: UserRequestType }> = function({ buttonType }) {
     const isDetailsRequest = buttonType === 'GET_DETAILS';
     const { 
-        requestType, 
-        setStep,
+        requestType,
         setRequestType,
-        setSessionId
     } = useRequestOtpStore((state) => state);
 
     return (
         <button
             type="button"
-            onClick={() => handleRequestType(buttonType)}
+            onClick={() => setRequestType(buttonType)}
             className={cn(
                 'w-full text-left p-4 md:p-5 rounded-xl border-2 transition-all duration-200',
                 'hover:shadow-md hover:border-primary/50',
