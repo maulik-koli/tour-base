@@ -22,4 +22,5 @@ export const MUTATION_REGISTRY = {
     bookingPayment: 'booking-payment',
 
     generateOtp: 'generate-otp',
+    verifyOtp: 'verify-otp',
 } as const;

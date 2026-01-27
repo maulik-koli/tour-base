@@ -12,10 +12,11 @@ interface DatePickerProps {
     containerClass?: string
     value: string
     onChange: (date: string) => void
+    isDisabled?: boolean
 }
 
 
-const DatePicker: React.FC<DatePickerProps> = ({ label, containerClass, value, onChange }) => {
+const DatePicker: React.FC<DatePickerProps> = ({ label, containerClass, value, onChange, isDisabled = false }) => {
     const [open, setOpen] = React.useState(false)
 
     const date = useMemo(() => {
@@ -38,6 +39,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ label, containerClass, value, o
                 </PopoverTrigger>
                 <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
+                    disabled={isDisabled}
                     mode="single"
                     selected={date}
                     captionLayout="dropdown"

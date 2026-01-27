@@ -1,3 +1,4 @@
+'use client'
 import React from 'react'
 import { useRequestOtpStore } from '@/store'
 
@@ -9,10 +10,11 @@ import { Typography } from '@ui/typography'
 const ResponseBlock: React.FC = () => {
     const { 
         requestType, 
-        setStep, 
+        clearState, 
+        step
     } = useRequestOtpStore((state) => state);
 
-    if (!requestType) return null;
+    if (!requestType && step !== "verified") return null;
 
     
     return (
@@ -52,7 +54,7 @@ const ResponseBlock: React.FC = () => {
                 variant="outline" 
                 className='w-full'
                 type='button'
-                onClick={() => setStep('selection')}
+                onClick={clearState}
             >
                 <Icon name='ArrowLeft' className='w-4 h-4' />
                 Back to Start
