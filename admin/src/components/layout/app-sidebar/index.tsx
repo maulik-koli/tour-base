@@ -46,6 +46,11 @@ const items: SideBarItem[] = [
         title: "Reviews",
         url: "/reviews",
         icon: "SquareStar",
+    },
+    {
+        title: "Requests",
+        url: "/requests",
+        icon: "BadgeQuestionMark",
     }
 ]
 

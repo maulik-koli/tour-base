@@ -43,7 +43,11 @@ import {
     ChevronUp,
     ChevronDown,
     ArrowLeft,
-    SquareStar
+    SquareStar,
+    CheckCircle,
+    BadgeQuestionMark,
+    FileText,
+    CircleX
 } from "lucide-react"
 
 
@@ -92,5 +96,9 @@ export const LUCIDE_ICON_MAP = {
     ChevronUp,
     ChevronDown,
     ArrowLeft,
-    SquareStar
+    SquareStar,
+    CheckCircle,
+    BadgeQuestionMark,
+    FileText,
+    CircleX
 }

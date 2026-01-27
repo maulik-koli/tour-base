@@ -1,22 +1,44 @@
 import { Types } from "mongoose";
 import { nanoid } from "nanoid";
-import RequestModel, { RequestType } from "./request.model";
+import RequestModel from "./request.model";
 import Booking from "../booking/booking.model";
 
 import { CustomError } from "@/api/utils/response";
 import { generateOtp, OTP_CONFIG } from "./request.utils";
-import { GenerateOtpPayload } from "./request.schema";
+import { AdminRequestListQueries, GenerateOtpPayload } from "./request.schema";
 import { normalizeDateRange } from "@/api/core/helper/data.helper";
+import { PaginationType } from "@/api/core/types/common.type";
 
 
 // ==================== Admin Services ====================
 
-export const getAllRequests = async () => {
+export const getAllRequests = async (query: AdminRequestListQueries) => {
+    const { page, limit } = query;
+
+    const skip = (page - 1) * limit;
+
     const requests = await RequestModel.find()
         .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
         .lean();
 
-    return requests;
+    const total = await RequestModel.countDocuments();
+    const totalPages = Math.ceil(total / limit);
+
+    const pagination: PaginationType = {
+        page,
+        limit,
+        totalItems: total,
+        totalPages,
+        isNextPage: page < totalPages,
+        isPrevPage: page > 1,
+    };
+
+    return {
+        requests,
+        pagination
+    };
 }
 
 
