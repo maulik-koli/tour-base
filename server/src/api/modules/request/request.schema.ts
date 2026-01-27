@@ -24,5 +24,12 @@ export const verifyOtpZodSchema = z.object({
 });
 
 
+export const adminRequestListQueriesZodSchema = z.object({
+    page: z.coerce.number().int().min(1).default(1),
+    limit: z.coerce.number().int().min(1).max(50).default(25),
+});
+
+
 export type GenerateOtpPayload = z.infer<typeof generateOtpZodSchema>;
 export type VerifyOtpPayload = z.infer<typeof verifyOtpZodSchema>;
+export type AdminRequestListQueries = z.infer<typeof adminRequestListQueriesZodSchema>;

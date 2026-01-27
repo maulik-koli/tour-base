@@ -19,6 +19,8 @@ export const QUERY_REGISTRY = {
 
     getTourReviewList: "get-tour-review-list",
     getTourReviews: "get-tour-reviews",
+
+    getRequestList: "get-request-list",
 }
 
 
@@ -51,4 +53,7 @@ export const MUTATION_REGISTRY = {
     createReview: "create-review",
     updateReview: "update-review",
     deleteReview: "delete-review",
+
+    closeRequest: "close-request",
+    deleteRequest: "delete-request",
 };

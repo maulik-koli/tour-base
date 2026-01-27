@@ -8,18 +8,20 @@ import {
     getRequestBySessionId, 
     verifyOtp 
 } from "./request.service";
-import { GenerateOtpPayload, VerifyOtpPayload } from "./request.schema";
+import { AdminRequestListQueries, GenerateOtpPayload, VerifyOtpPayload } from "./request.schema";
 
 
 // ==================== Admin Controllers ====================
 
 export const adminGetRequestsListController = asyncWrapper(async (req, res) => {
-    const requests = await getAllRequests();
+    const query = req.localsQuery as AdminRequestListQueries;
+
+    const { requests, pagination } = await getAllRequests(query);
 
     successResponse(res, {
         message: "Requests list fetched successfully",
         status: 200,
-        data: requests,
+        data: { requests, pagination },
     });
 });
 
@@ -45,7 +47,7 @@ export const adminCloseRequestController = asyncWrapper(async (req, res) => {
     successResponse(res, {
         message: "Request closed successfully",
         status: 200,
-        data: request,
+        data: null,
     });
 });
 

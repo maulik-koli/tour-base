@@ -1,7 +1,7 @@
 import express from "express";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
-import { validateRequest } from "@/api/middlewares/validate.middlewate";
-import { generateOtpZodSchema, verifyOtpZodSchema } from "./request.schema";
+import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
+import { adminRequestListQueriesZodSchema, generateOtpZodSchema, verifyOtpZodSchema } from "./request.schema";
 import { 
     adminCloseRequestController, 
     adminDeleteRequestController, 
@@ -19,6 +19,7 @@ const router = express.Router();
 router.get(
     "/admin/list",
     authMiddleware,
+    validateQuery(adminRequestListQueriesZodSchema),
     adminGetRequestsListController
 );
 
