@@ -2,23 +2,15 @@
   "name": "tour-base-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch dist --watch src -r tsconfig-paths/register src/server.ts",
-    "build": "tsc",
-    "start": "node -r module-alias/register dist/server.js"
+    "dev": "tsx watch --clear-screen=false src/server.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/server.js"
   },
   "keywords": [],
-  "types": "commonjs",
-  "_moduleAliases": {
-    "@": "dist",
-    "@api": "dist/api",
-    "@modules": "dist/modules",
-    "@utils": "dist/utils"
-  },
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
@@ -50,7 +42,9 @@
     "@types/node": "^22.15.3",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.7.0",
     "typescript": "^5.8.3"
   }
 }
