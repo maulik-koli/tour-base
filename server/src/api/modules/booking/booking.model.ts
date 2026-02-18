@@ -56,6 +56,14 @@ type PaymentType = {
 
 interface PaymentDocument extends PaymentType, Document {}
 
+type TemporaryPaymentRecord = {
+    upiUrl: string;
+    paymentOption: PaymentOption;
+    generatedAt: Date;
+}
+
+interface TemporaryPaymentRecordDocument extends TemporaryPaymentRecord, Document {}
+
 
 interface IBooking {
     tourId: Types.ObjectId
@@ -70,6 +78,7 @@ interface IBooking {
 
     totalAmount?: number;
     paymentDetails?: PaymentType
+    temporaryPaymentRecord?: TemporaryPaymentRecord
 }
 
 export interface BookingDocument extends IBooking, Document {
@@ -122,6 +131,15 @@ const paymentDetailsSchema = new Schema<PaymentDocument>({
     _id: false,
 });
 
+const temporaryPaymentRecordSchema = new Schema<TemporaryPaymentRecordDocument>({
+    upiUrl: { type: String, required: true },
+    paymentOption: { type: String, required: true, enum: paymentOptionsEnum },
+    generatedAt: { type: Date, required: true },
+}, {
+    versionKey: false,
+    _id: false,
+});
+
 
 const bookingSchema = new Schema<BookingDocument>({
     tourId: { type: Schema.Types.ObjectId, required: true, ref: 'Tour' },
@@ -157,6 +175,7 @@ const bookingSchema = new Schema<BookingDocument>({
         },
     },
 
+    temporaryPaymentRecord: { type: temporaryPaymentRecordSchema, required: false },
     totalAmount: { type: Number, required: false },
     paymentDetails: { type: paymentDetailsSchema, required: false  },
 }, {

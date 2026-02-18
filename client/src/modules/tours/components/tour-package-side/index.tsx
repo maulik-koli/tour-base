@@ -25,12 +25,24 @@ const TourPackageSide: React.FC<TourPackageSideProps> = ({ handleSelectPackage, 
                         )}
                         onClick={() => handleSelectPackage(pkg._id)}
                     >
-                        <Typography variant="h4" className='mb-2'>{pkg.name}</Typography>
+                        <div className='flex items-start justify-between gap-2 mb-2'>
+                            <Typography variant="h4">{pkg.name}</Typography>
+                            {pkg.priceSlots && pkg.priceSlots.length > 0 && (
+                                <span className='px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full whitespace-nowrap'>
+                                    Group Discount
+                                </span>
+                            )}
+                        </div>
                         <div className='space-y-2'>
                             <div className='flex items-center justify-between'>
-                                <Typography variant="p">Price per person</Typography>
+                                <Typography variant="p">
+                                    {pkg.priceSlots && pkg.priceSlots.length > 0 ? 'Starting from' : 'Price per person'}
+                                </Typography>
                                 <Typography variant="h4" className='font-semibold text-primary'>
-                                    ₹{pkg.pricePerPerson}
+                                    ₹{pkg.priceSlots && pkg.priceSlots.length > 0 
+                                        ? Math.min(...pkg.priceSlots.map((s: any) => s.price || 0)).toLocaleString('en-IN')
+                                        : pkg.pricePerPerson.toLocaleString('en-IN')
+                                    }
                                 </Typography>
                             </div>
                             <div className='flex items-center justify-between'>

@@ -50,7 +50,7 @@ const TourDetailPageComponent: React.FC<{ slug: string}> = ({ slug }) => {
                             tour={tourData}
                             selectedPackage={selectedPackageData}
                         />
-                        <TourPackageTabs 
+                        <TourPackageTabs
                             packages={packagesData}
                             handleSelectPackage={(id) => setSelectedPackage(id)}
                             selectedPackageId={selectedPackage}

@@ -16,6 +16,8 @@ const envSchema = z.object({
     CASHFREE_API_SECRET: z.string().min(1),
     CASHFREE_API_VERSION: z.string().min(1),
     WHATSAPP_TOKEN: z.string().min(1),
+    MERCHANT_UPI_ID: z.string().min(1),
+    MERCHANT_NAME: z.string().min(1),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

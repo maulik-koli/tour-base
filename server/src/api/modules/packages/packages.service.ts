@@ -1,6 +1,7 @@
 import mongoose, { Types } from "mongoose";
-import Package, { TourPackageFields, TourPackageLean } from "./packages.model";
+import Package from "./packages.model";
 import Tour from "../tour/tour.model";
+
 import { PackagePayload, PackagePriceSolt } from "./packages.schema";
 import { CustomError } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
@@ -10,147 +11,166 @@ type AddPackageTourType = {
     numberOfDays: number;
 }
 
-const validatePriceSlot = function(priceSlots: PackagePriceSolt[], end = 12, start = 2) {
-    const expectedLength = end - start + 1;
+const MIN_PERSONS = 2;
+const MAX_PERSONS = 12;
 
-    if (priceSlots.length !== expectedLength) return false;
 
-    const persons = priceSlots
-        .map(slot => slot.persons)
-        .sort((a, b) => a - b);
+class PackageAdminService {
+    public async addPackagesToTour (
+        tour: AddPackageTourType, 
+        packages: PackagePayload[],
+        session?: mongoose.ClientSession
+    ) {
+        this.validatePackages(packages, tour.numberOfDays);
 
-    if (persons[0] !== start) return false;
-    if (persons[persons.length - 1] !== end) return false;
+        const packagesData = packages.map(pckg => ({
+            ...pckg,
+            tourId: tour.tourId,
+        }));
 
-    for (let i = 1; i < persons.length; i++) {
-        if (persons[i] !== persons[i - 1] + 1) {
-            return false;
+        await Package.insertMany(packagesData, { session });
+    }
+
+    public deletePackagesByTourId = async (tourId: Types.ObjectId, session: mongoose.ClientSession) => {
+        await Package.deleteMany({ tourId }, { session });
+    }
+
+    public async createPackage(packagePayload: PackagePayload, tour: AddPackageTourType) {
+        this.validatePackages([packagePayload], tour.numberOfDays);
+
+        const newPackage = new Package({ ...packagePayload, tourId: tour.tourId });
+        const savedPackage = await newPackage.save();
+        
+        return savedPackage.toObject();
+    };
+
+    public async updatePackage(packageId: string, packagePayload: PackagePayload) {
+        const existingPackage = await Package.findById(packageId)
+            .select("tourId")
+            .lean();
+
+        if (!existingPackage) {
+            throw new CustomError(404, "Package not found");
+        }
+
+        const tour = await Tour.findById(existingPackage.tourId)
+            .select("dayPlans")
+            .lean();
+
+        if (!tour) {
+            throw new CustomError(404, "Parent tour not found");
+        }
+
+        this.validatePackages([packagePayload], tour.dayPlans.length);
+
+        const updatedPackage = await Package.findByIdAndUpdate(
+            packageId,
+            { $set: packagePayload },
+            { new: true }
+        ).lean();
+
+        return updatedPackage;
+    }
+
+    public async deletePackageById(packageId: string) {
+        const id = new mongoose.Types.ObjectId(packageId);
+        await Package.findByIdAndDelete(id);
+    }
+
+    private validatePackages(packages: PackagePayload[], tourDays: number) {
+        const invalidPackages = packages
+            .filter(pckg => {
+                const invalidByDays = pckg.days > tourDays;
+                
+                const hotelsNightCount = pckg.hotels.reduce((total, hotel) => total + hotel.nightNo, 0);
+                let invalidByNights = hotelsNightCount !== pckg.nights;
+
+                log.info('in the add packages', { invalidByDays, invalidByNights })
+                return invalidByDays || invalidByNights;
+            })
+            .map(pckg => pckg.name);
+        
+        if (invalidPackages.length > 0) {
+            throw new CustomError(
+                400, 
+                `Number of days or nights are mismatch. Please check number of days plan with package days or number of total hotels nights with package nights.`
+            );
+        }
+        
+        const isPriceSlotValid = packages.every(pkg =>
+            this.validatePriceSlot(pkg.priceSlots)
+        );
+
+        if (!isPriceSlotValid) {
+            throw new CustomError(
+                400,
+                'Price slots are invalid. Please ensure: 1) Person count is between 2-12, 2) No duplicate person values, 3) Prices decrease as person count increases (e.g., price for 2 persons > price for 7 persons).'
+            );
         }
     }
 
-    return true;
-}
-
-
-const validatePackages = function(packages: PackagePayload[], tourDays: number) {
-    const invalidPackages = packages
-        .filter(pckg => {
-            const invalidByDays = pckg.days > tourDays;
-            
-            const hotelsNightCount = pckg.hotels.reduce((total, hotel) => total + hotel.nightNo, 0);
-            let invalidByNights = hotelsNightCount !== pckg.nights;
-
-            log.info('in the add packages', { invalidByDays, invalidByNights })
-            return invalidByDays || invalidByNights;
-        })
-        .map(pckg => pckg.name);
-    
-    if (invalidPackages.length > 0) {
-        throw new CustomError(
-            400, 
-            `Number of days or nights are mismatch. Please check number of days plan with package days or number of total hotels nights with package nights.`
+    private validatePriceSlot(priceSlots: PackagePriceSolt[]) {
+        const maxEntries = MAX_PERSONS - MIN_PERSONS + 1; // 11 entries (2 to 12 inclusive)
+        
+        log.info('validate price slot', { 
+            priceSlotsLength: priceSlots.length, 
+            maxEntries 
+        });
+        
+        // check max entries
+        if (priceSlots.length > maxEntries) return false;
+        
+        // empty is valid
+        if (priceSlots.length === 0) return true;
+        
+        // check all person values are within range [MIN_PERSONS, MAX_PERSONS]
+        const invalidPersons = priceSlots.filter(
+            slot => slot.persons < MIN_PERSONS || slot.persons > MAX_PERSONS
         );
+
+        if (invalidPersons.length > 0) {
+            log.info('validate price slot - invalid persons found', { invalidPersons });
+            return false;
+        }
+        
+        // extract persons and check for duplicates
+        const persons = priceSlots.map(slot => slot.persons);
+        const uniquePersons = new Set(persons);
+        if (uniquePersons.size !== persons.length) {
+            log.info('validate price slot - duplicate persons found');
+            return false;
+        }
+        
+        // sort by persons ascending
+        const sorted = [...priceSlots].sort((a, b) => a.persons - b.persons);
+        
+        log.info('validate price slot - sorted', { 
+            sorted: sorted.map(s => ({ persons: s.persons, price: s.price }))
+        });
+        
+        // check that prices decrease as persons increase
+        for (let i = 1; i < sorted.length; i++) {
+            if (sorted[i].price >= sorted[i - 1].price) {
+                return false;
+            }
+        }
+        
+        return true;
     }
-    
-    const isPriceSlotValid = packages.every(pkg =>
-        validatePriceSlot(pkg.priceSlots)
-    );
+}
 
-    if (!isPriceSlotValid) {
-        throw new CustomError(
-            400,
-            'Price slots are invalid. Please ensure price slots cover persons from 2 to 12 with no missing or duplicate values.'
-        );
+const packageAdminService = new PackageAdminService();
+
+
+
+class PackageService {
+    public async getPackagesByTourId(tourId: Types.ObjectId) {
+        const packages = await Package.find({ tourId }).lean();
+        return packages;
     }
 }
 
-
-export const addPakagesToTour = async (
-    tour: AddPackageTourType, 
-    packages: PackagePayload[],
-    session?: mongoose.ClientSession
-) => {
-    validatePackages(packages, tour.numberOfDays);
-
-    const packagesData = packages.map(pckg => ({
-        ...pckg,
-        tourId: tour.tourId,
-    }));
-
-    await Package.insertMany(packagesData, { session });
-};
+const packageService = new PackageService();
 
 
-export const getPackagesByTourId = async (tourId: Types.ObjectId) => {
-    const packages = await Package.find({ tourId }).lean();
-    return packages;
-}
-
-
-export const createPackage = async (packagePayload: PackagePayload, tour: AddPackageTourType) => {
-    validatePackages([packagePayload], tour.numberOfDays);
-
-    const newPackage = new Package({ ...packagePayload, tourId: tour.tourId });
-    const savedPackage = await newPackage.save();
-    
-    return savedPackage.toObject();
-};
-
-
-export const updatePackage = async (packageId: string, packagePayload: PackagePayload) => {
-    const existingPackage = await Package.findById(packageId)
-        .select("tourId")
-        .lean();
-
-    if (!existingPackage) {
-        throw new CustomError(404, "Package not found");
-    }
-
-    const tour = await Tour.findById(existingPackage.tourId)
-        .select("dayPlans")
-        .lean();
-
-    if (!tour) {
-        throw new CustomError(404, "Parent tour not found");
-    }
-
-    validatePackages([packagePayload], tour.dayPlans.length);
-
-    const updatedPackage = await Package.findByIdAndUpdate(
-        packageId,
-        { $set: packagePayload },
-        { new: true }
-    ).lean();
-
-    return updatedPackage;
-}
-
-
-export const deletePackagesByTourId = async (tourId: Types.ObjectId, session: mongoose.ClientSession) => {
-    await Package.deleteMany({ tourId }, { session });
-}
-
-
-export const deletePackageById = async (packageId: string) => {
-    const id = new mongoose.Types.ObjectId(packageId);
-    await Package.findByIdAndDelete(id);
-}
-
-
-export const findPackage = async ({
-    query, select, unSelect
-}: { query: Partial<TourPackageLean>, select?: TourPackageFields[], unSelect?: TourPackageFields[] }) => {
-    
-    const selectFields = select ? select.join(' ') : '';
-    const unSelectField = unSelect ? unSelect.map(f => `-${f}`).join(' ') : '';
-
-    const pck = await Package.findOne(query)
-        .select(selectFields + ' ' + unSelectField)
-        .lean();
-
-    if(!pck) {
-        throw new CustomError(404, 'Package not found');
-    }
-
-    return pck;
-}
+export { packageAdminService, packageService };

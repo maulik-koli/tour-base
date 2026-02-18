@@ -12,8 +12,9 @@ import { env } from '@api/config/env';
 import { log } from './api/utils/log';
 
 import adminRoutes from '@api/modules/admin/admin.routes';
-import tourRoutes from '@api/modules/tour/tour.routes';
-import packageRoutes from '@api/modules/packages/packages.routes';
+import { tourRouter, adminTourRouter } from './api/modules/tour/tour.routes';
+import { adminPackageRouter } from './api/modules/packages/packages.routes';
+
 import mediaRoutes from '@api/modules/media/media.routes';
 import categoryRoutes from '@api/modules/category/category.routes';
 import bookingRoutes from '@api/modules/booking/booking.routes';
@@ -81,8 +82,11 @@ app.use('/api', apiLimiter);
 
 // api routes
 app.use('/api/admin', adminRoutes);
-app.use('/api/tour', tourRoutes);
-app.use('/api/packages', packageRoutes);
+app.use('/api/admin/tour', adminTourRouter);
+app.use('/api/admin/packages', adminPackageRouter);
+
+app.use('/api/tour', tourRouter);
+
 app.use('/api/media', mediaRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/booking', bookingRoutes);

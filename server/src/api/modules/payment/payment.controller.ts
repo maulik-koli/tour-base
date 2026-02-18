@@ -1,4 +1,4 @@
-import { verifyCashfreeSignature } from "./payment.service";
+import { paymentService } from "./payment.service";
 import { updateBookingPaymentStatus } from "../booking/booking.service";
 import { CashfreePaymentWebhookPayload } from "./payment.types";
 
@@ -22,7 +22,7 @@ export const cashfreeWebhookController = asyncWrapper(async (req, res) => {
         throw new CustomError(400, "Missing webhook signature")
     }
 
-    const isValid = verifyCashfreeSignature(rawBody, signature, timestamp);
+    const isValid = paymentService.verifyCashFreeWebhookSignature(rawBody, signature, timestamp);
         
     if (!isValid) {
         throw new CustomError(400, "Invalid webhook signature")

@@ -1,70 +1,75 @@
 import express from "express";
-import { 
-    createTourController, deleteTourController, getAdminToursListController, getFeaturedToursController, getTourAdminController, getTourController, getToursListController, toggleFeaturedTourController, updateTourController
-} from "./tour.controller";
+import { tourAdminController, tourController } from "./tour.controller";
 import { createTourSchema, setFeaturedTourZodSchema, tourListAdminQueriesZodSchema, tourListQueriesZodSchema, tourZodSchema } from "./tour.schema";
 import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 
-const router = express.Router();
+const tourRouter = express.Router();
+const adminTourRouter = express.Router();
 
-router.post(
+adminTourRouter.post(
     "/", 
-    // authMiddleware,
+    authMiddleware,
     validateRequest(createTourSchema), 
-    createTourController
+    tourAdminController.createTour
 );
 
-router.get(
-    "/list", 
-    authMiddleware, 
-    validateQuery(tourListAdminQueriesZodSchema), 
-    getAdminToursListController
-);
-
-router.put(
+adminTourRouter.put(
     "/:slug", 
     authMiddleware, 
-    validateRequest(tourZodSchema), 
-    updateTourController
+    validateRequest(tourZodSchema),
+    tourAdminController.updateTour
 );
 
-router.delete(
+adminTourRouter.delete(
     "/:slug", 
     authMiddleware,
-    deleteTourController
+    tourAdminController.deleteTour
 );
 
-
-router.get(
-    "/admin/:slug", 
-    authMiddleware, 
-    getTourAdminController
-);
-
-router.patch(
+adminTourRouter.patch(
     "/featured/:slug", 
     authMiddleware, 
     validateRequest(setFeaturedTourZodSchema),
-    toggleFeaturedTourController
+    tourAdminController.toggleFeaturedTour
 )
 
+adminTourRouter.get(
+    "/list", 
+    authMiddleware, 
+    validateQuery(tourListAdminQueriesZodSchema), 
+    tourAdminController.getToursList
+);
+
+adminTourRouter.get(
+    "/featured", 
+    authMiddleware,
+    tourController.getFeaturedTours
+);
+
+adminTourRouter.get(
+    "/:slug", 
+    authMiddleware, 
+    tourAdminController.getTour
+);
+
+
+
 // public routes
-router.get(
+tourRouter.get(
     "/", 
     validateQuery(tourListQueriesZodSchema),
-    getToursListController
+    tourController.getToursList
 );
 
-router.get(
+tourRouter.get(
     "/featured", 
-    getFeaturedToursController
+    tourController.getFeaturedTours
 );
 
-router.get(
+tourRouter.get(
     "/:slug", 
-    getTourController
+    tourAdminController.getTour
 );
 
-
-export default router;
+export { tourRouter, adminTourRouter };

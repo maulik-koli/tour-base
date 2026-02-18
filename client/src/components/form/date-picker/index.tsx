@@ -39,7 +39,7 @@ const DatePicker: React.FC<DatePickerProps> = ({ label, containerClass, value, o
                 </PopoverTrigger>
                 <PopoverContent className="w-auto overflow-hidden p-0" align="start">
                 <Calendar
-                    disabled={isDisabled}
+                    disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0)) || isDisabled}
                     mode="single"
                     selected={date}
                     captionLayout="dropdown"

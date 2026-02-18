@@ -26,7 +26,7 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
             <div>
                 <Typography variant="h2" className='mb-4'>Galary</Typography>
                 <div className='grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-9'>
-                    {tour.images.map((image, index) => (
+                    {tour.galleryImages.map((image, index) => (
                         <div key={index} className='relative w-full  aspect-square rounded-xl'>
                             <FallbackImage
                                 src={image}
@@ -47,7 +47,7 @@ const TourDetailComponent: React.FC<TourDetailComponentProps> = ({ tour, selecte
                     <div className='w-full rounded-xl'>
                         <iframe
                             className='w-full aspect-9/4 rounded-xl'
-                            src={tour.youtubeVideoUrl ?? "https://www.youtube.com/embed/dQw4w9WgXcQ"}
+                            src={tour.youtubeVideoUrl}
                             title="YouTube video player"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                             allowFullScreen

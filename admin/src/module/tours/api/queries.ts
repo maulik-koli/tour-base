@@ -40,7 +40,6 @@ export const useGetTour = (
         queryFn: () => safeAxios(() => getTour(params)),
         retry: false,
         enabled: enabled,
-        ...options,
     });
 };
 

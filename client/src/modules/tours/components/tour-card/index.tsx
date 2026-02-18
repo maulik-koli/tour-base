@@ -1,12 +1,14 @@
+"use client";
 import React from 'react'
+import { useRouter } from 'next/navigation';
 import { TourListType } from '@modules/tours/api/types'
 import { ViewMode } from '../tours-page-components'
 import { cn } from '@/lib/utils'
 
 import Icon from '@/components/icons'
-import ViewDetailsButton from '../view-details-btn'
 import FallbackImage from '@/components/fallback-image'
 import { Typography } from '@ui/typography'
+import { Button } from '@ui/button';
 
 interface TourListCardProps {
     tour: TourListType;
@@ -15,9 +17,19 @@ interface TourListCardProps {
 
 
 const TourCard: React.FC<TourListCardProps> = ({ tour, view }) => {
+    const router = useRouter();
+
+    const redirectToDetails = (slug: string) => {
+        router.push(`/tours/${slug}`);
+    }
+
     const isList = view === "list";
+
     return (
-        <div className='w-full rounded-xl shadow-xs border border-border flex items-center justify-center hover:shadow-lg transition-shadow'>
+        <div
+            className='w-full rounded-xl shadow-xs border border-border flex items-center justify-center hover:shadow-lg transition-shadow'
+            onClick={() => redirectToDetails(tour.slug)}
+        >
             <div className={cn(
                 "w-full flex flex-col",
                 isList && "md:flex-row"
@@ -87,5 +99,21 @@ const TourPriceBlock: React.FC<Pick<TourListType, 'minPrice' | 'maxPrice' | "slu
             </div>
             <ViewDetailsButton slug={slug} />
         </div>
+    )
+}
+
+const ViewDetailsButton: React.FC<{ slug: string }> = ({ slug }) => {
+    const router = useRouter();
+    const redirectToDetails = (slug: string) => {
+        router.push(`/tours/${slug}`);
+    }
+
+    return (
+        <Button
+            type='button' 
+            onClick={() => redirectToDetails(slug)}
+        >
+            View Details
+        </Button>
     )
 }

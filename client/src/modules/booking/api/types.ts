@@ -53,6 +53,7 @@ export interface GetBookingDataResponse extends GetBookingDataViewResponse {
         childrenPrice: number;
         startCity: string;
         endCity: string;
+        priceSlots?: { persons?: number; person?: number; price: number }[];
     },
     createdAt: string;
     customerBookingDetails?: CustomerDetailsFormType;
@@ -67,5 +68,6 @@ export interface BookingPaymentPayload {
 
 export interface BookingPaymentResponse {
     bookingId: string;
-    paymentSessionId: string;
+    // paymentSessionId: string;
+    upiUrl: string;
 }
