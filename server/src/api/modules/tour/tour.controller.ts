@@ -1,132 +1,136 @@
 import { CreateTourPayload, SetFeaturedTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
-import { 
-    createTour, deleteTour, findTour, getAdminToursList, getFeaturedTours, getToursList, toggleFeaturedTour, updateTour
-} from "./tour.service";
-import { getPackagesByTourId } from "../packages/packages.service";
+import { findTour, tourAdminService, tourService } from "./tour.service";
 
 import { asyncWrapper } from "@/api/utils/asyncWrapper";
 import { successResponse } from "@/api/utils/response";
 import { log } from "@/api/utils/log";
+import { packageService } from "../packages/packages.service";
 
 
-export const createTourController = asyncWrapper(async (req, res) => {
-    const payload = req.body as CreateTourPayload;
+class TourAdminController {
+    public createTour = asyncWrapper(async (req, res) => {
+        const payload = req.body as CreateTourPayload;
 
-    await createTour(payload);
+        await tourAdminService.handleCreateTour(payload);
 
-    successResponse(res, {
-        message: "Tour created successfully",
-        status: 201,
-        data: null,
-    })
-});
-
-
-export const getTourAdminController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
-
-    const tour = await findTour({ slug });
-    const packages = await getPackagesByTourId(tour._id);
-
-    successResponse(res, {
-        message: "Tour fetched successfully",
-        status: 200,
-        data: { tour, packages },
+        successResponse(res, {
+            message: "Tour created successfully",
+            status: 201,
+            data: null,
+        });
     });
-});
 
+    public getToursList = asyncWrapper(async (req, res) => {
+        const query = req.localsQuery as TourListAdminQueries;
 
-export const updateTourController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
-    const payload = req.body as TourPayload;
+        const { pagination, tours } = await tourAdminService.handleToursList(query);
 
-    const tour = await updateTour(slug, payload);
-
-    successResponse(res, {
-        message: "Tour updated successfully",
-        status: 200,
-        data: tour,
+        successResponse(res, {
+            message: "Admin tours list fetched successfully",
+            status: 200,
+            data: { pagination, tours },
+        });
     });
-});
 
+    public getTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
 
-export const deleteTourController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
+        const tour = await findTour({ slug });
+        const packages = await packageService.getPackagesByTourId(tour._id);
 
-    await deleteTour(slug);
-
-    successResponse(res, {
-        message: "Tour deleted successfully",
-        status: 200,
-        data: null,
+        successResponse(res, {
+            message: "Tour fetched successfully",
+            status: 200,
+            data: { tour, packages },
+        });
     });
-});
 
+    public updateTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
+        const payload = req.body as TourPayload;
 
-export const getAdminToursListController = asyncWrapper(async (req, res) => {
-    const query = req.localsQuery as TourListAdminQueries;
+        const tour = await tourAdminService.updateTour(slug, payload);
 
-    const { pagination, tours } = await getAdminToursList(query);
-
-    successResponse(res, {
-        message: "Admin tours list fetched successfully",
-        status: 200,
-        data: { pagination, tours },
+        successResponse(res, {
+            message: "Tour updated successfully",
+            status: 200,
+            data: tour,
+        });
     });
-});
 
+    public deleteTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
 
-export const getToursListController = asyncWrapper(async (req, res) => {
-    const query = req.localsQuery as TourListQueries;
-    log.info("Public tour list query", query);
+        await tourAdminService.deleteTour(slug);
 
-    const { pagination, tours } = await getToursList(query);
-
-    successResponse(res, {
-        message: "Admin tours list fetched successfully",
-        status: 200,
-        data: { pagination, tours },
+        successResponse(res, {
+            message: "Tour deleted successfully",
+            status: 200,
+            data: null,
+        });
     });
-});
 
+    public toggleFeaturedTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
+        const { isFeatured } = req.body as SetFeaturedTourPayload;
 
-export const getTourController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
+        await tourAdminService.toggleFeaturedTour(slug, isFeatured);
 
-    const tour = await findTour({ 
-        slug, 
-        isActive: true
+        successResponse(res, {
+            message: "Tour featured status updated successfully",
+            status: 200,
+            data: null,
+        });
     });
-    const packages = await getPackagesByTourId(tour._id);
+}
 
-    successResponse(res, {
-        message: "Tour fetched successfully",
-        status: 200,
-        data: { tour, packages },
+const tourAdminController = new TourAdminController();
+
+
+
+class TourController {
+    public getToursList = asyncWrapper(async (req, res) => {
+        const query = req.localsQuery as TourListQueries;
+        log.info("Public tour list query", query);
+
+        const { pagination, tours } = await tourService.getToursList(query);
+
+        successResponse(res, {
+            message: "Tours list fetched successfully",
+            status: 200,
+            data: { pagination, tours },
+        });
     });
-});
 
+    public getTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
 
-export const toggleFeaturedTourController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
-    const { isFeatured } = req.body as SetFeaturedTourPayload;
+        const tour = await findTour({ 
+            slug, 
+            isActive: true
+        });
+        const packages = await packageService.getPackagesByTourId(tour._id);
 
-    await toggleFeaturedTour(slug, isFeatured);
-
-    successResponse(res, {
-        message: "Tour featured status updated successfully",
-        status: 200,
-        data: null,
+        successResponse(res, {
+            message: "Tour fetched successfully",
+            status: 200,
+            data: { tour, packages },
+        });
     });
-});
 
+    public getFeaturedTours = asyncWrapper(async (req, res) => {
+        const tours = await tourService.getFeaturedTours();
 
-export const getFeaturedToursController = asyncWrapper(async (req, res) => {
-    const tours = await getFeaturedTours();
-
-    successResponse(res, {
-        message: "Featured tours fetched successfully",
-        status: 200,
-        data: tours,
+        successResponse(res, {
+            message: "Featured tours fetched successfully",
+            status: 200,
+            data: tours,
+        });
     });
-});
+}
+
+const tourController = new TourController();
+
+
+
+export { tourAdminController, tourController };

@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils'
 import Icon from '@/components/icons'
 import { Typography } from '@ui/typography'
 import { Separator } from '@ui/separator'
+import TourPriceSlot from '@/modules/tours/components/tour-price-slote'
 
 interface TourPackageTabsProps {
     packages: TourPackage[];
@@ -31,11 +32,23 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                             )}
                             onClick={() => handleSelectPackage(pkg._id)}
                         >
-                            <Typography variant="lead" className='font-semibold text-foreground'>{pkg.name}</Typography>
+                            <div className='flex items-start justify-between gap-2'>
+                                <Typography variant="lead" className='font-semibold text-foreground'>{pkg.name}</Typography>
+                                {pkg.priceSlots && pkg.priceSlots.length > 0 && (
+                                    <span className='px-2 py-0.5 bg-primary/20 text-primary text-xs rounded-full whitespace-nowrap'>
+                                        Group Discount
+                                    </span>
+                                )}
+                            </div>
                             <div className='flex items-center justify-between gap-2'>
-                                <Typography variant="p" className='text-sm md:text-base'>Price per person</Typography>
+                                <Typography variant="p" className='text-sm md:text-base'>
+                                    {pkg.priceSlots && pkg.priceSlots.length > 0 ? 'Starting from' : 'Price per person'}
+                                </Typography>
                                 <Typography variant="large" className='font-semibold text-primary'>
-                                    ₹ {pkg.pricePerPerson}
+                                    ₹{pkg.priceSlots && pkg.priceSlots.length > 0 
+                                        ? Math.min(...pkg.priceSlots.map((s: any) => s.price || 0)).toLocaleString('en-IN')
+                                        : pkg.pricePerPerson.toLocaleString('en-IN')
+                                    }
                                 </Typography>
                             </div>
                             <div className='flex items-center justify-between gap-2'>
@@ -53,19 +66,57 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                         <Separator />
                         <div className='bg-card p-3 md:p-4 rounded-md border border-border space-y-3 md:space-y-4'>
                             <Typography variant="h4" className='mb-2'>{selectedPackage.name}</Typography>
+                            
+                            <div className='space-y-4'>
+                                <div className='space-y-2'>
+                                    <div className='flex items-center gap-2 mb-2'>
+                                        <Icon name="Users" width={18} height={18} className='text-primary' />
+                                        <Typography variant="lead" className='font-medium text-foreground'>
+                                            Adult Pricing (12+ years)
+                                        </Typography>
+                                    </div>
+                                    
+                                    <TourPriceSlot 
+                                        priceSlots={selectedPackage.priceSlots}
+                                        basePrice={selectedPackage.pricePerPerson}
+                                    />
+                                </div>
+
+                                <Separator />
+
+                                <div className='space-y-2'>
+                                    <div className='flex items-center gap-2 mb-2'>
+                                        <Icon name="User" width={18} height={18} className='text-primary' />
+                                        <Typography variant="lead" className='font-medium text-foreground'>
+                                            Children Pricing
+                                        </Typography>
+                                    </div>
+                                    
+                                    <div className='space-y-1.5 pl-6'>
+                                        <div className='flex items-center justify-between py-2 border-b border-border'>
+                                            <div className='flex items-center gap-2'>
+                                                <Typography variant="p" className='text-muted-foreground'>Under 6 years</Typography>
+                                                <span className='px-2 py-0.5 bg-green-500 text-white text-xs rounded-full font-medium'>FREE</span>
+                                            </div>
+                                            <Typography variant="p" className='font-semibold text-green-600 dark:text-green-400'>
+                                                ₹0
+                                            </Typography>
+                                        </div>
+                                        
+                                        <div className='flex items-center justify-between py-2'>
+                                            <Typography variant="p" className='text-muted-foreground'>6-11 years</Typography>
+                                            <Typography variant="p" className='font-semibold text-primary'>
+                                                ₹{(selectedPackage.childrenPrice || selectedPackage.pricePerPerson).toLocaleString('en-IN')}
+                                                <span className='text-xs text-muted-foreground font-normal'>/child</span>
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <Separator />
+
                             <div className='space-y-2'>
-                                <div className='flex items-center justify-between'>
-                                    <Typography variant="p">Price per person</Typography>
-                                    <Typography variant="h4" className='font-semibold text-primary'>
-                                        ₹ {selectedPackage.pricePerPerson}
-                                    </Typography>
-                                </div>
-                                <div className='flex items-center justify-between'>
-                                    <Typography variant="p">Price for 6-11 years old</Typography>
-                                    <Typography variant="h4" className='font-semibold text-primary'>
-                                        ₹ {selectedPackage.childrenPrice || selectedPackage.pricePerPerson}
-                                    </Typography>
-                                </div>
                                 <div className='flex items-center justify-between'>
                                     <Typography variant="p">Duration</Typography>
                                     <Typography variant="p" className='font-semibold'>
@@ -78,6 +129,9 @@ const TourPackageTabs: React.FC<TourPackageTabsProps> = ({ packages, handleSelec
                                         {selectedPackage.startCity} - {selectedPackage.endCity}</Typography>
                                 </div>
                             </div>
+
+                            <Separator />
+
                             <div className='space-y-3'>
                                 <div className='flex items-center gap-2'>
                                     <Icon name="Hotel" width={20} height={20} className='text-primary' />

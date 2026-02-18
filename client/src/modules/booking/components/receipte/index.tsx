@@ -15,6 +15,14 @@ interface ReceiptPaymentProps {
 const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
     const isFull = options === "FULL"
 
+    // Calculate adult price based on price slots
+    const adultCount = data.customerBookingDetails?.members.filter(m => m.age >= 12).length || 0;
+    const adultPrice = calculateAdultPrice(
+        adultCount,
+        data.package.priceSlots,
+        data.package.pricePerPerson
+    );
+
     return (
         <>
             <Typography variant="h3">
@@ -138,7 +146,7 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
 
                                 </div>
                                 <Typography variant="p" className='font-medium'>
-                                    ₹ {getTravelMemberPrice(member.age, data.package.pricePerPerson, data.package.childrenPrice)}
+                                    ₹ {getTravelMemberPrice(member.age, adultPrice, data.package.childrenPrice)}
                                 </Typography>
                             </div>
                         ))}
@@ -175,13 +183,61 @@ const ReceiptPayment: React.FC<ReceiptPaymentProps> = ({ data, options }) => {
 export default ReceiptPayment
 
 
+// Calculate adult price based on price slots
+const calculateAdultPrice = (
+    adultCount: number, 
+    priceSlots: { persons?: number; person?: number; price: number }[] | undefined,
+    basePrice: number
+): number => {
+    // If no price slots or no adults, use base price
+    if (!priceSlots || priceSlots.length === 0 || adultCount === 0) {
+        return basePrice;
+    }
 
-const getTravelMemberPrice = function(age: number, pricePerPerson: number, childrenPrice: number) {
+    // Sort slots by person count
+    const sortedSlots = [...priceSlots].sort((a, b) => {
+        const aPersons = a.persons || a.person || 0;
+        const bPersons = b.persons || b.person || 0;
+        return aPersons - bPersons;
+    });
+
+    // Check for exact match
+    const exactMatch = sortedSlots.find(slot => {
+        const slotPersons = slot.persons || slot.person || 0;
+        return slotPersons === adultCount;
+    });
+
+    if (exactMatch) {
+        return exactMatch.price;
+    }
+
+    // Find nearest minimum slot (largest slot that is less than or equal to adultCount)
+    let nearestSlot = null;
+    for (const slot of sortedSlots) {
+        const slotPersons = slot.persons || slot.person || 0;
+        if (slotPersons <= adultCount) {
+            nearestSlot = slot;
+        } else {
+            break;
+        }
+    }
+
+    // If found nearest minimum slot, use its price
+    if (nearestSlot) {
+        return nearestSlot.price;
+    }
+
+    // If adult count is below all slots, use base price
+    return basePrice;
+};
+
+
+const getTravelMemberPrice = function(age: number, adultPrice: number, childrenPrice: number) {
     if (age < 12 && age >= 6) {
         return childrenPrice;
     }
     else if (age < 6) {
         return 0;
     }
-    return pricePerPerson;
+    return adultPrice;
 }

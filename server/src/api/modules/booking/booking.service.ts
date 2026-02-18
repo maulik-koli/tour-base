@@ -4,14 +4,96 @@ import Tour from "../tour/tour.model";
 import Package from "../packages/packages.model";
 
 import { AdminBookingListQueries, BookingPaymentPayload, CreateBookingPayload, CustomerDetailsPayload } from "./booking.schema";
-import { createCashFreeOrder } from "../payment/payment.service";
+import { paymentService } from "../payment/payment.service";
 import { CashfreePaymentWebhookPayload } from "../payment/payment.types";
-import { hashToken } from "@/api/utils/token";
 import { BOOKING_AUTH, BookingTourPackage } from "./booking.utils";
+import { hashToken } from "@/api/utils/token";
 import { CustomError } from "@/api/utils/response";
-import { log } from "@/api/utils/log";
 import { PaginationType } from "@/api/core/types/common.type";
 import { normalizeDate } from "@/api/core/helper/data.helper";
+import { log } from "@/api/utils/log";
+
+type Member = {
+    fullName: string;
+    age: number;
+    gender: string;
+};
+
+type PackageDetails = {
+    pricePerPerson: number;
+    childrenPrice: number;
+    priceSlots: Array<{ persons: number; price: number }>;
+};
+
+
+export const calculateTotalAmount = (members: Member[], packageDetails: PackageDetails): number => {
+    let childrenCount = 0;
+    let adultsCount = 0;
+
+    // by age
+    members.forEach(member => {
+        if (member.age < 6) {
+            // free for children under 6
+            return;
+        }
+        if (member.age >= 6 && member.age < 12) {
+            childrenCount++;
+        } else {
+            // Age >= 12
+            adultsCount++;
+        }
+    });
+
+    // calculate children price
+    const childrenTotalPrice = childrenCount * packageDetails.childrenPrice;
+
+    // calculate adults price
+    let adultsTotalPrice = 0;
+
+    if (adultsCount > 0) {
+        const priceSlots = packageDetails.priceSlots || [];
+        
+        if (priceSlots.length === 0) {
+            // no price slots, use pricePerPerson
+            adultsTotalPrice = adultsCount * packageDetails.pricePerPerson;
+        } else {
+            // find exact match or nearest minimum
+            const sortedSlots = [...priceSlots].sort((a, b) => a.persons - b.persons);
+            
+            // try to find exact match
+            const exactMatch = sortedSlots.find(slot => slot.persons === adultsCount);
+            
+            if (exactMatch) {
+                // use exact match price for all adults
+                adultsTotalPrice = adultsCount * exactMatch.price;
+            } else {
+                // Find nearest minimum (largest slot less than or equal to adultsCount)
+                const nearestSlot = sortedSlots
+                    .filter(slot => slot.persons <= adultsCount)
+                    .pop(); // Get the last one (highest persons less than adultsCount)
+                
+                if (nearestSlot) {
+                    adultsTotalPrice = adultsCount * nearestSlot.price;
+                } else {
+                    // No slot below adultsCount, use pricePerPerson as fallback
+                    adultsTotalPrice = adultsCount * packageDetails.pricePerPerson;
+                }
+            }
+        }
+    }
+
+    const totalAmount = childrenTotalPrice + adultsTotalPrice;
+    
+    log.info('calculateTotalAmount', {
+        childrenCount,
+        adultsCount,
+        childrenTotalPrice,
+        adultsTotalPrice,
+        totalAmount
+    });
+
+    return totalAmount;
+};
 
 
 export const createBooking = async (payload: CreateBookingPayload, token: string) => {
@@ -109,6 +191,7 @@ export const getBookingTourPackage = async (match: PipelineStage.Match["$match"]
                     childrenPrice: "$packageDetails.childrenPrice",
                     startCity: "$packageDetails.startCity",
                     endCity: "$packageDetails.endCity",
+                    priceSlots: "$packageDetails.priceSlots",
                 }
             }
         }
@@ -169,19 +252,8 @@ export const customerBooking = async (bookingId: string, payload: CustomerDetail
         bookingStatus: { $in: ["DRAFT", "DETAILS_FILLED"] },
     });
 
-    // commute total amount with customer details and package details of booking
-    const commuteTotalAmount = payload.members.reduce((totalAmount, member) => {
-        if (member.age < 6) {
-            return totalAmount;
-        }
-        if (6 <= member.age && member.age < 12) {
-            return totalAmount + booking.package?.childrenPrice || 0;
-        }
-        
-        return totalAmount + booking.package?.pricePerPerson || 0;
-
-    }, 0) || 0;
-
+    // calculate total amount using the new price slot logic
+    const commuteTotalAmount = calculateTotalAmount(payload.members, booking.package);
 
     // update booking with customer details and total amount
     const result = await Booking.findOneAndUpdate(
@@ -236,24 +308,39 @@ export const bookingPayment = async (bookingId: string, payload: BookingPaymentP
         ? booking.totalAmount * 0.5
         : booking.totalAmount;
 
-    const response = await createCashFreeOrder({
+    // const response = await paymentService.createCashFreeOrder({
+    //     paymentAmount, 
+    //     customerDetails: booking.customerDetails, 
+    //     bookingId: booking._id.toString()
+    // });
+
+    const response = paymentService.generateUPIQRCode({
         paymentAmount, 
         customerDetails: booking.customerDetails, 
         bookingId: booking._id.toString()
-    });
+    })
 
     // update payment details with cashfree response
     const result = await Booking.findOneAndUpdate(
         { _id: bookingId, bookingStatus: "DETAILS_FILLED" },
+        // {
+        //     $set: {
+        //         paymentDetails: {
+        //             paymentOption: payload.paymentOption,
+        //             order_status: response.order_status,
+        //             order_amount: response.order_amount,
+        //             cf_order_id: response.cf_order_id.toString(),
+        //             order_created_at: response.created_at,
+        //             payment_session_id: response.payment_session_id,
+        //         }
+        //     }
+        // },
         {
             $set: {
-                paymentDetails: {
+                temporaryPaymentRecord: {
+                    upiUrl: response.upiUrl,
                     paymentOption: payload.paymentOption,
-                    order_status: response.order_status,
-                    order_amount: response.order_amount,
-                    cf_order_id: response.cf_order_id.toString(),
-                    order_created_at: response.created_at,
-                    payment_session_id: response.payment_session_id,
+                    generatedAt: new Date(),
                 }
             }
         },
@@ -265,7 +352,8 @@ export const bookingPayment = async (bookingId: string, payload: BookingPaymentP
     }
 
     return {
-        paymentSessionId: response.payment_session_id,
+        // paymentSessionId: response.payment_session_id,
+        upiUrl: response.upiUrl,
         bookingId: result._id,
     };
 }

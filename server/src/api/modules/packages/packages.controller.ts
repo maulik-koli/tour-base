@@ -1,68 +1,72 @@
-import { createPackage, deletePackageById, getPackagesByTourId, updatePackage } from "./packages.service";
+import { packageAdminService, packageService } from "./packages.service";
 import { findTour } from "../tour/tour.service";
 import { PackagePayload } from "./packages.schema";
 import { asyncWrapper } from "@/api/utils/asyncWrapper";
 
 
-export const getPackagesOfTourController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
+class PackageAdminController {
+    public getPackagesOfTour = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
 
-    const tour = await findTour(
-        { slug },  ["slug"]
-    );
-    const packages = await getPackagesByTourId(tour._id);
+        const tour = await findTour(
+            { slug },  ["slug"]
+        );
+        const packages = await packageService.getPackagesByTourId(tour._id);
 
-    return res.status(200).json({
-        status: 200,
-        message: "Packages fetched successfully",
-        data: packages,
-    });
-});
-
-
-export const createPackageController = asyncWrapper(async (req, res) => {
-    const slug = req.params.slug;
-    const payload = req.body as PackagePayload;
-
-    const tour = await findTour(
-        { slug },
-        ["slug", "dayPlans"]
-    );
-
-    const newPackage = await createPackage(payload, {
-        tourId: tour._id, numberOfDays: tour.dayPlans.length
+        return res.status(200).json({
+            status: 200,
+            message: "Packages fetched successfully",
+            data: packages,
+        });
     });
 
-    return res.status(201).json({
-        status: 201,
-        message: "Package added successfully",
-        data: newPackage,
+    public createPackage = asyncWrapper(async (req, res) => {
+        const slug = req.params.slug;
+        const payload = req.body as PackagePayload;
+
+        const tour = await findTour(
+            { slug },
+            ["slug", "dayPlans"]
+        );
+
+        const newPackage = await packageAdminService.createPackage(payload, {
+            tourId: tour._id, numberOfDays: tour.dayPlans.length
+        });
+
+        return res.status(201).json({
+            status: 201,
+            message: "Package added successfully",
+            data: newPackage,
+        });
     });
-});
 
+    public updatePackage = asyncWrapper(async (req, res) => {
+        const packageId = req.params.packageId;
+        const payload = req.body as PackagePayload;
 
-export const updatePackageController = asyncWrapper(async (req, res) => {
-    const packageId = req.params.packageId;
-    const payload = req.body as PackagePayload;
+        const updatedPackage = await packageAdminService.updatePackage(
+            packageId,
+            payload
+        );
 
-    const updatedPackage = await updatePackage(packageId, payload);
-
-    return res.status(200).json({
-        status: 200,
-        message: "Package updated successfully",
-        data: updatedPackage,
+        return res.status(200).json({
+            status: 200,
+            message: "Package updated successfully",
+            data: updatedPackage,
+        });
     });
-});
 
+    public removePackageFromTour = asyncWrapper(async (req, res) => {
+        const packageId = req.params.packageId;
 
-export const removePackageFromTourController = asyncWrapper(async (req, res) => {
-    const packageId = req.params.packageId;
+        const deletedPackage = await packageAdminService.deletePackageById(packageId);
 
-    const deletedPackage = await deletePackageById(packageId);
-
-    return res.status(200).json({
-        status: 200,
-        message: "Package deleted successfully",
-        data: deletedPackage,
+        return res.status(200).json({
+            status: 200,
+            message: "Package deleted successfully",
+            data: deletedPackage,
+        });
     });
-});
+}
+
+export const packageAdminController = new PackageAdminController();

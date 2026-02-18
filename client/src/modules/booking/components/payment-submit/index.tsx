@@ -1,46 +1,60 @@
+"use client"
 import React from 'react'
 import { PaymentOption } from '@modules/booking/api/types';
 import { useBookingPayment } from '@modules/booking/api/mutations';
-import { useCashfree } from '@/hooks/useCashfree';
 import { cn } from '@/lib/utils';
+// import { useCashfree } from '@/hooks/useCashfree';
 
 import Icon from '@/components/icons'
 import { Typography } from '@ui/typography'
 import { Button } from '@ui/button';
-import { SpinnerOverlay } from '@ui/spinner';
 
 interface PaymentSubmitProps {
     bookingId: string,
     totalAmount: number
     options: PaymentOption
     onOptionChange: (op: PaymentOption) => void
+    onChangeUpiUrl: (url: string) => void
 }
 
 
-const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, totalAmount, bookingId }) => {
+const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, totalAmount, bookingId, onChangeUpiUrl }) => {
     const { mutate, isPending } = useBookingPayment()
-    const { cashfree, isLoaded } = useCashfree()
+    // const { cashfree, isLoaded } = useCashfree()
 
     const onProceedPayment = () => {
-        if (!cashfree) return;
-
+        // if (!cashfree) return;
         mutate({
             bookingId,
             paymentOption: options
         }, {
             onSuccess: async (data) => {
-                if(data.data) {
-                    await cashfree.checkout({
-                        paymentSessionId: data.data.paymentSessionId
-                    })
+                const url = data.data?.upiUrl;
+                if(url) {
+                    onChangeUpiUrl(url)
+                    // await cashfree.checkout({
+                    //     paymentSessionId: data.data.paymentSessionId
+                    // })
                 }
+            },
+            onError: (error) => {
+                console.error('Payment failed:', error);
             }
         })
     }
 
-    if(isPending || !isLoaded) {
-        return <div className='h-screen'><SpinnerOverlay /></div>
+
+    if (isPending) {
+        return (
+            <div className='w-full p-4 md:p-6 bg-card flex flex-col items-center justify-center gap-4 border border-border rounded-lg min-h-50'>
+                <div className='flex flex-col items-center gap-3'>
+                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-primary'></div>
+                    <Typography variant="p" className='text-muted-foreground'>Processing payment...</Typography>
+                </div>
+            </div>
+        )
     }
+
 
     return (
         <div className='w-full p-4 md:p-6 bg-card flex flex-col gap-4 md:gap-6 border border-border rounded-lg'>
@@ -78,7 +92,7 @@ const PaymentSubmit: React.FC<PaymentSubmitProps> = ({ onOptionChange, options, 
             >
                 Proceed to Payment
             </Button>
-        </div>
+    </div>
     )
 }
 

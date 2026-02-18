@@ -1,348 +1,400 @@
 import mongoose from "mongoose";
 import Tour, { TourFields, TourLean } from "./tour.model";
 import { CreateTourPayload, TourListAdminQueries, TourListQueries, TourPayload } from "./tour.schema";
-import { addPakagesToTour, deletePackagesByTourId } from "../packages/packages.service";
 
 import { CustomError } from "@/api/utils/response";
 import { ADMIN_SORT_FIELD_MAP, DURATION_MAP, SORT_FIELD_MAP } from "./tour.utils";
 import { PaginationType } from "@/api/core/types/common.type";
 import { slugify } from "@/api/core/helper/data.helper";
 import { TourListWithReviewsParams } from "../review/review.schema";
+import { packageAdminService } from "../packages/packages.service";
 
 
-export const createTour = async (payload: CreateTourPayload) => {
-    const { tour: tourPayload, packages: packagePayload } = payload;
-    
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    
-    try {
-        const slug = slugify(tourPayload.name);
+class TourAdminService {
+    public async handleCreateTour(payload: CreateTourPayload) {
+        const { tour: tourPayload, packages: packagePayload } = payload;
+        
+        const session = await mongoose.startSession();
+        session.startTransaction();
+        
+        try {
+            const slug = slugify(tourPayload.name);
 
-        const existingTour = await Tour.exists({ slug }).session(session);
-    
-        if(existingTour) {
-            throw new CustomError(409, "Tour with this name already exists");
+            const existingTour = await Tour.exists({ slug }).session(session);
+        
+            if(existingTour) {
+                throw new CustomError(409, "Tour with this name already exists");
+            }
+        
+            const tour = new Tour({ ...tourPayload, slug });
+            const newTour = await tour.save({ session });
+        
+            await packageAdminService.addPackagesToTour(
+                { tourId: newTour._id, numberOfDays: newTour.dayPlans.length },
+                packagePayload,
+                session
+            );
+
+            await session.commitTransaction();
+            session.endSession();
+
+            return newTour.toObject();
         }
-    
-        const tour = new Tour({ ...tourPayload, slug });
-        const newTour = await tour.save({ session });
-    
-        await addPakagesToTour(
-            { tourId: newTour._id, numberOfDays: newTour.dayPlans.length },
-            packagePayload,
-            session
-        );
-
-        await session.commitTransaction();
-        session.endSession();
-
-        return newTour.toObject();
+        catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     }
-    catch (error) {
-        await session.abortTransaction();
-        session.endSession();
-        throw error;
-    }
-}
 
+    public async handleToursList(query: TourListAdminQueries) {
+        const { page, limit, search, sort } = query;
 
-export const findTour = async (query: Partial<TourLean>, select?: TourFields[]) => {
-    const tour = await Tour.findOne(query)
-        .select(select?.join(' ') || '')
-        .lean();
+        const skip = (page - 1) * limit;
+        
+        const filter: any = {};
 
-    if(!tour) {
-        throw new CustomError(404, 'Tour not found');
-    }
-    return tour;
-};
+        if (search) {
+            filter.name = { $regex: search, $options: "i" };
+        }
 
+        const sortOption = ADMIN_SORT_FIELD_MAP[sort];
 
-export const updateTour = async (slug: string, tourPayload: TourPayload) => {
-    const tour = await Tour.findOneAndUpdate(
-        { slug },
-        { $set: tourPayload },
-        { new: true }
-    ).lean();
+        const tours = await Tour.aggregate([
+            { $match: filter },
+            {
+                $lookup: {
+                    from: "packages",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "packages"
+                }
+            },
+            {
+                $addFields: {
+                    daysCount: { $size: "$dayPlans" },
+                    packagesCount: { $size: "$packages" },
+                    minPrice: { $min: "$packages.pricePerPerson" },
+                    maxPrice: { $max: "$packages.pricePerPerson" },
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    slug: 1,
+                    thumbnailImage: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    daysCount: 1,
+                    minPrice: 1,
+                    maxPrice: 1,
+                    packagesCount: 1,
+                }
+            },
+            { $sort: sortOption },
+            { $skip: skip },
+            { $limit: limit },
+        ])
 
-    if(!tour) {
-        throw new CustomError(404, 'Tour not found');
-    }
-    return tour;
-};
+        const total = await Tour.countDocuments(filter);
+        const totalPages = Math.ceil(total / limit);
 
+        const pagination: PaginationType = {
+            page,
+            limit,
+            totalPages,
+            totalItems: total,
+            isNextPage: page < totalPages,
+            isPrevPage: page > 1,
+        }
 
-export const deleteTour = async (slug: string) => {
-    const session = await mongoose.startSession();
-    session.startTransaction();
+        return { tours, pagination };
+    };
 
-    try {
-        const tour = await Tour.findOneAndDelete({ slug }, { session });
-    
+    public async updateTour(slug: string, tourPayload: TourPayload) {
+        const tour = await Tour.findOneAndUpdate(
+            { slug },
+            { $set: tourPayload },
+            { new: true }
+        ).lean();
+
         if(!tour) {
             throw new CustomError(404, 'Tour not found');
         }
-        
-        await deletePackagesByTourId(tour._id, session);
+        return tour;
+    };
 
-        await session.commitTransaction();
-        session.endSession();
+    public async deleteTour(slug: string) {
+        const session = await mongoose.startSession();
+        session.startTransaction();
+
+        try {
+            const tour = await Tour.findOneAndDelete({ slug }, { session });
+        
+            if(!tour) {
+                throw new CustomError(404, 'Tour not found');
+            }
+            
+            await packageAdminService.deletePackagesByTourId(tour._id, session);
+
+            await session.commitTransaction();
+            session.endSession();
+        }
+        catch (error) {
+            await session.abortTransaction();
+            session.endSession();
+            throw error;
+        }
     }
-    catch (error) {
-        await session.abortTransaction();
-        session.endSession();
-        throw error;
+
+    public async toggleFeaturedTour(slug: string, isFeatured: boolean) {
+        const updateFields: any = { isFeatured };
+
+        if (isFeatured) {
+            const count = await Tour.countDocuments({ isFeatured: true });
+            if (count >= 6) {
+                throw new CustomError(400, "Cannot feature more than 6 tours");
+            }
+            updateFields.isActive = true;
+        }
+
+        const tour = await Tour.findOneAndUpdate(
+            { slug },
+            { $set: updateFields },
+            { new: true }
+        ).lean();
+
+        if (!tour) {
+            throw new CustomError(404, "Tour not found");
+        }
     }
 }
 
-
-export const getAdminToursList = async (query: TourListAdminQueries) => {
-    const { page, limit, search, sort } = query;
-
-    const skip = (page - 1) * limit;
-    
-    const filter: any = {};
-
-    if (search) {
-        filter.name = { $regex: search, $options: "i" };
-    }
-
-    const sortOption = ADMIN_SORT_FIELD_MAP[sort];
-
-    const tours = await Tour.aggregate([
-        { $match: filter },
-        {
-            $lookup: {
-                from: "packages",
-                localField: "_id",
-                foreignField: "tourId",
-                as: "packages"
-            }
-        },
-        {
-            $addFields: {
-                daysCount: { $size: "$dayPlans" },
-                packagesCount: { $size: "$packages" },
-                minPrice: { $min: "$packages.pricePerPerson" },
-                maxPrice: { $max: "$packages.pricePerPerson" },
-            }
-        },
-        {
-            $project: {
-                name: 1,
-                slug: 1,
-                thumbnailImage: 1,
-                createdAt: 1,
-                updatedAt: 1,
-                daysCount: 1,
-                minPrice: 1,
-                maxPrice: 1,
-                packagesCount: 1,
-            }
-        },
-        { $sort: sortOption },
-        { $skip: skip },
-        { $limit: limit },
-    ])
-
-    const total = await Tour.countDocuments(filter);
-    const totalPages = Math.ceil(total / limit);
-
-    const pagination: PaginationType = {
-        page,
-        limit,
-        totalPages,
-        totalItems: total,
-        isNextPage: page < totalPages,
-        isPrevPage: page > 1,
-    }
-
-    return { tours, pagination };
-};
+const tourAdminService = new TourAdminService();
 
 
-export const getToursList = async (query: TourListQueries) => {
-    const { page, limit, search, sort, maxPrice, duration, category } = query;
 
-    const skip = (page - 1) * limit;
+class TourService {
+    public async getToursList(query: TourListQueries) {
+        const { page, limit, search, sort, maxPrice, duration, category } = query;
 
-    const tourMatch: any = {
-        isActive: true,
-    };
+        const skip = (page - 1) * limit;
 
-    // SEARCH: Only applies name + pagination, ignores all other filters
-    if (search) {
-        tourMatch.name = { $regex: search, $options: "i" };
-        return await applySearchFilter(query, tourMatch);
-    }
+        const tourMatch: any = {
+            isActive: true,
+        };
 
-    if (category) {
-        tourMatch.categories = { $in: [category] };
-    }
+        // SEARCH: Only applies name + pagination, ignores all other filters
+        if (search) {
+            tourMatch.name = { $regex: search, $options: "i" };
+            return await this.applySearchFilter(query, tourMatch);
+        }
+
+        if (category) {
+            tourMatch.categories = { $in: [category] };
+        }
 
 
-    const packageFilterConditions: any[] = [];
+        const packageFilterConditions: any[] = [];
 
-    if (maxPrice) {
-        packageFilterConditions.push({ 
-            $lte: ["$$pkg.pricePerPerson", maxPrice] 
-        });
-    }
-
-    if (duration) {
-        const durationRange = DURATION_MAP[duration];
-        
-        if (durationRange.$gte !== undefined) {
+        if (maxPrice) {
             packageFilterConditions.push({ 
-                $gte: ["$$pkg.days", durationRange.$gte] 
+                $lte: ["$$pkg.pricePerPerson", maxPrice] 
             });
         }
-        
-        if (durationRange.$lte !== undefined) {
-            packageFilterConditions.push({ 
-                $lte: ["$$pkg.days", durationRange.$lte] 
-            });
-        }
-    }
 
-    const pipeline: any[] = [
-        { $match: tourMatch },
-        {
-            $lookup: {
-                from: "packages",
-                localField: "_id",
-                foreignField: "tourId",
-                as: "packages",
+        if (duration) {
+            const durationRange = DURATION_MAP[duration];
+            
+            if (durationRange.$gte !== undefined) {
+                packageFilterConditions.push({ 
+                    $gte: ["$$pkg.days", durationRange.$gte] 
+                });
+            }
+            
+            if (durationRange.$lte !== undefined) {
+                packageFilterConditions.push({ 
+                    $lte: ["$$pkg.days", durationRange.$lte] 
+                });
+            }
+        }
+
+        const pipeline: any[] = [
+            { $match: tourMatch },
+            {
+                $lookup: {
+                    from: "packages",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "packages",
+                },
             },
-        },
-        {
-            $addFields: {
-                matchedPackages: {
-                    $filter: {
-                        input: "$packages",
-                        as: "pkg",
-                        // If no conditions, include all packages; otherwise apply AND logic
-                        cond: packageFilterConditions.length > 0 
-                            ? { $and: packageFilterConditions }
-                            : true,
+            {
+                $addFields: {
+                    matchedPackages: {
+                        $filter: {
+                            input: "$packages",
+                            as: "pkg",
+                            // If no conditions, include all packages; otherwise apply AND logic
+                            cond: packageFilterConditions.length > 0 
+                                ? { $and: packageFilterConditions }
+                                : true,
+                        },
                     },
                 },
             },
-        },
-        // Only return tours that have at least one matching package
-        {
-            $match: {
-                "matchedPackages.0": { $exists: true },
+            // Only return tours that have at least one matching package
+            {
+                $match: {
+                    "matchedPackages.0": { $exists: true },
+                },
             },
-        },
-        {
-            $addFields: {
-                minPrice: { $min: "$matchedPackages.pricePerPerson" },
-                maxPrice: { $max: "$matchedPackages.pricePerPerson" },
-                minDays: { $min: "$matchedPackages.days" },
-                maxDays: { $max: "$matchedPackages.days" },
-                packageCount: { $size: "$matchedPackages" },
+            {
+                $addFields: {
+                    minPrice: { $min: "$matchedPackages.pricePerPerson" },
+                    maxPrice: { $max: "$matchedPackages.pricePerPerson" },
+                    minDays: { $min: "$matchedPackages.days" },
+                    maxDays: { $max: "$matchedPackages.days" },
+                    packageCount: { $size: "$matchedPackages" },
+                },
             },
-        },
-        {
-            $facet: {
-                metadata: [{ $count: "total" }],
-                data: [
-                    { $sort: SORT_FIELD_MAP[sort] },
-                    { $skip: skip },
-                    { $limit: limit },
-                    {
-                        $project: {
-                            name: 1,
-                            slug: 1,
-                            tagLine: 1,
-                            thumbnailImage: 1,
-                            minPrice: 1,
-                            maxPrice: 1,
-                            minDays: 1,
-                            maxDays: 1,
-                            packageCount: 1,
-                            createdAt: 1,
-                            updatedAt: 1,
+            {
+                $facet: {
+                    metadata: [{ $count: "total" }],
+                    data: [
+                        { $sort: SORT_FIELD_MAP[sort] },
+                        { $skip: skip },
+                        { $limit: limit },
+                        {
+                            $project: {
+                                name: 1,
+                                slug: 1,
+                                tagLine: 1,
+                                thumbnailImage: 1,
+                                minPrice: 1,
+                                maxPrice: 1,
+                                minDays: 1,
+                                maxDays: 1,
+                                packageCount: 1,
+                                createdAt: 1,
+                                updatedAt: 1,
+                            },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },
-    ];
+        ];
 
-    const result = await Tour.aggregate(pipeline, {
-        collation: { locale: 'en', strength: 2 }
-    });
+        const result = await Tour.aggregate(pipeline, {
+            collation: { locale: 'en', strength: 2 }
+        });
 
-    const tours = result[0]?.data || [];
-    const total = result[0]?.metadata[0]?.total || 0;
-    const totalPages = Math.ceil(total / limit);
+        const tours = result[0]?.data || [];
+        const total = result[0]?.metadata[0]?.total || 0;
+        const totalPages = Math.ceil(total / limit);
 
-    const pagination: PaginationType = {
-        page,
-        limit,
-        totalItems: total,
-        totalPages,
-        isNextPage: page < totalPages,
-        isPrevPage: page > 1,
-    };
+        const pagination: PaginationType = {
+            page,
+            limit,
+            totalItems: total,
+            totalPages,
+            isNextPage: page < totalPages,
+            isPrevPage: page > 1,
+        };
 
-    return { tours, pagination };
-}
+        return { tours, pagination };
+    }
 
-
-const applySearchFilter = async function(query: TourListQueries, tourMatch: any) {
-    const { page, limit, sort } = query;
-
-    const skip = (page - 1) * limit;
-
-    const pipeline = [
-        { $match: tourMatch },
-        {
-            $lookup: {
-                from: "packages",
-                localField: "_id",
-                foreignField: "tourId",
-                as: "packages",
+    public async getFeaturedTours() {
+        const tours = await Tour.aggregate([
+            { $match: { isFeatured: true, isActive: true } },
+            {
+                $lookup: {
+                    from: "packages",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "packages"
+                }
             },
-        },
-        {
-            $addFields: {
-                minPrice: { $min: "$packages.pricePerPerson" },
-                maxPrice: { $max: "$packages.pricePerPerson" },
-                minDays: { $min: "$packages.days" },
-                maxDays: { $max: "$packages.days" },
-                packageCount: { $size: "$packages" },
+            {
+                $addFields: {
+                    minPrice: { $min: "$packages.pricePerPerson" },
+                    maxPrice: { $max: "$packages.pricePerPerson" },
+                    minDays: { $min: "$packages.days" },
+                    maxDays: { $max: "$packages.days" },
+                    packageCount: { $size: "$packages" },
+                },
             },
-        },
-         { $sort: SORT_FIELD_MAP[sort] },
-        {
-            $facet: {
-                metadata: [{ $count: "total" }],
-                data: [
-                    { $skip: skip },
-                    { $limit: limit },
-                    {
-                        $project: {
-                            name: 1,
-                            slug: 1,
-                            tagLine: 1,
-                            thumbnailImage: 1,
-                            minPrice: 1,
-                            maxPrice: 1,
-                            minDays: 1,
-                            maxDays: 1,
-                            packageCount: 1,
-                            createdAt: 1,
-                            updatedAt: 1,
+            {
+                $project: {
+                    name: 1,
+                    slug: 1,
+                    tagLine: 1,
+                    thumbnailImage: 1,
+                    minPrice: 1,
+                    maxPrice: 1,
+                    minDays: 1,
+                    maxDays: 1,
+                    packageCount: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                }
+            }
+        ]);
+
+        return tours;
+    }
+
+    private async applySearchFilter(query: TourListQueries, tourMatch: any) {
+        const { page, limit, sort } = query;
+
+        const skip = (page - 1) * limit;
+
+        const pipeline = [
+            { $match: tourMatch },
+            {
+                $lookup: {
+                    from: "packages",
+                    localField: "_id",
+                    foreignField: "tourId",
+                    as: "packages",
+                },
+            },
+            {
+                $addFields: {
+                    minPrice: { $min: "$packages.pricePerPerson" },
+                    maxPrice: { $max: "$packages.pricePerPerson" },
+                    minDays: { $min: "$packages.days" },
+                    maxDays: { $max: "$packages.days" },
+                    packageCount: { $size: "$packages" },
+                },
+            },
+            { $sort: SORT_FIELD_MAP[sort] },
+            {
+                $facet: {
+                    metadata: [{ $count: "total" }],
+                    data: [
+                        { $skip: skip },
+                        { $limit: limit },
+                        {
+                            $project: {
+                                name: 1,
+                                slug: 1,
+                                tagLine: 1,
+                                thumbnailImage: 1,
+                                minPrice: 1,
+                                maxPrice: 1,
+                                minDays: 1,
+                                maxDays: 1,
+                                packageCount: 1,
+                                createdAt: 1,
+                                updatedAt: 1,
+                            },
                         },
-                    },
-                ],
+                    ],
+                },
             },
-        },
-    ];
+        ];
 
         const result = await Tour.aggregate(pipeline);
         const tours = result[0]?.data || [];
@@ -360,72 +412,25 @@ const applySearchFilter = async function(query: TourListQueries, tourMatch: any)
                 isPrevPage: page > 1,
             },
         };
-}
-
-
-export const toggleFeaturedTour = async (slug: string, isFeatured: boolean) => {
-    const updateFields: any = { isFeatured };
-
-    if (isFeatured) {
-        const count = await Tour.countDocuments({ isFeatured: true });
-        if (count >= 6) {
-            throw new CustomError(400, "Cannot feature more than 6 tours");
-        }
-        updateFields.isActive = true;
-    }
-
-    const tour = await Tour.findOneAndUpdate(
-        { slug },
-        { $set: updateFields },
-        { new: true }
-    ).lean();
-
-    if (!tour) {
-        throw new CustomError(404, "Tour not found");
     }
 }
 
+const tourService = new TourService();
 
-export const getFeaturedTours = async () => {
-    const tours = await Tour.aggregate([
-        { $match: { isFeatured: true, isActive: true } },
-        {
-            $lookup: {
-                from: "packages",
-                localField: "_id",
-                foreignField: "tourId",
-                as: "packages"
-            }
-        },
-        {
-            $addFields: {
-                minPrice: { $min: "$packages.pricePerPerson" },
-                maxPrice: { $max: "$packages.pricePerPerson" },
-                minDays: { $min: "$packages.days" },
-                maxDays: { $max: "$packages.days" },
-                packageCount: { $size: "$packages" },
-            },
-        },
-        {
-            $project: {
-                name: 1,
-                slug: 1,
-                tagLine: 1,
-                thumbnailImage: 1,
-                minPrice: 1,
-                maxPrice: 1,
-                minDays: 1,
-                maxDays: 1,
-                packageCount: 1,
-                createdAt: 1,
-                updatedAt: 1,
-            }
-        }
-    ]);
+export { tourAdminService, tourService };
 
-    return tours;
-}
 
+// TODO: move to class based service
+export const findTour = async (query: Partial<TourLean>, select?: TourFields[]) => {
+    const tour = await Tour.findOne(query)
+        .select(select?.join(' ') || '')
+        .lean();
+
+    if(!tour) {
+        throw new CustomError(404, 'Tour not found');
+    }
+    return tour;
+};
 
 export const getAllToursWithReviewCount = async (params: TourListWithReviewsParams) => {
     const { page, limit, search } = params;

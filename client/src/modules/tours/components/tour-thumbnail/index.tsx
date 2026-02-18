@@ -53,9 +53,10 @@ const TourThumbnail: React.FC<TourThumbnailProps> = ({ name, thumbnailImage, pac
                                 src={image}
                                 alt={`${name} - Image ${index + 1}`}
                                 crop="fill"
+                                gravity="auto"
                                 fill
                                 sizes="(max-width: 768px) 100vw, 50vw"
-                                className='object-cover'
+                                className="object-cover"
                             />
                         </SwiperSlide>
                     ))}

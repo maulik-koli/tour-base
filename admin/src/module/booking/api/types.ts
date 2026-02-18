@@ -85,6 +85,11 @@ export interface GetBookingDetailsResponse {
     packageDetails?: PackageBookingInfo,
     tourDetails?: TourBookingInfo,
     paymentDetails?: PaymentBookingInfo,
+    temporaryPaymentRecord?: {
+        paymentOption: "FULL" | "PARTIAL",
+        generatedAt: string
+        upiUrl: string
+    }
     totalAmount?: number,
 
     createdAt: string,

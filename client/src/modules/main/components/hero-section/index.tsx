@@ -2,7 +2,6 @@
 import React from 'react'
 import SearchButtonBar from '@/modules/tours/components/search-button-bar'
 import FallbackImage from '@/components/fallback-image'
-import { Typography } from '@/components/ui/typography'
 
 
 const HeroSection: React.FC = () => {
@@ -17,7 +16,7 @@ const HeroSection: React.FC = () => {
             />
 
             {/* <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60" /> */}
-            <div className="absolute inset-0 bg-linear-to-b from-slate-900/30 via-slate-900/20 to-slate-900/40" />
+            <div className="absolute inset-0 bg-linear-to-b from-slate-900/15 via-slate-900/5 to-slate-900/25" />
 
             <div className="relative z-10 h-full w-full">
                 {/* Logo - Commented out as per client requirement */}

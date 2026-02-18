@@ -65,6 +65,12 @@ type PackageHotel = {
     nightNo: number;
 };
 
+type PriceSlote = {
+    persons?: number;  // API might use 'persons' (plural)
+    person?: number;   // or 'person' (singular)
+    price: number;
+}
+
 export type TourPackage = {
     _id: string;
     tourId: string;
@@ -77,6 +83,7 @@ export type TourPackage = {
     startCity: string;
     endCity: string;
     hotels: PackageHotel[];
+    priceSlots: PriceSlote[];
     createdAt: string;
     updatedAt: string;
 };

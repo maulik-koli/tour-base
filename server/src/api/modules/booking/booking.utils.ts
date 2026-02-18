@@ -28,5 +28,6 @@ export interface BookingTourPackage {
         childrenPrice: number;
         startCity: string;
         endCity: string;
+        priceSlots: Array<{ persons: number; price: number }>;
     };
 }

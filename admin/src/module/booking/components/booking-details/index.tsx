@@ -4,6 +4,7 @@ import { GetBookingDetailsResponse } from '@module/booking/api/types';
 import BookingCustomerInfo from '../customer-info'
 import BookingPaymentInfo from '../payment-info';
 import { BookingPackgeInfo, BookingTourInfo } from '../packge-tour-info';
+import BookingTemporaryPaymentInfo from '../temporary-payment-info';
 
 interface BookingDetailsProps {
     booking: GetBookingDetailsResponse;
@@ -18,6 +19,12 @@ const BookingDetailsComponent: React.FC<BookingDetailsProps> = ({ booking }) => 
                 <BookingPaymentInfo
                     paymentDetails={booking.paymentDetails}
                     totalAmount={booking.totalAmount}
+                />
+            )}
+
+            {booking.temporaryPaymentRecord && (
+                <BookingTemporaryPaymentInfo 
+                    temporaryPaymentRecord={booking.temporaryPaymentRecord}
                 />
             )}
 

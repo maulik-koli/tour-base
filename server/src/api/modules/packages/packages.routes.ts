@@ -1,37 +1,35 @@
 import express from "express";
-import { 
-    createPackageController, getPackagesOfTourController, removePackageFromTourController, updatePackageController
-} from "./packages.controller";
+import { packageAdminController } from "./packages.controller";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 import { validateRequest } from "@/api/middlewares/validate.middlewate";
 import { packageZodSchema } from "./packages.schema";
 
-const router = express.Router();
+const adminPackageRouter = express.Router();
 
-router.get(
+adminPackageRouter.get(
     '/:slug', 
     authMiddleware,
-    getPackagesOfTourController
+    packageAdminController.getPackagesOfTour
 );
 
-router.post(
+adminPackageRouter.post(
     "/:slug", 
     authMiddleware, 
     validateRequest(packageZodSchema), 
-    createPackageController
+    packageAdminController.createPackage
 );
 
-router.put(
+adminPackageRouter.put(
     "/:packageId", 
     authMiddleware, 
     validateRequest(packageZodSchema), 
-    updatePackageController
+    packageAdminController.updatePackage
 );
 
-router.delete(
+adminPackageRouter.delete(
     "/:packageId", 
     authMiddleware, 
-    removePackageFromTourController
+    packageAdminController.removePackageFromTour
 );
 
-export default router;
+export { adminPackageRouter };

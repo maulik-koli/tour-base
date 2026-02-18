@@ -8,6 +8,7 @@ import CustomerDetailsForm from '../customer-details-form'
 import ReceiptPayment from '../receipte'
 import PaymentSubmit from '../payment-submit'
 import PaymentTerms from '../payment-terms'
+import QrcodeComponent from '../qrcode-component'
 import { SpinnerOverlay } from '@ui/spinner'
 import { Separator } from '@ui/separator'
 import { Button } from '@ui/button'
@@ -23,6 +24,7 @@ interface BookingComponentProps {
 const BookingComponent: React.FC<BookingComponentProps> = ({ data, isFetching }) => {
     const [bookingState, setBookingState] = useState<BookingStateType>("details")
     const [selectedPaymentOption, setSelectedPaymentOption] = useState<PaymentOption>("FULL");
+    const [upiUrl, setUpiUrl] = useState<string | null>(null)
 
     if (isFetching) {
         return <div className='h-screen'><SpinnerOverlay /></div>
@@ -52,13 +54,22 @@ const BookingComponent: React.FC<BookingComponentProps> = ({ data, isFetching })
                     data={data}
                     options={selectedPaymentOption}
                 />
-                <PaymentSubmit
-                    bookingId={data.bookingId}
-                    totalAmount={data.totalAmount || 0}
-                    options={selectedPaymentOption}
-                    onOptionChange={(op) => setSelectedPaymentOption(op)}
-                />
-                <PaymentTerms />        
+                {upiUrl ? (
+                    <QrcodeComponent
+                        upiUrl={upiUrl}
+                        displayAmount={selectedPaymentOption === 'FULL' ? data.totalAmount || 0 : (data.totalAmount || 0) / 2}
+                        handleBack={() => setUpiUrl(null)}
+                    />
+                ) : (
+                    <PaymentSubmit
+                        bookingId={data.bookingId}
+                        totalAmount={data.totalAmount || 0}
+                        options={selectedPaymentOption}
+                        onOptionChange={(op) => setSelectedPaymentOption(op)}
+                        onChangeUpiUrl={(url) => setUpiUrl(url)}
+                    />
+                )}
+                <PaymentTerms />
             </div>
             <div className='w-full flex items-center gap-4 justify-start'>
                 <Button type='button' onClick={() => setBookingState("details")}>
