@@ -11,7 +11,7 @@ const TourImageSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <FormSectionWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Images & Media" contentClassName="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
             <ImageUploadGrid
                 control={control}
                 name="tour.images"

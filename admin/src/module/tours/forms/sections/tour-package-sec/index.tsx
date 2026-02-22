@@ -13,10 +13,9 @@ import Icon from '@/components/icons';
 import CollapsibleComponent from '@ui/collapsible/index';
 import FormSectionWrapper from '@/components/form-section-wrapper';
 import { InputField, CounterInput, SelectField } from '@/components/form';
-import { HotelInput } from '@module/tours/forms/fields';
+import { HotelInput, PriceSlotInput } from '@module/tours/forms/fields';
 import { Button } from '@ui/button';
 import { Typography } from '@ui/typography';
-import PriceSlotInput from '../../fields/price-slot-input';
 
 interface TourFormPackageSectionProps {
     type?: 'create' | 'update';
@@ -95,7 +94,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
     return (
         <FormSectionWrapper 
             cardTitle="Packages" 
-            contentClassName='flex flex-col gap-4'
+            contentClassName='flex flex-col gap-3 md:gap-4'
             isChildrenEmpty={fields.length === 0}
             headerNode={
                 <Button
@@ -104,24 +103,24 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                     onClick={() => append(DEFAULT_PACKAGE)}
                     disabled={isUpdateMode && isLoading}
                 >
-                    <Icon name="Plus" />
+                    <Icon name="Plus" className='w-4 h-4' />
                     Add Packge
                 </Button>
             }
         >
             <CollapsibleComponent
-                className='gap-4'
-                contentClassName='px-4 border-t'
+                className='gap-3 md:gap-4'
+                contentClassName='px-2 md:px-4 border-t'
                 triggerClassName='px-0 p-0'
                 items={fields.map((_, index) => {
                     const hasMembersError = !!errors.packages?.[index]
 
                     return {
                         label: (
-                            <div className={cn('flex items-center justify-between px-4 p-2 rounded-md',
+                            <div className={cn('flex items-center justify-between px-3 md:px-4 p-2 rounded-md',
                                 hasMembersError && "bg-destructive/30"
                             )}>
-                                <Typography variant='p' className='font-semibold'>
+                                <Typography variant='p' className='font-semibold text-sm md:text-base'>
                                     Package No. {index + 1}
                                 </Typography>
                                 <div className='flex items-center gap-2 w-fit'>
@@ -131,7 +130,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                             type='button'
                                             size="sm"
                                             onClick={() => handleSaveClick(index)}
-                                            className='bg-green-400 text-foreground hover:bg-green-400/80 h-8'
+                                            className='bg-green-400 text-foreground hover:bg-green-400/80 h-7 md:h-8 text-xs'
                                             disabled={isUpdateMode && isLoading}
                                         >
                                             Save
@@ -142,18 +141,18 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         variant="outline"
                                         type='button'
                                         onClick={() => handleDeleteClick(index)}
-                                        className='text-destructive border-none'
+                                        className='text-destructive border-none h-7 w-7 md:h-8 md:w-8'
                                         disabled={isUpdateMode && isLoading}
 
                                     >
-                                        <Icon name="Trash2" width={16} height={16}  />
+                                        <Icon name="Trash2" width={14} height={14} className='md:w-4 md:h-4' />
                                     </Button>
                                 </div>
                             </div>
                         ),
                         children: (
-                            <div className='flex flex-col gap-4 pb-3'>
-                                <div className='grid grid-cols-2 gap-6'>
+                            <div className='flex flex-col gap-3 md:gap-4 pb-3'>
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6'>
                                     <Controller
                                         control={control}
                                         name={`packages.${index}.name`}
@@ -167,7 +166,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                             />
                                         )}
                                     />
-                                    <div className='grid grid-cols-2 gap-6'>
+                                    <div className='grid grid-cols-2 gap-3 md:gap-4 lg:gap-6'>
                                         <Controller
                                             control={control}
                                             name={`packages.${index}.days`}
@@ -220,7 +219,7 @@ const TourFormPackageSection: React.FC<TourFormPackageSectionProps> = ({ type = 
                                         )}
                                     />
                                 </div>
-                                <div className='grid grid-cols-3 gap-6'>
+                                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6'>
                                     <Controller
                                         control={control}
                                         name={`packages.${index}.category`}

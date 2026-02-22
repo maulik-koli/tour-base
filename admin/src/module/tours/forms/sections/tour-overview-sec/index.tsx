@@ -18,7 +18,7 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
             <Controller
                 control={control}
                 name='tour.name'
@@ -58,10 +58,10 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
                     />
                 )}
             />
-            <div className='flex justify-between items-center bg-primary/10 py-4 px-3 rounded-md '>
+            <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 bg-primary/10 py-3 md:py-4 px-3 rounded-md'>
                 <div className='flex flex-col gap-1'>
-                    <FieldLabel>Tour Status</FieldLabel>
-                    <Typography variant="small">Tour is visible to customers</Typography>
+                    <FieldLabel className='text-sm md:text-base'>Tour Status</FieldLabel>
+                    <Typography variant="small" className='text-xs md:text-sm'>Tour is visible to customers</Typography>
                 </div>
                 <Controller
                     control={control}
@@ -73,7 +73,7 @@ const TourOverviewSection: React.FC<TourOverviewSectionProps> = ({ featuredButto
             </div>
             {featuredButton && (
                 <>
-                    <Separator className='col-span-2' />
+                    <Separator className='col-span-1 md:col-span-2' />
                     {featuredButton}
                 </>
             )}

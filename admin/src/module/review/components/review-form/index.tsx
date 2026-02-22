@@ -49,8 +49,8 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
     });
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-3 md:gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4'>
                 <Controller
                     control={control}
                     name="reviewerName"
@@ -109,22 +109,22 @@ const ReviewForm: React.FC<ReviewFormProps> = ({
                 )}
             />
 
-            <div className='flex items-center gap-3 pt-2'>
-                <Button type="submit" disabled={isPending}>
+            <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 pt-2'>
+                <Button type="submit" disabled={isPending} className='text-xs md:text-sm w-full sm:w-auto'>
                     {isPending ? (
                         <>
-                            <Icon name="Loader2" className="animate-spin" />
+                            <Icon name="Loader2" className="animate-spin w-4 h-4" />
                             Saving...
                         </>
                     ) : (
                         <>
-                            <Icon name="Check" />
+                            <Icon name="Check" className='w-4 h-4' />
                             {submitLabel}
                         </>
                     )}
                 </Button>
                 {onCancel && (
-                    <Button type="button" variant="outline" onClick={onCancel}>
+                    <Button type="button" variant="outline" onClick={onCancel} className='text-xs md:text-sm w-full sm:w-auto'>
                         Cancel
                     </Button>
                 )}

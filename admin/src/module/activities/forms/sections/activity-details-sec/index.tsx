@@ -10,7 +10,7 @@ const ActivityDetailsSection: React.FC = () => {
     const { control } = useFormContext<ActivityPayload>();
 
     return (
-        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
+        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-4 md:gap-5 lg:gap-6'>
             <Controller
                 control={control}
                 name='description'

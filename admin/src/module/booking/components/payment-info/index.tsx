@@ -5,7 +5,7 @@ import { getOrderStatusStyles } from '@module/booking/utils/getStatusStyle'
 import { Card, CardContent, CardHeader } from '@ui/card'
 import { Typography } from '@ui/typography'
 import { InfoRow } from '../common'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { cn, formatCurrency, formatDate } from '@/lib/utils'
 
 interface BookingPaymentInfoProps {
     paymentDetails: PaymentBookingInfo
@@ -17,20 +17,23 @@ const BookingPaymentInfo: React.FC<BookingPaymentInfoProps> = ({ paymentDetails,
     return (
         <Card className='w-full'>
             <CardHeader>
-                <div className='flex items-center justify-between w-full'>
-                    <Typography variant="lead">Payment Details</Typography>
-                    <span className={`px-3 py-1.5 rounded-full text-xs font-medium ${getOrderStatusStyles(paymentDetails.order_status)}`}>
+                <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full'>
+                    <Typography variant="lead" className='text-base md:text-lg'>Payment Details</Typography>
+                    <span className={cn(
+                        "px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-xs font-medium w-fit",
+                        getOrderStatusStyles(paymentDetails.order_status)
+                    )}>
                         {paymentDetails.order_status}
                     </span>
                 </div>
             </CardHeader>
             <CardContent>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6'>
                     <div className='flex flex-col gap-1'>
                         <Typography variant="muted" className='text-xs uppercase tracking-wide'>
                             Total Amount
                         </Typography>
-                        <Typography variant="h4" className='text-primary'>
+                        <Typography variant="h4" className='text-primary text-lg md:text-xl lg:text-2xl'>
                             {totalAmount ? formatCurrency(totalAmount) : "-"}
                         </Typography>
                     </div>
@@ -38,7 +41,7 @@ const BookingPaymentInfo: React.FC<BookingPaymentInfoProps> = ({ paymentDetails,
                         <Typography variant="muted" className='text-xs uppercase tracking-wide'>
                             Order Amount
                         </Typography>
-                        <Typography variant="h4">
+                        <Typography variant="h4" className='text-lg md:text-xl lg:text-2xl'>
                             {formatCurrency(paymentDetails.order_amount)}
                         </Typography>
                     </div>
@@ -51,7 +54,7 @@ const BookingPaymentInfo: React.FC<BookingPaymentInfoProps> = ({ paymentDetails,
                         value={paymentDetails.cf_order_id} 
                     />
                 </div>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-6 mt-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6 mt-4 md:mt-5 lg:mt-6'>
                     <InfoRow 
                         label="Order Created At" 
                         value={formatDate(paymentDetails.order_created_at, true)} 

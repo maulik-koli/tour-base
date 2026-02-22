@@ -11,7 +11,7 @@ const TourDetailsSection: React.FC = () => {
     const { control } = useFormContext<CreateTourFormType>();
 
     return (
-        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-6'>
+        <FormSectionWrapper cardTitle="Details" contentClassName='flex flex-col gap-4 md:gap-5 lg:gap-6'>
             <Controller
                 control={control}
                 name='tour.description'
@@ -25,7 +25,7 @@ const TourDetailsSection: React.FC = () => {
                 )}
             />
             <CategorySelect />
-            <div className='grid grid-cols-2 gap-y-4 gap-x-8'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-y-3 md:gap-y-4 gap-x-4 md:gap-x-6 lg:gap-x-8'>
                 <ArrayListInput
                     control={control}
                     name='tour.includes'

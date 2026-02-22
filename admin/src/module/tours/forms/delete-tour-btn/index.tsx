@@ -7,7 +7,7 @@ import { useModelStore } from '@/store';
 
 import Icon from '@/components/icons';
 import { Button } from '@ui/button';
-import { logger } from '@/lib/utils';
+import { cn, logger } from '@/lib/utils';
 
 interface DeleteTourButtonProps {
     slug: string;
@@ -47,9 +47,9 @@ const DeleteTourButton: React.FC<DeleteTourButtonProps> = ({ slug, className }) 
             type='button'
             variant="destructive"
             onClick={handleClick}
-            className={className}
+            className={cn("text-xs md:text-sm w-fit", className)}
         >
-            <Icon name="Trash2" />
+            <Icon name="Trash2" className='w-4 h-4' />
             Delete Tour
         </Button>
     )

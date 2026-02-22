@@ -67,8 +67,8 @@ const ReviewListSection: React.FC<ReviewListSectionProps> = ({ reviews, tourId }
 
     if (reviews.length === 0) {
         return (
-            <div className='w-full bg-card border border-border rounded-lg p-8 text-center'>
-                <Typography variant="muted">
+            <div className='w-full bg-card border border-border rounded-lg p-6 md:p-8 text-center'>
+                <Typography variant="muted" className='text-xs md:text-sm'>
                     No reviews yet. Add the first review using the form above.
                 </Typography>
             </div>
@@ -76,12 +76,12 @@ const ReviewListSection: React.FC<ReviewListSectionProps> = ({ reviews, tourId }
     }
 
     return (
-        <div className='flex flex-col gap-3'>
-            <Typography variant="h4" className='font-semibold'>
+        <div className='flex flex-col gap-3 md:gap-4'>
+            <Typography variant="h4" className='font-semibold text-base md:text-lg'>
                 Reviews ({reviews.length})
             </Typography>
             
-            <div className='flex flex-col gap-3'>
+            <div className='flex flex-col gap-3 md:gap-4'>
                 {reviews.map((review) => (
                     <Collapsible
                         key={review._id}
@@ -100,9 +100,9 @@ const ReviewListSection: React.FC<ReviewListSectionProps> = ({ reviews, tourId }
                             </div>
                         </CollapsibleTrigger>
 
-                        <CollapsibleContent className='pt-3'>
-                            <div className='bg-muted/30 border border-border rounded-lg p-4'>
-                                <Typography variant="p" className='font-medium mb-4'>
+                        <CollapsibleContent className='pt-3 md:pt-4'>
+                            <div className='bg-muted/30 border border-border rounded-lg p-3 md:p-4'>
+                                <Typography variant="p" className='font-medium mb-3 md:mb-4 text-sm md:text-base'>
                                     Edit Review
                                 </Typography>
                                 <ReviewForm

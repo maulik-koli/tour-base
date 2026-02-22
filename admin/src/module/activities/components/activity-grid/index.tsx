@@ -47,7 +47,7 @@ const ActivityGrid: React.FC = () => {
         }
 
         return (
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-2'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 lg:gap-6 py-2'>
                 {data.data?.activities.map((activity) => (
                     <ActivityCard activity={activity} key={activity.slug} />
                 ))}

@@ -39,8 +39,8 @@ export const DeleteBookingButton: React.FC<{ bookingId: string }> = ({ bookingId
 
     
     return (
-        <Button variant="destructive" onClick={handleClick}>
-            <Icon name="Trash2" />
+        <Button variant="destructive" onClick={handleClick} className='text-xs md:text-sm w-fit'>
+            <Icon name="Trash2" className='w-4 h-4' />
             Delete Booking
         </Button>
     )
