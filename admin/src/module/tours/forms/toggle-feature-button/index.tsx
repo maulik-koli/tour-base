@@ -47,24 +47,24 @@ const ToggleFeaturedButton: React.FC<ToggleFeaturedButtonProps> = ({ slug, isFea
 
 
     return (
-        <div className='flex justify-between items-center py-4 px-3 rounded-md bg-muted/50'>
+        <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4 py-3 md:py-4 px-3 rounded-md bg-muted/50'>
             <div className='flex flex-col gap-1'>
-                <FieldLabel>Featured Tour State</FieldLabel>
-                <Typography variant="small">Tour that are in featured slider of home page</Typography>
+                <FieldLabel className='text-sm md:text-base'>Featured Tour State</FieldLabel>
+                <Typography variant="small" className='text-xs md:text-sm'>Tour that are in featured slider of home page</Typography>
             </div>
             <div className='flex items-center gap-2'>
                 {isFeatured ? (
                     <Typography 
                         variant="small"
-                        className='text-green-600 bg-green-100 p-2 rounded-xl'
+                        className='text-green-600 bg-green-100 p-2 rounded-xl text-xs md:text-sm'
                     >Featured</Typography>
                 ) : (
                     <Typography 
                         variant="small"
-                        className='text-red-600 bg-red-100 py-1 px-2 rounded-xl'
+                        className='text-red-600 bg-red-100 py-1 px-2 rounded-xl text-xs md:text-sm'
                     >Not Featured</Typography>
                 )}
-                <Button type='button' variant="link" onClick={handleDeleteButton} >
+                <Button type='button' variant="link" onClick={handleDeleteButton} className='text-xs md:text-sm'>
                     Change
                 </Button>
             </div>
@@ -114,12 +114,12 @@ export const RemoveFeaturedButton: React.FC<RemoveFeaturedButtonProps> = ({ slug
     return (
         <Button 
             variant="outline"
-            className='text-destructive'
+            className='text-destructive h-8 w-8 md:h-9 md:w-9'
             size="icon"
             type='button'
             onClick={handleDeleteButton}
         >
-            <Icon name="Trash2" />   
+            <Icon name="Trash2" className='w-3.5 h-3.5 md:w-4 md:h-4' />   
         </Button>
     )
 }

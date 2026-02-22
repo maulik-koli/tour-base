@@ -10,7 +10,7 @@ interface ActivityFilterProps {
 
 const ActivityFilter: React.FC<ActivityFilterProps> = ({ searchFilters, onChange }) => {
     return (
-        <div className='w-full flex justify-between items-center gap-6 bg-card border border-border rounded-md p-3'>
+        <div className='w-full flex justify-between items-center gap-3 md:gap-6 bg-card border border-border rounded-md p-3'>
             <InputField 
                 onChange={(value) => onChange(value)}
                 value={searchFilters || ''}

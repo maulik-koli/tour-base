@@ -76,10 +76,10 @@ const ReviewDetailComponents: React.FC = () => {
     const { tour, reviews } = data.data;
 
     return (
-        <div className='flex flex-col gap-6'>
+        <div className='flex flex-col gap-4 md:gap-5 lg:gap-6'>
             {/* Tour Info Header */}
-            <div className='flex items-start gap-4 bg-card border border-border rounded-lg p-4'>
-                <div className='relative w-24 h-24 shrink-0 rounded-md overflow-hidden'>
+            <div className='flex items-start gap-3 md:gap-4 bg-card border border-border rounded-lg p-3 md:p-4'>
+                <div className='relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 shrink-0 rounded-md overflow-hidden'>
                     <FallbackImage
                         src={tour.thumbnailImage}
                         alt={tour.name}
@@ -88,13 +88,13 @@ const ReviewDetailComponents: React.FC = () => {
                     />
                 </div>
                 <div className='flex flex-col gap-1'>
-                    <Typography variant="h3" className='font-semibold'>
+                    <Typography variant="h3" className='font-semibold text-base md:text-lg lg:text-xl'>
                         {tour.name}
                     </Typography>
-                    <Typography variant="muted">
+                    <Typography variant="muted" className='text-xs md:text-sm'>
                         Slug: {tour.slug}
                     </Typography>
-                    <Typography variant="small" className='text-primary'>
+                    <Typography variant="small" className='text-primary text-xs md:text-sm'>
                         {reviews.length} {reviews.length === 1 ? 'Review' : 'Reviews'}
                     </Typography>
                 </div>
@@ -105,16 +105,16 @@ const ReviewDetailComponents: React.FC = () => {
                 <CollapsibleTrigger asChild>
                     <Button 
                         variant={isAddFormOpen ? "secondary" : "default"}
-                        className='w-fit'
+                        className='w-fit text-xs md:text-sm'
                     >
-                        <Icon name={isAddFormOpen ? "X" : "Plus"} />
+                        <Icon name={isAddFormOpen ? "X" : "Plus"} className='w-4 h-4' />
                         {isAddFormOpen ? 'Close Form' : 'Add Review'}
                     </Button>
                 </CollapsibleTrigger>
 
-                <CollapsibleContent className='pt-4'>
-                    <div className='bg-card border border-border rounded-lg p-4'>
-                        <Typography variant="p" className='font-medium mb-4'>
+                <CollapsibleContent className='pt-3 md:pt-4'>
+                    <div className='bg-card border border-border rounded-lg p-3 md:p-4'>
+                        <Typography variant="p" className='font-medium mb-3 md:mb-4 text-sm md:text-base'>
                             Add New Review
                         </Typography>
                         <ReviewForm

@@ -11,9 +11,9 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { IconName } from "@/components/icons"
-import NavUser from "../nav-user"
 import SidebarNavLink from "../sidebar-nav-link";
 import LogoutButton from "@module/admin/components/logout-btn";
+import { Avatar, AvatarFallback, AvatarImage } from "@ui/avatar";
 
 export type SideBarItem = {
     title: string;
@@ -54,18 +54,19 @@ const items: SideBarItem[] = [
     }
 ]
 
-const USER = {
-    name: "user name",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-}
-
 
 const AppSidebar: React.FC = () => {
     return (
        <Sidebar collapsible="icon">
-            <SidebarHeader>
-                <div className="bg-blue-900 flex items-center justify-center p-4 rounde-xl text-primary-foreground">Logo</div>
+            <SidebarHeader className="flex items-center justify-center">
+                <Avatar className="h-15 w-30 rounded-sm">
+                    <AvatarImage src="/logo.png" alt="Eklavya Tourism" />
+                    <AvatarFallback 
+                        className="rounded-lg bg-secondary-foreground/50 text-secondary flex ic justify-center"
+                    >
+                        LOGO
+                    </AvatarFallback>
+                </Avatar>
             </SidebarHeader>
             <SidebarContent>
                 <SidebarGroup>

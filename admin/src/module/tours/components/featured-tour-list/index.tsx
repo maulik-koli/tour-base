@@ -39,9 +39,11 @@ const FeaturedTourList: React.FC = () => {
         return (
             <>
                 {data.data?.map((tour) => (
-                    <li key={tour._id} className='w-full flex items-center justify-between'>
-                        <Typography className='font-medium'>{tour.name}</Typography>
-                        <RemoveFeaturedButton slug={tour.slug} onSuccessAction={refetch} />
+                    <li key={tour._id} className='w-full flex items-start justify-between gap-2 md:gap-3'>
+                        <Typography className='font-medium text-sm md:text-base wrap-break-word flex-1'>{tour.name}</Typography>
+                        <div className='shrink-0'>
+                            <RemoveFeaturedButton slug={tour.slug} onSuccessAction={refetch} />
+                        </div>
                     </li>
                 ))}
             </>
@@ -50,13 +52,13 @@ const FeaturedTourList: React.FC = () => {
 
     
     return (
-        <Card className='w-full h-fit col-span-4 pb-0'>
+        <Card className='w-full h-fit lg:col-span-4 pb-0'>
             <CardHeader className='gap-0'>
-                <Typography variant="lead">Featured Tours</Typography>
+                <Typography variant="lead" className='text-base md:text-lg'>Featured Tours</Typography>
             </CardHeader>
             <CardContent className='px-0'>
                 <Separator />
-                <ul className='flex flex-col gap-4 p-6'>
+                <ul className='flex flex-col gap-3 md:gap-4 p-4 md:p-6'>
                     {getContent()}
                 </ul>
             </CardContent>

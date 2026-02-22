@@ -13,7 +13,7 @@ const ActivityOverviewSection: React.FC = () => {
     const { control } = useFormContext<ActivityPayload>();
 
     return (
-        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-2 gap-6">
+        <FormSectionWrapper cardTitle="Overview" contentClassName="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
             <Controller
                 control={control}
                 name='title'
@@ -67,10 +67,10 @@ const ActivityOverviewSection: React.FC = () => {
                     />
                 )}
             />
-            <div className='flex justify-between items-center bg-primary/10 py-4 px-3 rounded-md col-span-2'>
+            <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-primary/10 py-3 md:py-4 px-3 rounded-md md:col-span-2'>
                 <div className='flex flex-col gap-1'>
-                    <FieldLabel>Activity Status</FieldLabel>
-                    <Typography variant="small">Activity is visible to customers</Typography>
+                    <FieldLabel className='text-sm md:text-base'>Activity Status</FieldLabel>
+                    <Typography variant="small" className='text-xs md:text-sm'>Activity is visible to customers</Typography>
                 </div>
                 <Controller
                     control={control}

@@ -10,7 +10,6 @@ import { flatZodError } from '@/lib/zod/flatZodError'
 
 import Icon from '@/components/icons'
 import TourFormPackageSection from '../sections/tour-package-sec'
-import { Typography } from '@ui/typography'
 import { Button } from '@ui/button'
 import { 
     TourOverviewSection, 
@@ -19,6 +18,7 @@ import {
     ToursFormDaysSections
 } from '../sections'
 import { logger } from '@/lib/utils'
+import PageTitle from '@/components/page-title'
 
 
 const CreateTourForm: React.FC = () => {
@@ -42,16 +42,18 @@ const CreateTourForm: React.FC = () => {
     
     return (
         <>
-            <div className='flex items-center justify-between'>
-                <Typography variant="h2">Create Tour</Typography>
-                <Button type='submit' onClick={form.handleSubmit(onCreateSubmit)}>
-                    <Icon name='Save' />
+            <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+                <PageTitle
+                    title='Create Tour'
+                />
+                <Button type='submit' onClick={form.handleSubmit(onCreateSubmit)} className='text-xs md:text-sm w-fit'>
+                    <Icon name='Save' className='w-4 h-4' />
                     Save Tour
                 </Button>
             </div>
 
             <FormProvider {...form}>
-                <form className='w-full flex flex-col gap-8'>
+                <form className='w-full flex flex-col gap-4 md:gap-6 lg:gap-8'>
                     <TourOverviewSection />
                     <TourDetailsSection />
                     <TourImageSection />

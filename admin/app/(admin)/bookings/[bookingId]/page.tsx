@@ -5,7 +5,7 @@ import { useGetBookingDetails } from '@module/booking/api/queries'
 
 import ErrorBlock from '@/components/error-block'
 import BookingDetailsComponent from '@module/booking/components/booking-details'
-import { Typography } from '@ui/typography'
+import PageTitle from '@/components/page-title'
 import { CustomSpinner } from '@ui/spinner'
 import { DeleteBookingButton } from '@module/booking/components/booking-actions-btn'
 
@@ -44,14 +44,12 @@ const BookingDetail: React.FC = () => {
 
 
     return (
-        <div className='px-8 py-6 flex flex-col gap-6 bg-background'>
-            <div className='w-full flex items-center justify-between'>
-                <div className='flex flex-col gap-1'>
-                    <Typography variant="h2" className='font-semibold'>Booking Details</Typography>
-                    <Typography variant="small" className='text-muted-foreground font-normal'>
-                        View booking information and manage status
-                    </Typography>
-                </div>
+        <div className='px-4 py-4 md:px-6 md:py-5 lg:px-8 lg:py-6 flex flex-col gap-4 md:gap-5 lg:gap-6 bg-background'>
+            <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+                <PageTitle
+                    title='Booking Details'
+                    subtitle='View booking information and manage status'
+                />
                 <DeleteBookingButton bookingId={bookingId} />
             </div>
 

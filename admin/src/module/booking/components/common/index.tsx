@@ -5,7 +5,7 @@ export const InfoRow: React.FC<{ label: string; value: React.ReactNode }> = ({ l
         <Typography variant="muted" className='text-xs uppercase tracking-wide'>
             {label}
         </Typography>
-        <Typography variant="p" className='font-medium'>
+        <Typography variant="p" className='font-medium text-sm md:text-base wrap-break-word'>
             {value || "-"}
         </Typography>
     </div>

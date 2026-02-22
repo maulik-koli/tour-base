@@ -20,16 +20,16 @@ const BookingTemporaryPaymentInfo: React.FC<BookingTemporaryPaymentInfoProps> = 
     return (
         <Card className='w-full'>
             <CardHeader>
-                <Typography variant="lead">Temporary Payment Record</Typography>
+                <Typography variant="lead" className='text-base md:text-lg'>Temporary Payment Record</Typography>
             </CardHeader>
             <CardContent>
-                <div className='grid grid-cols-3 gap-8 items-start'>
-                    {/* QR Code Column - 1/3 width */}
-                    <div className='flex justify-center pt-2'>
-                        <div className='p-3 bg-white rounded-lg border border-muted'>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 items-start'>
+                    <div className='flex justify-center md:justify-start pt-2'>
+                        <div className='p-2.5 md:p-3 bg-white rounded-lg border border-muted'>
                             <QRCode
                                 value={temporaryPaymentRecord.upiUrl}
-                                size={160}
+                                size={140}
+                                className='md:w-40 md:h-40 w-35 h-35'
                                 bgColor="#ffffff"
                                 fgColor="#000000"
                                 level="H"
@@ -37,7 +37,7 @@ const BookingTemporaryPaymentInfo: React.FC<BookingTemporaryPaymentInfoProps> = 
                         </div>
                     </div>
 
-                    <div className='col-span-2 flex flex-col gap-6'>
+                    <div className='md:col-span-2 flex flex-col gap-4 md:gap-5 lg:gap-6'>
                         <InfoRow 
                             label="Payment Option" 
                             value={temporaryPaymentRecord.paymentOption} 

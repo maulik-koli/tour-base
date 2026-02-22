@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { ReviewItem } from '@module/review/api/types'
-import { formatDate } from '@/lib/utils'
+import { cn, formatDate } from '@/lib/utils'
 
 import Icon from '@/components/icons'
 import FallbackImage from '@/components/fallback-image'
@@ -23,9 +23,10 @@ const StarRating: React.FC<{ rating: number }> = ({ rating }) => {
                 <Icon
                     key={star}
                     name="Star"
-                    width={16}
-                    height={16}
-                    className={star <= rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}
+                    className={cn(
+                        'w-3 h-3 md:w-4 md:h-4',
+                        star <= rating ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'
+                    )}
                 />
             ))}
         </div>
@@ -40,15 +41,16 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
     isExpanded = false
 }) => {
     return (
-        <div className={`
-            w-full bg-card border border-border rounded-lg p-4 
-            transition-all duration-200 cursor-pointer
-            ${isExpanded ? 'border-primary/50' : 'hover:border-primary/30'}
-        `}>
-            <div className='flex gap-4'>
+        <div 
+            className={cn(
+                "w-full bg-card border border-border rounded-lg p-3 md:p-4 transition-all duration-200 cursor-pointer",
+                isExpanded ? 'border-primary/50' : 'hover:border-primary/30'
+            )}
+        >
+            <div className='flex flex-col sm:flex-row gap-3 md:gap-4'>
                 {/* Review Image */}
                 {review.imageUrl && (
-                    <div className='shrink-0 w-20 h-20 relative rounded-md overflow-hidden'>
+                    <div className='shrink-0 w-full sm:w-16 h-32 sm:h-16 md:w-20 md:h-20 relative rounded-md overflow-hidden'>
                         <FallbackImage
                             src={review.imageUrl}
                             alt={`Review by ${review.reviewerName}`}
@@ -60,20 +62,20 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
                 {/* Review Content */}
                 <div className='flex-1 flex flex-col gap-2 min-w-0'>
-                    <div className='flex items-start justify-between gap-4'>
+                    <div className='flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 sm:gap-4'>
                         <div className='flex flex-col gap-1'>
-                            <Typography variant="p" className='font-semibold'>
+                            <Typography variant="p" className='font-semibold text-sm md:text-base'>
                                 {review.reviewerName}
                             </Typography>
                             <StarRating rating={review.rating} />
                         </div>
                         
-                        <div className='flex items-center gap-2'>
-                            <Typography variant="muted" className='text-xs whitespace-nowrap'>
+                        <div className='flex items-center gap-1.5 sm:gap-2'>
+                            <Typography variant="muted" className='text-[10px] md:text-xs whitespace-nowrap'>
                                 {formatDate(review.createdAt)}
                             </Typography>
                             {(onEdit || onDelete) && (
-                                <div className='flex items-center gap-1'>
+                                <div className='flex items-center gap-0.5 sm:gap-1'>
                                     {onEdit && (
                                         <Button
                                             variant="ghost"
@@ -83,9 +85,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                                                 e.stopPropagation();
                                                 onEdit();
                                             }}
-                                            className='h-8 w-8'
+                                            className='h-7 w-7 md:h-8 md:w-8'
                                         >
-                                            <Icon name="Pencil" width={14} height={14} />
+                                            <Icon name="Pencil" className='w-3 h-3 md:w-3.5 md:h-3.5' />
                                         </Button>
                                     )}
                                     {onDelete && (
@@ -97,9 +99,9 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                                                 e.stopPropagation();
                                                 onDelete();
                                             }}
-                                            className='h-8 w-8 text-destructive hover:text-destructive'
+                                            className='h-7 w-7 md:h-8 md:w-8 text-destructive hover:text-destructive'
                                         >
-                                            <Icon name="Trash2" width={14} height={14} />
+                                            <Icon name="Trash2" className='w-3 h-3 md:w-3.5 md:h-3.5' />
                                         </Button>
                                     )}
                                 </div>
@@ -107,7 +109,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
                         </div>
                     </div>
 
-                    <Typography variant="small" className='text-muted-foreground line-clamp-3'>
+                    <Typography variant="small" className='text-muted-foreground line-clamp-3 text-xs md:text-sm'>
                         {review.comment}
                     </Typography>
                 </div>
@@ -115,11 +117,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
 
             {/* Expand indicator */}
             <div className='flex items-center justify-center mt-2 pt-2 border-t border-border'>
-                <Typography variant="muted" className='text-xs flex items-center gap-1'>
+                <Typography variant="muted" className='text-[10px] md:text-xs flex items-center gap-1'>
                     <Icon 
                         name={isExpanded ? "ChevronUp" : "ChevronDown"} 
-                        width={14} 
-                        height={14} 
+                        className='w-3 h-3 md:w-3.5 md:h-3.5'
                     />
                     {isExpanded ? 'Click to collapse' : 'Click to edit'}
                 </Typography>

@@ -11,8 +11,8 @@ import { flatZodError } from '@/lib/zod/flatZodError'
 import { logger } from '@/lib/utils'
 
 import Icon from '@/components/icons'
+import PageTitle from '@/components/page-title'
 import DeleteActivityButton from '../delete-activity-btn'
-import { Typography } from '@ui/typography'
 import { Button } from '@ui/button'
 import { 
     ActivityOverviewSection, 
@@ -48,24 +48,28 @@ const UpdateActivityForm: React.FC<UpdateActivityFormProps> = ({ data }) => {
     
     return (
         <>
-            <div className='flex items-center justify-between'>
-                <Typography variant="h2">Update Activity</Typography>
-                <div className='flex items-center gap-4'>
+            <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+                <PageTitle 
+                    title='Update Activity'
+                    subtitle='Modify your activity details'
+                />
+                <div className='flex items-center gap-2 md:gap-3 lg:gap-4 flex-wrap'>
                     <DeleteActivityButton slug={data.slug} /> 
                     <Button 
                         type='button'
                         onClick={handleSubmit(onUpdateSubmit)}
                         disabled={!isDirty || isUpdatingActivity}
+                        className='text-xs md:text-sm w-fit'
                     >
-                        <Icon name='Save' />
+                        <Icon name='Save' className='w-4 h-4' />
                         Save Activity
                     </Button>
                 </div>
             </div>
 
-            <div className='w-full flex flex-col gap-8'>
+            <div className='w-full flex flex-col gap-4 md:gap-6 lg:gap-8'>
                 <FormProvider {...form}>
-                    <form className='w-full flex flex-col gap-8'>
+                    <form className='w-full flex flex-col gap-4 md:gap-6 lg:gap-8'>
                         <ActivityOverviewSection />
                         <ActivityDetailsSection />
                         <ActivityImageSection />

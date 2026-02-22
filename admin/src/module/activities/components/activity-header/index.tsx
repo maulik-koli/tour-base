@@ -3,8 +3,8 @@ import React from 'react'
 import { useRouter } from 'next/navigation' 
 
 import Icon from '@/components/icons'
+import PageTitle from '@/components/page-title'
 import { Button } from '@ui/button'
-import { Typography } from '@ui/typography'
 
 
 const ActivityHeader: React.FC = () => {
@@ -15,15 +15,13 @@ const ActivityHeader: React.FC = () => {
     }
 
     return (
-        <div className='w-full flex items-center justify-between'>
-            <div className='flex flex-col gap-1'>
-                <Typography variant="h2" className='font-semibold'>Activities</Typography>
-                <Typography variant="small" className='text-muted-foreground font-normal'>
-                    Manage your activities
-                </Typography>
-            </div>
-            <Button variant="default" onClick={handleAddButton}>
-                <Icon name="Plus" width={16} height={16} fill="none" stroke="currentColor" />
+        <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4'>
+            <PageTitle
+                title='Activities'
+                subtitle='Manage your activities'
+            />
+            <Button variant="default" onClick={handleAddButton} className='text-xs md:text-sm w-fit'>
+                <Icon name="Plus" width={14} height={14} className='md:w-4 md:h-4' fill="none" stroke="currentColor" />
                 Create New Activity
             </Button>
         </div>

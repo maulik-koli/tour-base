@@ -30,41 +30,41 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
 
     return (
         <Card className='w-full'>
-            <CardContent className='px-0'>
-                <Table>
+            <CardContent className='px-0 overflow-x-auto'>
+                <Table className='min-w-[1000px]'>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className='pl-6'>Sr No.</TableHead>
-                            <TableHead>Booking ID</TableHead>
-                            <TableHead>Customer Name</TableHead>
-                            <TableHead>Customer Number</TableHead>
-                            <TableHead>Tour Name</TableHead>
-                            <TableHead>Created At</TableHead>
-                            <TableHead>Booking Status</TableHead>
-                            <TableHead>Payment Status</TableHead>
-                            <TableHead className='pr-6'>Action</TableHead>
+                            <TableHead className='pl-4 md:pl-6 text-xs md:text-sm'>Sr No.</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Booking ID</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Customer Name</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Customer Number</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Tour Name</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Created At</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Booking Status</TableHead>
+                            <TableHead className='text-xs md:text-sm'>Payment Status</TableHead>
+                            <TableHead className='pr-4 md:pr-6 text-xs md:text-sm'>Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {bookingsList.map((booking, index) => (
                             <TableRow key={booking._id}>
-                                <TableCell className='pl-6 font-medium'>
+                                <TableCell className='pl-4 md:pl-6 font-medium text-xs md:text-sm'>
                                     {index + 1}
                                 </TableCell>
-                                <TableCell className='font-medium'>
+                                <TableCell className='font-medium text-xs md:text-sm'>
                                     {booking._id}
                                 </TableCell>
-                                <TableCell>{booking.customerName || '-'}</TableCell>
-                                <TableCell>{booking.customerNumber || '-'}</TableCell>
-                                <TableCell className='max-w-40 truncate'>
+                                <TableCell className='text-xs md:text-sm'>{booking.customerName || '-'}</TableCell>
+                                <TableCell className='text-xs md:text-sm'>{booking.customerNumber || '-'}</TableCell>
+                                <TableCell className='max-w-40 truncate text-xs md:text-sm'>
                                     {booking.tourName}
                                 </TableCell>
-                                <TableCell className='font-medium'>
+                                <TableCell className='font-medium text-xs md:text-sm'>
                                     {formatDate(booking.createdAt)}
                                 </TableCell>
                                 <TableCell>
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-full text-xs font-medium capitalize",
+                                        "px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-xs font-medium capitalize",
                                         getBookingStatusStyles(booking.bookingStatus)
                                     )}>
                                         {booking.bookingStatus.replace(/_/g, ' ')}
@@ -72,20 +72,21 @@ const BookingsTable: React.FC<BookingsTableProps> = ({ bookingsList }) => {
                                 </TableCell>
                                 <TableCell>
                                     <span className={cn(
-                                        "px-2.5 py-1 rounded-full text-xs font-medium capitalize",
+                                        "px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-xs font-medium capitalize",
                                         getPaymentStatusStyles(booking.orderStatus || "")
                                     )}>
                                         {booking.orderStatus || "Not Initiated"}
                                     </span>
                                 </TableCell>
-                                <TableCell className='pr-6'>
+                                <TableCell className='pr-4 md:pr-6'>
                                     <Button 
                                         variant="outline"
                                         size="icon"
                                         type='button'
                                         onClick={() => handleEdit(booking._id)}
+                                        className='h-8 w-8 md:h-9 md:w-9'
                                     >
-                                        <Icon name="Pencil" />
+                                        <Icon name="Pencil" className='w-3.5 h-3.5 md:w-4 md:h-4' />
                                     </Button>
                                 </TableCell>
                             </TableRow>

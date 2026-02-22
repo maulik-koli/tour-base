@@ -7,7 +7,7 @@ import { useModelStore } from '@/store';
 
 import Icon from '@/components/icons';
 import { Button } from '@ui/button';
-import { logger } from '@/lib/utils';
+import { cn, logger } from '@/lib/utils';
 
 interface DeleteActivityButtonProps {
     slug: string;
@@ -47,9 +47,9 @@ const DeleteActivityButton: React.FC<DeleteActivityButtonProps> = ({ slug, class
             type='button'
             variant="destructive"
             onClick={handleClick}
-            className={className}
+            className={cn("text-xs md:text-sm w-fit", className)}
         >
-            <Icon name="Trash2" />
+            <Icon name="Trash2" className='w-4 h-4' />
             Delete Activity
         </Button>
     )

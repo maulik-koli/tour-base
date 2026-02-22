@@ -32,18 +32,18 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
     return (
         <Card className='w-full'>
             <CardHeader>
-                <div className='flex items-center justify-between w-full'>
-                    <Typography variant="lead">Booking Information</Typography>
+                <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 w-full'>
+                    <Typography variant="lead" className='text-base md:text-lg'>Booking Information</Typography>
                     <span className={cn(
-                        'px-3 py-1.5 rounded-full text-xs font-medium',
+                        'px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-xs font-medium w-fit',
                         getBookingStatusStyles(booking.bookingStatus)
                     )}>
                         {booking.bookingStatus.replace(/_/g, ' ')}
                     </span>
                 </div>
             </CardHeader>
-            <CardContent className='flex flex-col gap-6'>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+            <CardContent className='flex flex-col gap-4 md:gap-5 lg:gap-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6'>
                     <InfoRow label="Booking ID" value={booking._id} />
                     <InfoRow label="Tour ID" value={booking.tourId} />
                     <InfoRow label="Package ID" value={booking.packageId} />
@@ -52,7 +52,7 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
                             Expired
                         </Typography>
                         <span className={cn(
-                            'w-fit px-2.5 py-1 rounded-full text-xs font-medium',
+                            'w-fit px-2 py-0.5 md:px-2.5 md:py-1 rounded-full text-xs font-medium',
                             expired ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                         )}>
                             {expired ? 'Yes' : 'No'}
@@ -60,7 +60,7 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
                     </div>
                 </div>
                 
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6'>
                     <InfoRow label="Expires At" value={formatDate(booking.expiresAt, true)} />
                     <InfoRow label="Created At" value={formatDate(booking.createdAt)} />
                     <InfoRow label="Updated At" value={formatDate(booking.updatedAt)} />
@@ -68,8 +68,8 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
 
                 <Separator />
 
-                <Typography variant="large">Customer Details</Typography>
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+                <Typography variant="large" className='text-base md:text-lg'>Customer Details</Typography>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 lg:gap-6'>
                     <InfoRow 
                         label="Full Name" 
                         value={booking.customerDetails?.fullName} 
@@ -90,14 +90,14 @@ const BookingCustomerInfo: React.FC<BookingCustomerInfoProps> = ({ booking }) =>
 
                 {booking.customerDetails?.members && booking.customerDetails.members.length > 0 && (
                     <>
-                        <Typography variant="p" className='font-medium text-muted-foreground'>
+                        <Typography variant="p" className='font-medium text-muted-foreground text-sm md:text-base'>
                             Travel Members ({booking.customerDetails.members.length})
                         </Typography>
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4'>
                             {booking.customerDetails.members.map((member, index) => (
-                                <div key={index} className='flex items-center gap-3 p-3 bg-muted rounded-lg'>
-                                    <div className='w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center'>
-                                        <Typography variant="small" className='text-primary font-medium'>
+                                <div key={index} className='flex items-center gap-2 md:gap-3 p-2.5 md:p-3 bg-muted rounded-lg'>
+                                    <div className='w-9 h-9 md:w-10 md:h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0'>
+                                        <Typography variant="small" className='text-primary font-medium text-xs md:text-sm'>
                                             {member.gender}
                                         </Typography>
                                     </div>

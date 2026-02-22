@@ -39,33 +39,33 @@ const ProfileCard: React.FC = () => {
         return (
             <>
                 <div className='flex flex-col gap-2 items-center'>
-                    <Avatar className="h-15 w-15 rounded-lg">
-                        <AvatarImage src="/avatars/admin.jpg" alt={data.data?.name} />
+                    <Avatar className="h-12 w-24 md:h-15 md:w-30 rounded-sm">
+                        <AvatarImage src="/logo.png" alt={data.data?.name} />
                         <AvatarFallback 
-                            className="rounded-lg bg-secondary-foreground/50 text-secondary flex ic justify-center"
+                            className="rounded-lg bg-secondary-foreground/50 text-secondary flex ic justify-center text-xs md:text-sm"
                         >
                             LOGO
                         </AvatarFallback>
                     </Avatar>
-                    <Typography variant="lead">
+                    <Typography variant="lead" className='text-base md:text-lg text-center'>
                         {data.data?.name}
                     </Typography>
                 </div>
 
-                <div className='w-full flex flex-col gap-3'>
-                    <div className='w-full flex items-center justify-between gap-4'>
+                <div className='w-full flex flex-col gap-2.5 md:gap-3'>
+                    <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-4'>
                         <div className='flex items-center gap-2'>
-                            <Icon name='Mail' width={18} height={18} />
-                            <Typography>Email:</Typography>
+                            <Icon name='Mail' width={16} height={16} className='md:w-[18px] md:h-[18px]' />
+                            <Typography className='text-sm md:text-base'>Email:</Typography>
                         </div>
-                        <Typography className='font-medium'>{data.data?.email}</Typography>
+                        <Typography className='font-medium text-sm md:text-base break-all'>{data.data?.email}</Typography>
                     </div>
-                    <div className='w-full flex items-center justify-between gap-3'>
+                    <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-3'>
                         <div className='flex items-center gap-2'>
-                            <Icon name='Phone' width={18} height={18} />
-                            <Typography>Phone:</Typography>
+                            <Icon name='Phone' width={16} height={16} className='md:w-[18px] md:h-[18px]' />
+                            <Typography className='text-sm md:text-base'>Phone:</Typography>
                         </div>
-                        <Typography className='font-medium'>{data.data?.phone}</Typography>
+                        <Typography className='font-medium text-sm md:text-base'>{data.data?.phone}</Typography>
                     </div>
                 </div>
             </>
@@ -73,8 +73,8 @@ const ProfileCard: React.FC = () => {
     }
 
     return (
-        <Card className='w-full col-span-4'>
-            <CardContent className='h-full flex flex-col gap-4 justify-between'>
+        <Card className='w-full lg:col-span-4'>
+            <CardContent className='h-full flex flex-col gap-3 md:gap-4 justify-between'>
                 {getContent()}
             </CardContent>
         </Card>

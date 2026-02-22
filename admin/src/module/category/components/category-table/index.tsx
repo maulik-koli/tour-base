@@ -74,27 +74,28 @@ const CategoryTable: React.FC = () => {
                 {data.data?.map((category) => (
                     <TableRow key={category._id}>
                         <TableCell>
-                            <div className='relative w-15 aspect-square bg-muted rounded-xl overflow-hidden'>
+                            <div className='relative w-12 md:w-15 aspect-square bg-muted rounded-lg md:rounded-xl overflow-hidden'>
                                 <FallbackImage 
                                     src={category.image}
                                     alt={category.name}
                                     fill
                                     crop="fill"
                                     sizes="(max-width: 768px) 100vw, 50vw"
-                                    className='rounded-xl'
+                                    className='rounded-lg md:rounded-xl'
                                 />
                             </div>
                         </TableCell>
-                        <TableCell className='max-w-70 truncate font-medium'>{category.name}</TableCell>
-                        <TableCell className='max-w-30 truncate'>{category.value}</TableCell>
+                        <TableCell className='max-w-40 md:max-w-70 truncate font-medium text-sm md:text-base'>{category.name}</TableCell>
+                        <TableCell className='max-w-20 md:max-w-30 truncate text-sm md:text-base'>{category.value}</TableCell>
                         <TableCell>
                             <Button 
                                 variant="outline"
                                 size="icon"
                                 type='button'
                                 onClick={() => router.push(`/category/${category.value}`)}
+                                className='h-8 w-8 md:h-9 md:w-9'
                             >
-                                <Icon name="Pencil" />
+                                <Icon name="Pencil" className='w-3.5 h-3.5 md:w-4 md:h-4' />
                             </Button>
                         </TableCell>
                     </TableRow>
@@ -105,17 +106,17 @@ const CategoryTable: React.FC = () => {
 
 
     return (
-        <Card className='w-full col-span-8'>
-            <CardHeader className='flex items-center justify-between'>
-                <Typography variant="lead">Categories</Typography>
-                <Button onClick={() => router.push('/category/create')}>
-                    <Icon name="Plus" className="w-4 h-4" />
+        <Card className='w-full lg:col-span-8'>
+            <CardHeader className='flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+                <Typography variant="lead" className='text-base md:text-lg'>Categories</Typography>
+                <Button onClick={() => router.push('/category/create')} className='text-xs md:text-sm'>
+                    <Icon name="Plus" className="w-3.5 h-3.5 md:w-4 md:h-4" />
                     Add Category
                 </Button>
             </CardHeader>
             <CardContent>
-                <CardContent className='px-0'>
-                    <Table>
+                <CardContent className='px-0 overflow-x-auto'>
+                    <Table className='min-w-[500px]'>
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Images</TableHead>

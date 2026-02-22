@@ -55,8 +55,8 @@ const CardMatrix: React.FC = () => {
     // here call the api
 
     return (
-        <div className='w-full col-span-8'>
-            <div className='w-full grid grid-cols-2 gap-8'>
+        <div className='w-full lg:col-span-8'>
+            <div className='w-full grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8'>
                 {CARD_DATA.map((card) => (
                     <DashboardCard 
                         key={card.label}
@@ -79,16 +79,16 @@ const DashboardCard: React.FC<CardMatrixType> = function ({ value, icon, label, 
     return (
         <Card>
             <CardContent>
-                <div className='flex items-center justify-between gap-4'>
+                <div className='flex items-center justify-between gap-3 md:gap-4'>
                     <div className={cn(
-                        'flex items-center justify-center rounded-lg h-10 w-10',
+                        'flex items-center justify-center rounded-lg h-9 w-9 md:h-10 md:w-10',
                         COLOR_CLASSES[colorName],
                     )}>
-                        <Icon name={icon} />
+                        <Icon name={icon} className='w-4 h-4 md:w-5 md:h-5' />
                     </div>
-                    <div className='flex flex-col gap-2 items-end'>
-                        <Typography variant="h4" className='font-semibold'>{value}</Typography>
-                        <Typography variant="p" className='text-muted-foreground'>{label}</Typography>
+                    <div className='flex flex-col gap-1.5 md:gap-2 items-end'>
+                        <Typography variant="h4" className='font-semibold text-lg md:text-xl lg:text-2xl'>{value}</Typography>
+                        <Typography variant="p" className='text-muted-foreground text-xs md:text-sm text-right'>{label}</Typography>
                     </div>
                 </div>
             </CardContent>
