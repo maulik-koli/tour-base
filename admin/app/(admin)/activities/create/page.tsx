@@ -1,6 +1,11 @@
 import React from 'react'
+import { Metadata } from 'next'
 import CreateActivityForm from '@module/activities/forms/create-activity-form'
 
+export const metadata: Metadata = {
+    title: 'Create Activity',
+    description: 'Add a new activity or experience to your tour offerings',
+}
 
 const CreateActivityPage: React.FC = () => {
     return (

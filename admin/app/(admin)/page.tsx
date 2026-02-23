@@ -1,10 +1,15 @@
 import React from 'react'
+import { Metadata } from 'next'
 import PageTitle from '@/components/page-title'
 import CardMatrix from '@/components/card-matrix'
 import ProfileCard from '@module/admin/components/profile-card'
 import CategoryTable from '@module/category/components/category-table'
 import FeaturedTourList from '@module/tours/components/featured-tour-list'
 
+export const metadata: Metadata = {
+    title: 'Dashboard',
+    description: 'Admin dashboard for managing tours, bookings, activities, and customer requests',
+}
 
 const DashboardPage: React.FC = () => {
     return (

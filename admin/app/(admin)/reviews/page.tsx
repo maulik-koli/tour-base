@@ -1,7 +1,12 @@
 import React from 'react'
+import { Metadata } from 'next'
 import ReviewListComponents from '@module/review/components/review-list-components'
 import PageTitle from '@/components/page-title'
 
+export const metadata: Metadata = {
+    title: 'Reviews',
+    description: 'Manage and respond to customer reviews for your tours',
+}
 
 const ReviewsPage: React.FC = () => {
     return (

@@ -1,8 +1,13 @@
 import React from 'react'
+import { Metadata } from 'next'
 import LoginForm from '@/module/admin/components/login-form'
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Typography } from '@/components/ui/typography'
 
+export const metadata: Metadata = {
+    title: 'Login',
+    description: 'Login to your admin account to manage tours, bookings, and activities',
+}
 
 const LoginPage: React.FC = () => {
     return (

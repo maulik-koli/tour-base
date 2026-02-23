@@ -6,8 +6,9 @@ dotenv.config({ quiet: true });
 const envSchema = z.object({
     NODE_ENV: z.enum(['development', 'production', 'staging']),
     PORT: z.coerce.number().default(3005),
-    ALLOWED_URL: z.string(),
-    MONGO_URI: z.string(),
+    ALLOWED_URL: z.string().min(1),
+    MONGO_URI: z.string().min(1),
+    WEBSITE_DOMAIN: z.string().min(1),
     JWT_ADMIN_SECRET: z.string().min(64),
     CLOUDINARY_CLOUD_NAME: z.string().min(1),
     CLOUDINARY_API_KEY: z.string().min(1),

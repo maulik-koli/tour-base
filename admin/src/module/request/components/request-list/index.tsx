@@ -52,7 +52,7 @@ const RequestListComponent: React.FC = () => {
 
         return (
             <>
-                <div className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-3 md:gap-4'>
                     {data.data.requests.map((request) => (
                         <RequestCard key={request._id} request={request} />
                     ))}

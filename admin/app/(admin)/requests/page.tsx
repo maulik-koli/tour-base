@@ -1,17 +1,21 @@
 import React from 'react'
+import { Metadata } from 'next'
 import RequestListComponent from '@module/request/components/request-list'
-import { Typography } from '@ui/typography'
+import PageTitle from '@/components/page-title'
+
+export const metadata: Metadata = {
+    title: 'Customer Requests',
+    description: 'View and manage all customer requests and support inquiries',
+}
 
 const RequestsPage: React.FC = () => {
     return (
-        <div className='px-8 py-6 flex flex-col gap-6 bg-background'>
-            <div className='w-full flex items-center justify-between'>
-                <div className='flex flex-col gap-1'>
-                    <Typography variant="h2" className='font-semibold'>Requests</Typography>
-                    <Typography variant="small" className='text-muted-foreground font-normal'>
-                        View and manage all customer requests
-                    </Typography>
-                </div>
+        <div className='px-4 py-4 md:px-6 md:py-5 lg:px-8 lg:py-6 flex flex-col gap-4 md:gap-5 lg:gap-6 bg-background'>
+            <div className='w-full flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3'>
+                <PageTitle
+                    title='Customer Requests'
+                    subtitle='View and manage all customer requests in one place'
+                />
             </div>
 
             <RequestListComponent />
