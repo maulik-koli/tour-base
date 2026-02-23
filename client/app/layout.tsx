@@ -85,6 +85,10 @@ export default function RootLayout({
                         gtag('config', 'G-4645VQZ1HY');
                     `}
                 </Script>
+                <Script
+                    src="https://analytics.eklavyatourism.cloud/script.js" 
+                    data-website-id="115426cc-1401-4f3b-983a-db34c43566dd"
+                />
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{
