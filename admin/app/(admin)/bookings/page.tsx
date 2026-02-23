@@ -1,6 +1,12 @@
 import React from 'react'
+import { Metadata } from 'next'
 import BookingsComponents from '@module/booking/components/bookings-components'
 import PageTitle from '@/components/page-title'
+
+export const metadata: Metadata = {
+    title: 'Bookings',
+    description: 'View and manage all tour bookings, payments, and customer information',
+}
 
 const BookingsPage: React.FC = () => {
     return (

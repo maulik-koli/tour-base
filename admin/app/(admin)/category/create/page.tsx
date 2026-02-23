@@ -1,7 +1,12 @@
 import React from 'react'
+import { Metadata } from 'next'
 import CreateCategoryComponent from '@module/category/components/create-category-component'
 import { Typography } from '@ui/typography'
 
+export const metadata: Metadata = {
+    title: 'Create Category',
+    description: 'Create a new tour category to organize your tours',
+}
 
 const CreateCategoryPage: React.FC = () => {
     return (

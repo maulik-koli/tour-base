@@ -3,7 +3,6 @@ import { env } from "../config/env"
 import { log } from "./log";
 
 type SameSiteType = boolean | "lax" | "strict" | "none" | undefined
-const DOMAIN = ".eklavyatourism.com";
 
 
 export const getCookiesConfig = (): CookieOptions => {
@@ -19,13 +18,13 @@ export const getCookiesConfig = (): CookieOptions => {
             httpOnly: true,
             secure: true,
             sameSite: 'lax' as SameSiteType,
-            domain: DOMAIN,
+            domain: env.WEBSITE_DOMAIN,
         },
         production: {
             httpOnly: true,
             secure: true,
             sameSite: 'lax' as SameSiteType,
-            domain: DOMAIN,
+            domain: env.WEBSITE_DOMAIN,
         }
     };
 

@@ -1,7 +1,12 @@
 import React from 'react'
+import { Metadata } from 'next'
 import ActivityHeader from '@module/activities/components/activity-header'
 import ActivityGrid from '@module/activities/components/activity-grid'
 
+export const metadata: Metadata = {
+    title: 'Activities',
+    description: 'Manage tour activities and experiences offered to customers',
+}
 
 const ActivitiesPage: React.FC = () => {
     return (
