@@ -1,63 +1,57 @@
 import express from "express";
-import { 
-    createActivityController, 
-    deleteActivityController, 
-    getActivitiesListAdminController, 
-    getActivitiesListController, 
-    getActivityAdminController, 
-    getActivityController, 
-    updateActivityController 
-} from "./activity.controller";
+import { activityAdminController, activityController } from "./activity.controller";
 import { activityListQueriesZodSchema, activityZodSchema } from "./activity.schema";
 import { validateQuery, validateRequest } from "@/api/middlewares/validate.middlewate";
 import { authMiddleware } from "@/api/middlewares/auth.middleware";
 
-const router = express.Router();
+const activityAdminRouter = express.Router();
+const activityRouter = express.Router();
 
-router.post(
+
+activityAdminRouter.post(
     "/",
     authMiddleware,
     validateRequest(activityZodSchema),
-    createActivityController
+    activityAdminController.createActivity
 );
 
-router.put(
+activityAdminRouter.get(
+    "/",
+    authMiddleware,
+    validateQuery(activityListQueriesZodSchema),
+    activityAdminController.getActivitiesList
+);
+
+activityAdminRouter.get(
+    "/:slug",
+    authMiddleware,
+    activityAdminController.getActivity
+);
+
+activityAdminRouter.put(
     "/:slug",
     authMiddleware,
     validateRequest(activityZodSchema),
-    updateActivityController
+    activityAdminController.updateActivity
 );
 
-router.delete(
+activityAdminRouter.delete(
     "/:slug",
     authMiddleware,
-    deleteActivityController
-);
-
-router.get(
-    "/admin/list",
-    authMiddleware,
-    validateQuery(activityListQueriesZodSchema),
-    getActivitiesListAdminController
-);
-
-router.get(
-    "/admin/:slug",
-    authMiddleware,
-    getActivityAdminController
+    activityAdminController.deleteActivity
 );
 
 // public api
-router.get(
+activityRouter.get(
     "/",
     validateQuery(activityListQueriesZodSchema),
-    getActivitiesListController
+    activityController.getActivitiesList
 );
 
-router.get(
+activityRouter.get(
     "/:slug",
-    getActivityController
+    activityController.getActivity
 );
 
 
-export default router;
+export { activityAdminRouter, activityRouter };

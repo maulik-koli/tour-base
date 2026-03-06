@@ -1,3 +1,4 @@
+// TODO: add all pages in the map
 const PAGES_MAP: Record<string, string> = {
     "tours": "Tours",
     "tickets": "Tickets",

@@ -1,6 +1,5 @@
 import { ApiError } from "@/types/api";
 import axios, { AxiosInstance } from "axios";
-import { logger } from "../utils";
 
 const SERVER_BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 let isRedirecting = false;

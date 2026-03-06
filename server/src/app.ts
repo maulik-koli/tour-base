@@ -14,13 +14,13 @@ import { log } from './api/utils/log';
 import adminRoutes from '@api/modules/admin/admin.routes';
 import { tourRouter, adminTourRouter } from './api/modules/tour/tour.routes';
 import { adminPackageRouter } from './api/modules/packages/packages.routes';
+import { activityAdminRouter, activityRouter } from './api/modules/activity/activity.routes';
 
 import mediaRoutes from '@api/modules/media/media.routes';
 import categoryRoutes from '@api/modules/category/category.routes';
 import bookingRoutes from '@api/modules/booking/booking.routes';
 import paymentRoutes from '@api/modules/payment/payment.routes';
 import whatsappRoutes from '@api/modules/whatsapp/whatsapp.routes';
-import activityRoutes from '@/api/modules/activity/activity.routes';
 import reviewRoutes from '@/api/modules/review/review.routes';
 import requestRoutes from '@/api/modules/request/request.routes';
 
@@ -84,15 +84,17 @@ app.use('/api', apiLimiter);
 app.use('/api/admin', adminRoutes);
 app.use('/api/admin/tour', adminTourRouter);
 app.use('/api/admin/packages', adminPackageRouter);
+app.use('/api/admin/activity', activityAdminRouter);
 
 app.use('/api/tour', tourRouter);
+app.use('/api/activity', activityRouter);
 
 app.use('/api/media', mediaRoutes);
 app.use('/api/category', categoryRoutes);
 app.use('/api/booking', bookingRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
-app.use('/api/activity', activityRoutes);
+
 app.use('/api/review', reviewRoutes);
 app.use('/api/request', requestRoutes);
 
