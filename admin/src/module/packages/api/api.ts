@@ -8,24 +8,25 @@ import {
     UpdatePackageResponse
 } from "./types";
 
+const BASE_URL = '/admin/packages';
 
 export const addPackage = async (
     payload: CreatePackagePayload
 ): Promise<ApiResponse<CreatePackageResponse>> => {
-    const res = await api.post(`/packages/${payload.slug}`, payload.payload);
+    const res = await api.post(`${BASE_URL}/${payload.slug}`, payload.payload);
     return res.data;
 }
 
 export const updatePackage = async (
     payload: UpdatePackagePayload
 ): Promise<ApiResponse<UpdatePackageResponse>> => {
-    const res = await api.put(`/packages/${payload._id}`, payload.payload);
+    const res = await api.put(`${BASE_URL}/${payload._id}`, payload.payload);
     return res.data;
 }
 
 export const deletePackage = async (
     payload: DeletePackagePayload
 ): Promise<ApiResponse<void>> => {
-    const res = await api.delete(`/packages/${payload._id}`);
+    const res = await api.delete(`${BASE_URL}/${payload._id}`);
     return res.data;
 }

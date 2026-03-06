@@ -62,7 +62,7 @@ const AppSidebar: React.FC = () => {
                 <Avatar className="h-15 w-30 rounded-sm">
                     <AvatarImage src="/logo.png" alt="Eklavya Tourism" />
                     <AvatarFallback 
-                        className="rounded-lg bg-secondary-foreground/50 text-secondary flex ic justify-center"
+                        className="rounded-lg bg-secondary-foreground/50 text-secondary flex items-center justify-center"
                     >
                         LOGO
                     </AvatarFallback>
